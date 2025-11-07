@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, Image } from 'react-native';
 import { ScrollView } from 'react-native';
 import { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -50,8 +50,15 @@ export default function LoginScreen() {
         style={styles.keyboardView}
       >
         <View style={styles.header}>
-          <Text style={styles.year}>2025</Text>
-          <Text style={styles.subtitle}>Spring Edition</Text>
+          <Image
+            source={require('@/assets/images/Fingerboard_Con_Transparent.png')}
+            style={styles.logo}
+            resizeMode="contain"
+          />
+          <Text style={styles.eventYear}>Boston 2026</Text>
+          <View style={styles.eventCard}>
+            <Text style={styles.eventDate}>April 24-26, 2026 • Tewksbury, MA</Text>
+          </View>
         </View>
 
         <View style={styles.form}>
@@ -150,35 +157,35 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    backgroundColor: '#4CAF50',
-    borderBottomLeftRadius: 24,
-    borderBottomRightRadius: 24,
+    backgroundColor: '#76B84B',
     paddingTop: 40,
     paddingBottom: 32,
+    paddingHorizontal: 24,
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 12,
-    elevation: 8,
   },
   logo: {
-    width: 200,
-    height: 80,
-    marginBottom: 16,
+    width: 280,
+    height: 140,
+    marginBottom: 8,
   },
-  year: {
-    fontSize: 32,
+  eventYear: {
+    fontSize: 40,
     fontWeight: '900',
     color: '#1A1A1A',
     textAlign: 'center',
-    marginBottom: 4,
+    marginBottom: 16,
   },
-  subtitle: {
-    fontSize: 16,
+  eventCard: {
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    borderRadius: 20,
+    padding: 16,
+    width: '100%',
+    alignItems: 'center',
+  },
+  eventDate: {
+    fontSize: 20,
+    fontWeight: '700',
     color: '#FFFFFF',
-    fontWeight: '600',
-    textAlign: 'center',
   },
   form: {
     paddingHorizontal: 24,
