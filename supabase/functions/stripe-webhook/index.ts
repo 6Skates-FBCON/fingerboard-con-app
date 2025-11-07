@@ -6,8 +6,8 @@ const stripeSecret = Deno.env.get('STRIPE_SECRET_KEY')!;
 const stripeWebhookSecret = Deno.env.get('STRIPE_WEBHOOK_SECRET')!;
 const stripe = new Stripe(stripeSecret, {
   appInfo: {
-    name: 'Bolt Integration',
-    version: '1.0.0',
+    name: 'Fingerboard Con App',
+    version: '1.0.3',
   },
 });
 
