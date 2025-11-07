@@ -151,7 +151,7 @@ export default function LocationScreen() {
             <Text style={styles.noteText}>
               • Valid ticket and ID required for entry{'\n'}
               • Security check at main entrance{'\n'}
-              • No outside food or drinks allowed
+              • Please remain in designated event areas (hotel lobby, restaurant, or main ballroom)
             </Text>
           </View>
 
