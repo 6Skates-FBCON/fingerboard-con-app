@@ -1,5 +1,5 @@
 import { Tabs } from 'expo-router';
-import { Chrome as Home, Calendar, ShoppingBag, Users, MapPin, Ticket, Shield } from 'lucide-react-native';
+import { Chrome as Home, Calendar, ShoppingBag, Users, MapPin, UserCircle, Shield } from 'lucide-react-native';
 import { useIsAdmin } from '@/hooks/useIsAdmin';
 
 export default function TabLayout() {
@@ -57,15 +57,6 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="my-tickets"
-        options={{
-          title: 'My Tickets',
-          tabBarIcon: ({ size, color }) => (
-            <Ticket size={size} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
         name="vendors"
         options={{
           title: 'Vendors',
@@ -84,6 +75,15 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="account"
+        options={{
+          title: 'Account',
+          tabBarIcon: ({ size, color }) => (
+            <UserCircle size={size} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="staff"
         options={{
           title: 'Staff',
@@ -91,6 +91,12 @@ export default function TabLayout() {
             <Shield size={size} color={color} />
           ),
           href: isAdmin ? '/staff' : null,
+        }}
+      />
+      <Tabs.Screen
+        name="my-tickets"
+        options={{
+          href: null,
         }}
       />
     </Tabs>
