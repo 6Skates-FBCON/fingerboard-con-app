@@ -78,12 +78,10 @@ export default function RegisterScreen() {
         });
       }
 
-      setSuccess('Registration successful! Signing you in...');
+      setSuccess('Registration successful! Please check your email to confirm your account. Look for an email from FBCon.');
 
-      // Redirect to home after a short delay
-      setTimeout(() => {
-        router.replace('/(tabs)');
-      }, 1500);
+      // Don't auto-redirect - user needs to confirm email first
+      // They can sign in after confirming their email
     } catch (err: any) {
       setError(err.message || 'An error occurred during registration');
     } finally {
