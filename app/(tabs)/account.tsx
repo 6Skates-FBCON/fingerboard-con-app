@@ -79,7 +79,12 @@ export default function AccountScreen() {
           style: 'destructive',
           onPress: async () => {
             try {
-              await api.signOut();
+              const { error } = await supabase.auth.signOut();
+              if (error) {
+                console.error('Sign out error:', error);
+                Alert.alert('Error', 'Failed to sign out. Please try again.');
+                return;
+              }
               router.replace('/login');
             } catch (error) {
               console.error('Error signing out:', error);
