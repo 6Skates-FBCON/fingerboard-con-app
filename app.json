@@ -4,7 +4,6 @@
     "slug": "fingerboard-con",
     "version": "1.0.3",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -12,7 +11,6 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.fingerboardcon.app",
       "buildNumber": "6",
-      "icon": "./assets/images/icon.png",
       "infoPlist": {
         "NSCameraUsageDescription": "We use your camera so you can record fingerboard clips for the event.",
         "NSMicrophoneUsageDescription": "We use your microphone to capture audio while recording clips.",
@@ -23,10 +21,6 @@
     "android": {
       "package": "com.fingerboardcon.app",
       "versionCode": 5,
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/images/icon.png",
-        "backgroundColor": "#4CAF50"
-      },
       "permissions": [
         "android.permission.CAMERA",
         "android.permission.RECORD_AUDIO",
@@ -42,8 +36,7 @@
     },
     "web": {
       "bundler": "metro",
-      "output": "single",
-      "favicon": "./assets/images/favicon.png"
+      "output": "single"
     },
     "plugins": [
       "expo-router",
