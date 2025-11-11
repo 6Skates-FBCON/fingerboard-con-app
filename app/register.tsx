@@ -65,24 +65,40 @@ export default function RegisterScreen() {
     setSuccess('');
 
     try {
-      const { user } = await api.signUp(email, password);
+      const response = await api.signUp(email, password);
 
-      if (user) {
-        await api.updateUserProfile(user.id, {
-          phone_number: phoneNumber,
-          address,
-          city,
-          state_province: stateProvince,
-          postal_code: postalCode,
-          country,
-        });
+      const userId = response.user?.id;
+
+      if (userId) {
+        try {
+          await api.updateUserProfile(userId, {
+            phone_number: phoneNumber,
+            address,
+            city,
+            state_province: stateProvince,
+            postal_code: postalCode,
+            country,
+          });
+        } catch (profileError: any) {
+          console.error('Error updating profile:', profileError);
+          // Continue even if profile update fails
+        }
       }
 
       setSuccess('Registration successful! Please check your email to confirm your account. Look for an email from FBCon.');
 
-      // Don't auto-redirect - user needs to confirm email first
-      // They can sign in after confirming their email
+      // Clear form
+      setEmail('');
+      setPassword('');
+      setConfirmPassword('');
+      setPhoneNumber('');
+      setAddress('');
+      setCity('');
+      setStateProvince('');
+      setPostalCode('');
+      setCountry('');
     } catch (err: any) {
+      console.error('Registration error:', err);
       setError(err.message || 'An error occurred during registration');
     } finally {
       setIsLoading(false);
