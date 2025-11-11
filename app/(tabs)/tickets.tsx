@@ -233,8 +233,6 @@ export default function TicketsScreen() {
   );
 }
 
-export default TicketsScreen;
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
