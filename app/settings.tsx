@@ -37,20 +37,24 @@ export default function SettingsScreen() {
 
   useEffect(() => {
     loadProfile();
-  }, []);
+  }, [user]);
 
   const loadProfile = async () => {
-    if (!user) return;
+    if (!user) {
+      setLoading(false);
+      return;
+    }
 
     try {
       const { data, error } = await supabase
         .from('profiles')
         .select('display_name, phone_number, address, city, state_province, postal_code, country')
         .eq('id', user.id)
-        .single();
+        .maybeSingle();
 
       if (error) {
         console.error('Error loading profile:', error);
+        setLoading(false);
         return;
       }
 
