@@ -22,8 +22,9 @@ export interface UserProfile {
   phone_number?: string;
   address?: string;
   city?: string;
-  state?: string;
-  zip_code?: string;
+  state_province?: string;
+  postal_code?: string;
+  country?: string;
   created_at: string;
   updated_at: string;
 }

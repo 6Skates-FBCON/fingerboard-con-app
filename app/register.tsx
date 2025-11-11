@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingVi
 import { ScrollView } from 'react-native';
 import { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Mail, Lock, Eye, EyeOff, ArrowLeft, Phone, MapPin } from 'lucide-react-native';
+import { Mail, Lock, Eye, EyeOff, ArrowLeft, Phone, MapPin, Globe } from 'lucide-react-native';
 import { router } from 'expo-router';
 import { api } from '@/lib/supabase';
 
@@ -13,8 +13,9 @@ export default function RegisterScreen() {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [address, setAddress] = useState('');
   const [city, setCity] = useState('');
-  const [state, setState] = useState('');
-  const [zipCode, setZipCode] = useState('');
+  const [stateProvince, setStateProvince] = useState('');
+  const [postalCode, setPostalCode] = useState('');
+  const [country, setCountry] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -22,8 +23,8 @@ export default function RegisterScreen() {
   const [success, setSuccess] = useState('');
 
   const validateForm = () => {
-    if (!email || !password || !confirmPassword || !phoneNumber || !address || !city || !state || !zipCode) {
-      setError('Please fill in all fields');
+    if (!email || !password || !confirmPassword || !phoneNumber || !address || !city || !country) {
+      setError('Please fill in all required fields');
       return false;
     }
 
@@ -34,17 +35,10 @@ export default function RegisterScreen() {
       return false;
     }
 
-    // Phone validation (basic)
-    const phoneRegex = /^[0-9]{10}$/;
-    if (!phoneRegex.test(phoneNumber.replace(/[-\s()]/g, ''))) {
-      setError('Please enter a valid 10-digit phone number');
-      return false;
-    }
-
-    // Zip code validation
-    const zipRegex = /^[0-9]{5}$/;
-    if (!zipRegex.test(zipCode)) {
-      setError('Please enter a valid 5-digit zip code');
+    // Phone validation (international - at least 7 digits)
+    const cleanPhone = phoneNumber.replace(/[-\s().+]/g, '');
+    if (cleanPhone.length < 7 || !/^[0-9+]+$/.test(phoneNumber.replace(/[-\s().]/g, ''))) {
+      setError('Please enter a valid phone number');
       return false;
     }
 
@@ -78,8 +72,9 @@ export default function RegisterScreen() {
           phone_number: phoneNumber,
           address,
           city,
-          state,
-          zip_code: zipCode,
+          state_province: stateProvince,
+          postal_code: postalCode,
+          country,
         });
       }
 
@@ -185,16 +180,28 @@ export default function RegisterScreen() {
               />
             </View>
 
+            <View style={styles.inputWrapper}>
+              <Globe size={20} color="#FFFFFF" style={styles.inputIcon} />
+              <TextInput
+                style={styles.textInput}
+                placeholder="Country"
+                placeholderTextColor="#FFFFFF"
+                value={country}
+                onChangeText={setCountry}
+                autoCapitalize="words"
+                autoCorrect={false}
+              />
+            </View>
+
             <View style={styles.rowInputs}>
               <View style={[styles.inputWrapper, styles.halfWidth]}>
                 <TextInput
                   style={styles.textInput}
-                  placeholder="State"
+                  placeholder="State/Province (optional)"
                   placeholderTextColor="#FFFFFF"
-                  value={state}
-                  onChangeText={setState}
-                  autoCapitalize="characters"
-                  maxLength={2}
+                  value={stateProvince}
+                  onChangeText={setStateProvince}
+                  autoCapitalize="words"
                   autoCorrect={false}
                 />
               </View>
@@ -202,12 +209,10 @@ export default function RegisterScreen() {
               <View style={[styles.inputWrapper, styles.halfWidth]}>
                 <TextInput
                   style={styles.textInput}
-                  placeholder="Zip Code"
+                  placeholder="Postal Code (optional)"
                   placeholderTextColor="#FFFFFF"
-                  value={zipCode}
-                  onChangeText={setZipCode}
-                  keyboardType="number-pad"
-                  maxLength={5}
+                  value={postalCode}
+                  onChangeText={setPostalCode}
                   autoCorrect={false}
                 />
               </View>
