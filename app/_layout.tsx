@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { Stack, useRouter, useSegments } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useFrameworkReady } from '@/hooks/useFrameworkReady';
@@ -10,20 +10,16 @@ export default function RootLayout() {
   const { isAuthenticated, loading } = useAuth();
   const segments = useSegments();
   const router = useRouter();
-  const hasNavigated = useRef(false);
 
   useEffect(() => {
     if (loading) return;
 
-    if (hasNavigated.current) return;
-
     const inAuthGroup = segments[0] === '(tabs)';
+    const inAuthScreen = segments[0] === 'login' || segments[0] === 'register';
 
     if (!isAuthenticated && inAuthGroup) {
-      hasNavigated.current = true;
       router.replace('/login');
-    } else if (isAuthenticated && !inAuthGroup && segments[0] !== 'register') {
-      hasNavigated.current = true;
+    } else if (isAuthenticated && !inAuthGroup && !inAuthScreen) {
       router.replace('/(tabs)');
     }
   }, [isAuthenticated, segments, loading]);
