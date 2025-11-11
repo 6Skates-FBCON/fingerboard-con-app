@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, Image } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
 import { ScrollView } from 'react-native';
 import { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -56,11 +56,7 @@ export default function LoginScreen() {
         style={styles.keyboardView}
       >
         <View style={styles.header}>
-          <Image
-            source={require('@/assets/images/Fingerboard_Con_Transparent.png')}
-            style={styles.logo}
-            resizeMode="contain"
-          />
+          <Text style={styles.logoText}>FINGERBOARD CON</Text>
           <Text style={styles.eventYear}>Boston 2026</Text>
           <View style={styles.eventCard}>
             <Text style={styles.eventDate}>April 24-26, 2026 • Tewksbury, MA</Text>
@@ -169,10 +165,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     alignItems: 'center',
   },
-  logo: {
-    width: 280,
-    height: 140,
-    marginBottom: 8,
+  logoText: {
+    fontSize: 36,
+    fontWeight: '900',
+    color: '#FFD700',
+    textAlign: 'center',
+    marginBottom: 12,
+    letterSpacing: 2,
   },
   eventYear: {
     fontSize: 40,

@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Calendar, Users, ShoppingBag, MapPin, Bell } from 'lucide-react-native';
@@ -30,11 +30,7 @@ export default function HomeScreen() {
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
       <View style={styles.header}>
         <View style={styles.headerContent}>
-          <Image
-            source={require('@/assets/images/Fingerboard_Con_Transparent.png')}
-            style={styles.logo}
-            resizeMode="contain"
-          />
+          <Text style={styles.logoText}>FINGERBOARD CON</Text>
           <Text style={styles.eventYear}>Boston 2026</Text>
           
           <View style={styles.eventCard}>
@@ -117,10 +113,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 24,
   },
-  logo: {
-    width: 288,
-    height: 120,
-    alignItems: 'center',
+  logoText: {
+    fontSize: 36,
+    fontWeight: '900',
+    color: '#FFD700',
+    textAlign: 'center',
+    marginBottom: 8,
+    letterSpacing: 2,
   },
   eventYear: {
     fontSize: 32,

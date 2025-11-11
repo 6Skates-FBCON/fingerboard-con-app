@@ -1,6 +1,5 @@
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { useState } from 'react';
-import { Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Calendar, Clock, MapPin, Users, Trophy, Wrench, ShoppingBag, MessageSquare } from 'lucide-react-native';
@@ -202,35 +201,9 @@ export default function EventsScreen() {
               style={styles.eventCard}
             >
               <View style={styles.eventHeader}>
-                {event.title === 'Vendor Showcase Opening' ? (
-                  <View style={styles.logoContainer}>
-                    <Image
-                      source={require('@/assets/images/Fingerboard_Con_Transparent.png')}
-                      style={styles.eventLogo}
-                      resizeMode="contain"
-                    />
-                  </View>
-                ) : event.title === 'Blackriver Ramps Sponsored Event' ? (
-                  <View style={styles.logoContainer}>
-                    <Image
-                      source={require('@/assets/images/Blackriver Skull Logo.png')}
-                      style={styles.eventLogo}
-                      resizeMode="contain"
-                    />
-                  </View>
-                ) : event.title === 'FlatFace Rendezvous' ? (
-                  <View style={styles.logoContainer}>
-                    <Image
-                      source={require('@/assets/images/02-FlatfaceFingerboards-300x300.png')}
-                      style={styles.eventLogo}
-                      resizeMode="contain"
-                    />
-                  </View>
-                ) : (
-                  <View style={[styles.eventIcon, { backgroundColor: eventColor }]}>
-                    <IconComponent size={20} color="#000000" />
-                  </View>
-                )}
+                <View style={[styles.eventIcon, { backgroundColor: eventColor }]}>
+                  <IconComponent size={20} color="#000000" />
+                </View>
                 <View style={styles.eventInfo}>
                   <Text style={styles.eventTitle}>{event.title}</Text>
                   <View style={styles.eventMeta}>
