@@ -65,29 +65,34 @@ export default function RegisterScreen() {
     setSuccess('');
 
     try {
+      console.log('Starting registration...');
       const response = await api.signUp(email, password);
+      console.log('SignUp response:', response);
 
       const userId = response.user?.id;
 
-      if (userId) {
-        try {
-          await api.updateUserProfile(userId, {
-            phone_number: phoneNumber,
-            address,
-            city,
-            state_province: stateProvince,
-            postal_code: postalCode,
-            country,
-          });
-        } catch (profileError: any) {
-          console.error('Error updating profile:', profileError);
-          // Continue even if profile update fails
-        }
+      if (!userId) {
+        throw new Error('Registration failed: No user ID returned');
       }
 
-      setSuccess('Registration successful! Please check your email to confirm your account. Look for an email from FBCon.');
+      console.log('Updating user profile for:', userId);
 
-      // Clear form
+      try {
+        await api.updateUserProfile(userId, {
+          phone_number: phoneNumber,
+          address,
+          city,
+          state_province: stateProvince,
+          postal_code: postalCode,
+          country,
+        });
+        console.log('Profile updated successfully');
+      } catch (profileError: any) {
+        console.error('Error updating profile:', profileError);
+      }
+
+      setSuccess('Registration successful! You can now sign in with your email and password.');
+
       setEmail('');
       setPassword('');
       setConfirmPassword('');
@@ -97,6 +102,10 @@ export default function RegisterScreen() {
       setStateProvince('');
       setPostalCode('');
       setCountry('');
+
+      setTimeout(() => {
+        router.replace('/login');
+      }, 2000);
     } catch (err: any) {
       console.error('Registration error:', err);
       setError(err.message || 'An error occurred during registration');
