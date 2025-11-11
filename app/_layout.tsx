@@ -16,10 +16,11 @@ export default function RootLayout() {
 
     const inAuthGroup = segments[0] === '(tabs)';
     const inAuthScreen = segments[0] === 'login' || segments[0] === 'register';
+    const inProtectedScreen = segments[0] === 'settings' || segments[0] === 'transfer-ticket' || segments[0] === 'validate-ticket';
 
     if (!isAuthenticated && inAuthGroup) {
       router.replace('/login');
-    } else if (isAuthenticated && !inAuthGroup && !inAuthScreen) {
+    } else if (isAuthenticated && !inAuthGroup && !inAuthScreen && !inProtectedScreen) {
       router.replace('/(tabs)');
     }
   }, [isAuthenticated, segments, loading]);
@@ -38,6 +39,7 @@ export default function RootLayout() {
         <Stack.Screen name="login" />
         <Stack.Screen name="register" />
         <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="settings" />
         <Stack.Screen name="transfer-ticket" />
         <Stack.Screen name="validate-ticket" />
         <Stack.Screen name="+not-found" />
