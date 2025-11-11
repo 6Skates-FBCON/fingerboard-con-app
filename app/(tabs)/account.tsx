@@ -293,17 +293,20 @@ export default function AccountScreen() {
         </View>
 
         <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Account Settings</Text>
+
+          <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/settings')}>
+            <Settings size={20} color="#E8F5E8" />
+            <Text style={styles.menuItemText}>Settings</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.section}>
           <Text style={styles.sectionTitle}>Coming Soon</Text>
 
           <TouchableOpacity style={styles.menuItem} disabled>
             <Bell size={20} color="#E8F5E8" />
             <Text style={styles.menuItemText}>Notifications</Text>
-            <Text style={styles.comingSoonBadge}>Soon</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.menuItem} disabled>
-            <Settings size={20} color="#E8F5E8" />
-            <Text style={styles.menuItemText}>Settings</Text>
             <Text style={styles.comingSoonBadge}>Soon</Text>
           </TouchableOpacity>
         </View>
