@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingVi
 import { ScrollView } from 'react-native';
 import { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Mail, Lock, Eye, EyeOff, ArrowLeft } from 'lucide-react-native';
+import { Mail, Lock, Eye, EyeOff, ArrowLeft, Phone, MapPin } from 'lucide-react-native';
 import { router } from 'expo-router';
 import { api } from '@/lib/supabase';
 
@@ -10,6 +10,11 @@ export default function RegisterScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [address, setAddress] = useState('');
+  const [city, setCity] = useState('');
+  const [state, setState] = useState('');
+  const [zipCode, setZipCode] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -17,7 +22,7 @@ export default function RegisterScreen() {
   const [success, setSuccess] = useState('');
 
   const validateForm = () => {
-    if (!email || !password || !confirmPassword) {
+    if (!email || !password || !confirmPassword || !phoneNumber || !address || !city || !state || !zipCode) {
       setError('Please fill in all fields');
       return false;
     }
@@ -26,6 +31,20 @@ export default function RegisterScreen() {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       setError('Please enter a valid email address');
+      return false;
+    }
+
+    // Phone validation (basic)
+    const phoneRegex = /^[0-9]{10}$/;
+    if (!phoneRegex.test(phoneNumber.replace(/[-\s()]/g, ''))) {
+      setError('Please enter a valid 10-digit phone number');
+      return false;
+    }
+
+    // Zip code validation
+    const zipRegex = /^[0-9]{5}$/;
+    if (!zipRegex.test(zipCode)) {
+      setError('Please enter a valid 5-digit zip code');
       return false;
     }
 
@@ -52,7 +71,18 @@ export default function RegisterScreen() {
     setSuccess('');
 
     try {
-      await api.signUp(email, password);
+      const { user } = await api.signUp(email, password);
+
+      if (user) {
+        await api.updateUserProfile(user.id, {
+          phone_number: phoneNumber,
+          address,
+          city,
+          state,
+          zip_code: zipCode,
+        });
+      }
+
       setSuccess('Registration successful! Signing you in...');
 
       // Redirect to home after a short delay
@@ -113,6 +143,74 @@ export default function RegisterScreen() {
                 autoCapitalize="none"
                 autoCorrect={false}
               />
+            </View>
+
+            <View style={styles.inputWrapper}>
+              <Phone size={20} color="#FFFFFF" style={styles.inputIcon} />
+              <TextInput
+                style={styles.textInput}
+                placeholder="Phone Number"
+                placeholderTextColor="#FFFFFF"
+                value={phoneNumber}
+                onChangeText={setPhoneNumber}
+                keyboardType="phone-pad"
+                autoCapitalize="none"
+                autoCorrect={false}
+              />
+            </View>
+
+            <View style={styles.inputWrapper}>
+              <MapPin size={20} color="#FFFFFF" style={styles.inputIcon} />
+              <TextInput
+                style={styles.textInput}
+                placeholder="Street Address"
+                placeholderTextColor="#FFFFFF"
+                value={address}
+                onChangeText={setAddress}
+                autoCapitalize="words"
+                autoCorrect={false}
+              />
+            </View>
+
+            <View style={styles.inputWrapper}>
+              <MapPin size={20} color="#FFFFFF" style={styles.inputIcon} />
+              <TextInput
+                style={styles.textInput}
+                placeholder="City"
+                placeholderTextColor="#FFFFFF"
+                value={city}
+                onChangeText={setCity}
+                autoCapitalize="words"
+                autoCorrect={false}
+              />
+            </View>
+
+            <View style={styles.rowInputs}>
+              <View style={[styles.inputWrapper, styles.halfWidth]}>
+                <TextInput
+                  style={styles.textInput}
+                  placeholder="State"
+                  placeholderTextColor="#FFFFFF"
+                  value={state}
+                  onChangeText={setState}
+                  autoCapitalize="characters"
+                  maxLength={2}
+                  autoCorrect={false}
+                />
+              </View>
+
+              <View style={[styles.inputWrapper, styles.halfWidth]}>
+                <TextInput
+                  style={styles.textInput}
+                  placeholder="Zip Code"
+                  placeholderTextColor="#FFFFFF"
+                  value={zipCode}
+                  onChangeText={setZipCode}
+                  keyboardType="number-pad"
+                  maxLength={5}
+                  autoCorrect={false}
+                />
+              </View>
             </View>
 
             <View style={styles.inputWrapper}>
@@ -336,6 +434,14 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     lineHeight: 18,
     opacity: 0.8,
+  },
+  rowInputs: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: 12,
+  },
+  halfWidth: {
+    flex: 1,
   },
   errorContainer: {
     backgroundColor: '#FF5252',

@@ -19,6 +19,11 @@ export interface UserProfile {
   id: string;
   email: string;
   role: UserRole;
+  phone_number?: string;
+  address?: string;
+  city?: string;
+  state?: string;
+  zip_code?: string;
   created_at: string;
   updated_at: string;
 }
@@ -149,6 +154,23 @@ export const api = {
     }
 
     return data?.role === 'admin';
+  },
+
+  updateUserProfile: async (userId: string, profile: Partial<UserProfile>) => {
+    if (!supabase) {
+      throw new Error('Supabase not connected. Please connect to Supabase first.');
+    }
+
+    const { data, error } = await supabase
+      .from('profiles')
+      .update(profile)
+      .eq('id', userId);
+
+    if (error) {
+      throw error;
+    }
+
+    return data;
   },
   
   // Events functions
