@@ -52,20 +52,31 @@ export function useAuth(): AuthState {
     }
 
     loadingTimeoutRef.current = setTimeout(() => {
-      if (mounted && loading) {
+      if (mounted) {
         console.warn('Auth loading timeout - forcing completion');
         setLoading(false);
       }
-    }, 5000);
+    }, 3000);
 
     const initAuth = async () => {
       if (!supabase) {
         setLoading(false);
+        if (loadingTimeoutRef.current) {
+          clearTimeout(loadingTimeoutRef.current);
+        }
         return;
       }
 
       try {
-        const { data: { session } } = await supabase.auth.getSession();
+        const sessionPromise = supabase.auth.getSession();
+        const timeoutPromise = new Promise((_, reject) =>
+          setTimeout(() => reject(new Error('Auth timeout')), 2000)
+        );
+
+        const { data: { session } } = await Promise.race([
+          sessionPromise,
+          timeoutPromise
+        ]) as any;
 
         if (!mounted) return;
 
@@ -99,7 +110,14 @@ export function useAuth(): AuthState {
 
     initAuth();
 
-    if (!supabase) return;
+    if (!supabase) {
+      return () => {
+        mounted = false;
+        if (loadingTimeoutRef.current) {
+          clearTimeout(loadingTimeoutRef.current);
+        }
+      };
+    }
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
