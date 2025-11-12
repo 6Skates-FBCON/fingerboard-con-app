@@ -45,10 +45,10 @@ export function useAuth(): AuthState {
     let mounted = true;
 
     if (!supabase) {
-      if (mounted) {
-        setLoading(false);
-      }
-      return;
+      setLoading(false);
+      return () => {
+        mounted = false;
+      };
     }
 
     loadingTimeoutRef.current = setTimeout(() => {
