@@ -16,7 +16,7 @@ export function useAuth(): AuthState {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [role, setRole] = useState<UserRole | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!supabase ? false : true);
   const loadingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const fetchUserRole = async (userId: string): Promise<UserRole | null> => {
@@ -56,7 +56,7 @@ export function useAuth(): AuthState {
         console.warn('Auth loading timeout - forcing completion');
         setLoading(false);
       }
-    }, 3000);
+    }, 1500);
 
     const initAuth = async () => {
       if (!supabase) {
@@ -70,7 +70,7 @@ export function useAuth(): AuthState {
       try {
         const sessionPromise = supabase.auth.getSession();
         const timeoutPromise = new Promise((_, reject) =>
-          setTimeout(() => reject(new Error('Auth timeout')), 2000)
+          setTimeout(() => reject(new Error('Auth timeout')), 1000)
         );
 
         const { data: { session } } = await Promise.race([
