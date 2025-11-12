@@ -36,7 +36,7 @@ export default function TransferTicketScreen() {
   }, [ticketId]);
 
   const fetchTicket = async () => {
-    if (!ticketId || !session) return;
+    if (!ticketId || !session || !supabase) return;
 
     try {
       const { data, error } = await supabase
@@ -75,6 +75,8 @@ export default function TransferTicketScreen() {
       return;
     }
 
+    if (!supabase) return;
+
     setSearching(true);
 
     try {
@@ -112,6 +114,8 @@ export default function TransferTicketScreen() {
           text: 'Transfer',
           style: 'destructive',
           onPress: async () => {
+            if (!supabase) return;
+
             setTransferring(true);
 
             try {

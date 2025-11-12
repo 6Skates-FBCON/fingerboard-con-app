@@ -1,37 +1,9 @@
-import { useEffect } from 'react';
-import { Stack, useRouter, useSegments } from 'expo-router';
+import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useFrameworkReady } from '@/hooks/useFrameworkReady';
-import { useAuth } from '@/hooks/useAuth';
-import { View, ActivityIndicator, StyleSheet } from 'react-native';
 
 export default function RootLayout() {
   useFrameworkReady();
-  const { isAuthenticated, loading } = useAuth();
-  const segments = useSegments();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (loading) return;
-
-    const inAuthGroup = segments[0] === '(tabs)';
-    const inAuthScreen = segments[0] === 'login' || segments[0] === 'register';
-    const inProtectedScreen = segments[0] === 'settings' || segments[0] === 'transfer-ticket' || segments[0] === 'validate-ticket';
-
-    if (!isAuthenticated && (inAuthGroup || inProtectedScreen)) {
-      router.replace('/login');
-    } else if (isAuthenticated && inAuthScreen) {
-      router.replace('/(tabs)');
-    }
-  }, [isAuthenticated, segments, loading]);
-
-  if (loading) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#4CAF50" />
-      </View>
-    );
-  }
 
   return (
     <>
@@ -48,12 +20,3 @@ export default function RootLayout() {
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#1a1a1a',
-  },
-});

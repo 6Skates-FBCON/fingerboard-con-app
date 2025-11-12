@@ -41,7 +41,7 @@ export default function EventsScreen() {
         title: 'Blackriver Ramps Sponsored Event',
         time: '7:00 PM - 9:00 PM',
         location: 'Main Ballroom',
-        type: 'compitition',
+        type: 'competition',
         description: 'Your chance to beat a Blackriver pro and win sick prizes.'
       },
       {
@@ -59,7 +59,7 @@ export default function EventsScreen() {
         title: 'FlatFace Rendezvous',
         time: '12:00 PM - 5:30 PM',
         location: 'FlatFace Warehouse, 54 Chuck Dr, Dracut, MA 01826',
-        type: 'Social',
+        type: 'social',
         description: 'Open Fingerboard Session'
       },
       {

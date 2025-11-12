@@ -40,7 +40,7 @@ export default function SettingsScreen() {
   }, [user]);
 
   const loadProfile = async () => {
-    if (!user) {
+    if (!user || !supabase) {
       setLoading(false);
       return;
     }
@@ -77,7 +77,7 @@ export default function SettingsScreen() {
   };
 
   const saveProfile = async () => {
-    if (!user) return;
+    if (!user || !supabase) return;
 
     setSaving(true);
     setMessage(null);
@@ -126,6 +126,8 @@ export default function SettingsScreen() {
       setMessage({ type: 'error', text: 'Password must be at least 6 characters' });
       return;
     }
+
+    if (!supabase) return;
 
     setSaving(true);
     setMessage(null);

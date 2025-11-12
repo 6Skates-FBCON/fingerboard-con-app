@@ -17,7 +17,7 @@ export function useAuth(): AuthState {
   const [session, setSession] = useState<Session | null>(null);
   const [role, setRole] = useState<UserRole | null>(null);
   const [loading, setLoading] = useState(true);
-  const loadingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const loadingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const fetchUserRole = async (userId: string): Promise<UserRole | null> => {
     if (!supabase) return 'user';
@@ -59,6 +59,11 @@ export function useAuth(): AuthState {
     }, 5000);
 
     const initAuth = async () => {
+      if (!supabase) {
+        setLoading(false);
+        return;
+      }
+
       try {
         const { data: { session } } = await supabase.auth.getSession();
 
@@ -93,6 +98,8 @@ export function useAuth(): AuthState {
     };
 
     initAuth();
+
+    if (!supabase) return;
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {

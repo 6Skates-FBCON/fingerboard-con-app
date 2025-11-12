@@ -38,6 +38,12 @@ export default function AccountScreen() {
       return;
     }
 
+    if (!supabase) {
+      setLoading(false);
+      setRefreshing(false);
+      return;
+    }
+
     try {
       const { data, error } = await supabase
         .from('ticket_details')
@@ -69,6 +75,8 @@ export default function AccountScreen() {
   };
 
   const handleSignOut = async () => {
+    if (!supabase) return;
+
     try {
       console.log('Signing out...');
       const { error } = await supabase.auth.signOut();
