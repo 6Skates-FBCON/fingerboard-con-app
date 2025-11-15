@@ -141,82 +141,19 @@ export default function TransferTicketScreen() {
     }
   };
 
-  const handleTransfer = async (recipientId: string, recipientEmail: string) => {
-    if (!ticket || !session) return;
+  const handleTransfer = (recipientId: string, recipientEmail: string) => {
+    if (!ticket) return;
 
-    Alert.alert(
-      '⚠️ Warning: Transfer Cannot Be Reversed',
-      `You are about to transfer your ticket to:\n\n📧 ${recipientEmail}\n\nTicket: ${ticket.ticket_type}\nTicket #${ticket.ticket_number}\n\n⚠️ IMPORTANT:\n• This transfer is IMMEDIATE and PERMANENT\n• You will LOSE ACCESS to this ticket\n• The new owner can transfer it to others\n• This action CANNOT be undone\n\nAre you absolutely sure you want to proceed?`,
-      [
-        {
-          text: 'Cancel',
-          style: 'cancel',
-          onPress: () => {
-            setSearchResults([]);
-            setSearchEmail('');
-          }
-        },
-        {
-          text: 'Yes, Transfer Ticket',
-          style: 'destructive',
-          onPress: async () => {
-            if (!supabase) return;
-
-            setTransferring(true);
-
-            try {
-              const { data: transferData, error: transferError } = await supabase
-                .from('ticket_transfers')
-                .insert({
-                  ticket_id: ticket.id,
-                  from_user_id: session.user.id,
-                  to_user_id: recipientId,
-                  transfer_status: 'completed',
-                })
-                .select()
-                .single();
-
-              if (transferError) {
-                console.error('Error creating transfer:', transferError);
-                Alert.alert('Transfer Failed', 'Failed to transfer ticket. Please try again.');
-                return;
-              }
-
-              const { error: updateError } = await supabase
-                .from('tickets')
-                .update({
-                  owner_id: recipientId,
-                  status: 'active',
-                  updated_at: new Date().toISOString(),
-                })
-                .eq('id', ticket.id);
-
-              if (updateError) {
-                console.error('Error updating ticket:', updateError);
-                Alert.alert('Transfer Failed', 'Failed to update ticket ownership. Please contact support.');
-                return;
-              }
-
-              Alert.alert(
-                '✓ Transfer Successful',
-                `Your ticket has been transferred to ${recipientEmail}. They now have full access to the ticket.`,
-                [
-                  {
-                    text: 'OK',
-                    onPress: () => router.replace('/account'),
-                  },
-                ]
-              );
-            } catch (error) {
-              console.error('Error transferring ticket:', error);
-              Alert.alert('Error', 'An unexpected error occurred during transfer. Please try again.');
-            } finally {
-              setTransferring(false);
-            }
-          },
-        },
-      ]
-    );
+    router.push({
+      pathname: '/transfer-confirm',
+      params: {
+        ticketId: ticket.id.toString(),
+        recipientId,
+        recipientEmail,
+        ticketType: ticket.ticket_type,
+        ticketNumber: ticket.ticket_number.toString(),
+      },
+    });
   };
 
   if (loading) {
