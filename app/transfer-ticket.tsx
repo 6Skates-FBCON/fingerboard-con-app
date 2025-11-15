@@ -71,7 +71,7 @@ export default function TransferTicketScreen() {
     }
 
     if (searchEmail.toLowerCase() === session?.user.email?.toLowerCase()) {
-      Alert.alert('Invalid', 'You cannot transfer a ticket to yourself');
+      Alert.alert('Invalid Email', 'You cannot transfer a ticket to yourself.');
       return;
     }
 
@@ -86,17 +86,22 @@ export default function TransferTicketScreen() {
 
       if (error) {
         console.error('Error searching users:', error);
-        Alert.alert('Error', 'Failed to search users');
+        Alert.alert('Error', 'Failed to search users. Please try again.');
         return;
       }
 
       setSearchResults(data || []);
 
       if (!data || data.length === 0) {
-        Alert.alert('No Results', 'No users found with that email');
+        Alert.alert(
+          'User Not Found',
+          `No registered user found with the email "${searchEmail}". The recipient must have an account before you can transfer the ticket.`,
+          [{ text: 'OK' }]
+        );
       }
     } catch (error) {
       console.error('Error searching users:', error);
+      Alert.alert('Error', 'An error occurred while searching.');
     } finally {
       setSearching(false);
     }
@@ -106,12 +111,19 @@ export default function TransferTicketScreen() {
     if (!ticket || !session) return;
 
     Alert.alert(
-      'Confirm Transfer',
-      `Transfer "${ticket.ticket_type}" (Ticket ${ticket.ticket_number}) to ${recipientEmail}?\n\nThis action cannot be undone.`,
+      '⚠️ Warning: Transfer Cannot Be Reversed',
+      `You are about to transfer your ticket to:\n\n📧 ${recipientEmail}\n\nTicket: ${ticket.ticket_type}\nTicket #${ticket.ticket_number}\n\n⚠️ IMPORTANT:\n• This transfer is IMMEDIATE and PERMANENT\n• You will LOSE ACCESS to this ticket\n• The new owner can transfer it to others\n• This action CANNOT be undone\n\nAre you absolutely sure you want to proceed?`,
       [
-        { text: 'Cancel', style: 'cancel' },
         {
-          text: 'Transfer',
+          text: 'Cancel',
+          style: 'cancel',
+          onPress: () => {
+            setSearchResults([]);
+            setSearchEmail('');
+          }
+        },
+        {
+          text: 'Yes, Transfer Ticket',
           style: 'destructive',
           onPress: async () => {
             if (!supabase) return;
@@ -132,7 +144,7 @@ export default function TransferTicketScreen() {
 
               if (transferError) {
                 console.error('Error creating transfer:', transferError);
-                Alert.alert('Error', 'Failed to transfer ticket');
+                Alert.alert('Transfer Failed', 'Failed to transfer ticket. Please try again.');
                 return;
               }
 
@@ -140,26 +152,30 @@ export default function TransferTicketScreen() {
                 .from('tickets')
                 .update({
                   owner_id: recipientId,
-                  status: 'transferred',
+                  status: 'active',
                   updated_at: new Date().toISOString(),
                 })
                 .eq('id', ticket.id);
 
               if (updateError) {
                 console.error('Error updating ticket:', updateError);
-                Alert.alert('Error', 'Failed to update ticket ownership');
+                Alert.alert('Transfer Failed', 'Failed to update ticket ownership. Please contact support.');
                 return;
               }
 
-              Alert.alert('Success', `Ticket transferred to ${recipientEmail}`, [
-                {
-                  text: 'OK',
-                  onPress: () => router.back(),
-                },
-              ]);
+              Alert.alert(
+                '✓ Transfer Successful',
+                `Your ticket has been transferred to ${recipientEmail}. They now have full access to the ticket.`,
+                [
+                  {
+                    text: 'OK',
+                    onPress: () => router.replace('/account'),
+                  },
+                ]
+              );
             } catch (error) {
               console.error('Error transferring ticket:', error);
-              Alert.alert('Error', 'An error occurred during transfer');
+              Alert.alert('Error', 'An unexpected error occurred during transfer. Please try again.');
             } finally {
               setTransferring(false);
             }
@@ -209,7 +225,7 @@ export default function TransferTicketScreen() {
 
         <View style={styles.searchSection}>
           <Text style={styles.sectionTitle}>Find Recipient</Text>
-          <Text style={styles.sectionSubtitle}>Enter the email address of the person you want to transfer this ticket to</Text>
+          <Text style={styles.sectionSubtitle}>Enter the email address of the registered user you want to transfer this ticket to</Text>
 
           <View style={styles.searchContainer}>
             <TextInput
@@ -258,13 +274,15 @@ export default function TransferTicketScreen() {
         </View>
 
         <View style={styles.warningSection}>
-          <Text style={styles.warningTitle}>Important</Text>
+          <Text style={styles.warningTitle}>⚠️ Before You Transfer</Text>
           <Text style={styles.warningText}>
-            • Transfers are immediate and cannot be undone{'\n'}
-            • The recipient must have an account{'\n'}
-            • You will no longer have access to this ticket{'\n'}
-            • The recipient can transfer the ticket to others{'\n'}
-            • Once validated at the event, tickets cannot be transferred
+            • Verify the recipient's email address is correct{'\n'}
+            • The recipient MUST have a registered account{'\n'}
+            • Transfers are IMMEDIATE and PERMANENT{'\n'}
+            • You will IMMEDIATELY lose access to this ticket{'\n'}
+            • The new owner can transfer it to anyone else{'\n'}
+            • Once validated at the event, tickets cannot be transferred{'\n'}
+            • There are NO REFUNDS for incorrect transfers
           </Text>
         </View>
       </ScrollView>
