@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingVi
 import { ScrollView } from 'react-native';
 import { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Mail, Lock, Eye, EyeOff } from 'lucide-react-native';
+import { Mail, Lock, Eye, EyeOff, ArrowLeft } from 'lucide-react-native';
 import { router } from 'expo-router';
 import { api } from '@/lib/supabase';
 
@@ -51,6 +51,16 @@ export default function LoginScreen() {
         style={styles.keyboardView}
       >
         <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+          <View style={styles.navigationBar}>
+            <TouchableOpacity
+              style={styles.backButton}
+              onPress={() => router.back()}
+            >
+              <ArrowLeft size={24} color="#FFFFFF" />
+              <Text style={styles.backButtonText}>Back</Text>
+            </TouchableOpacity>
+          </View>
+
           <View style={styles.header}>
             <Text style={styles.logoText}>FINGERBOARD CON</Text>
             <Text style={styles.eventYear}>Boston 2026</Text>
@@ -156,6 +166,23 @@ const styles = StyleSheet.create({
   },
   keyboardView: {
     flex: 1,
+  },
+  navigationBar: {
+    backgroundColor: '#4CAF50',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#66BB6A',
+  },
+  backButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  backButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '600',
   },
   header: {
     backgroundColor: '#76B84B',
