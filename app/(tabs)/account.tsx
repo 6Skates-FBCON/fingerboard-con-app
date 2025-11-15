@@ -75,7 +75,10 @@ export default function AccountScreen() {
   };
 
   const handleSignOut = async () => {
-    if (!supabase) return;
+    if (!supabase) {
+      console.error('Supabase not available');
+      return;
+    }
 
     Alert.alert(
       'Sign Out',
@@ -90,13 +93,17 @@ export default function AccountScreen() {
           style: 'destructive',
           onPress: async () => {
             try {
+              console.log('Starting sign out...');
               const { error } = await supabase.auth.signOut();
+
               if (error) {
                 console.error('Sign out error:', error);
                 Alert.alert('Error', 'Failed to sign out. Please try again.');
                 return;
               }
-              router.replace('/');
+
+              console.log('Sign out successful, redirecting to home...');
+              router.replace('/(tabs)');
             } catch (error) {
               console.error('Error signing out:', error);
               Alert.alert('Error', 'Failed to sign out. Please try again.');
