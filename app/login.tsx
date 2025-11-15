@@ -45,99 +45,98 @@ export default function LoginScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
-      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-      <KeyboardAvoidingView 
+    <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
+      <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.keyboardView}
       >
-        <View style={styles.header}>
-          <Text style={styles.logoText}>FINGERBOARD CON</Text>
-          <Text style={styles.eventYear}>Boston 2026</Text>
-          <View style={styles.eventCard}>
-            <Text style={styles.eventDate}>April 24-26, 2026 • Tewksbury, MA</Text>
+        <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+          <View style={styles.header}>
+            <Text style={styles.logoText}>FINGERBOARD CON</Text>
+            <Text style={styles.eventYear}>Boston 2026</Text>
+            <View style={styles.eventCard}>
+              <Text style={styles.eventDate}>April 24-26, 2026 • Tewksbury, MA</Text>
+            </View>
           </View>
-        </View>
 
-        <View style={styles.form}>
-          <Text style={styles.formTitle}>
-            Welcome Back
-          </Text>
+          <View style={styles.form}>
+            <Text style={styles.formTitle}>
+              Welcome Back
+            </Text>
 
-          {error ? (
-            <View style={styles.errorContainer}>
-              <Text style={styles.errorText}>{error}</Text>
+            {error ? (
+              <View style={styles.errorContainer}>
+                <Text style={styles.errorText}>{error}</Text>
+              </View>
+            ) : null}
+
+            <View style={styles.inputContainer}>
+              <View style={styles.inputWrapper}>
+                <Mail size={20} color="#FFFFFF" style={styles.inputIcon} />
+                <TextInput
+                  style={styles.textInput}
+                  placeholder="Email address"
+                  placeholderTextColor="#FFFFFF"
+                  value={email}
+                  onChangeText={setEmail}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                />
+              </View>
+
+              <View style={styles.inputWrapper}>
+                <Lock size={20} color="#FFFFFF" style={styles.inputIcon} />
+                <TextInput
+                  style={[styles.textInput, styles.passwordInput]}
+                  placeholder="Password"
+                  placeholderTextColor="#FFFFFF"
+                  value={password}
+                  onChangeText={setPassword}
+                  secureTextEntry={!showPassword}
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                />
+                <TouchableOpacity
+                  style={styles.eyeIcon}
+                  onPress={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? (
+                    <EyeOff size={20} color="#FFFFFF" />
+                  ) : (
+                    <Eye size={20} color="#FFFFFF" />
+                  )}
+                </TouchableOpacity>
+              </View>
             </View>
-          ) : null}
 
-          <View style={styles.inputContainer}>
-            <View style={styles.inputWrapper}>
-              <Mail size={20} color="#FFFFFF" style={styles.inputIcon} />
-              <TextInput
-                style={styles.textInput}
-                placeholder="Email address"
-                placeholderTextColor="#FFFFFF"
-                value={email}
-                onChangeText={setEmail}
-                keyboardType="email-address"
-                autoCapitalize="none"
-                autoCorrect={false}
-              />
-            </View>
+            <TouchableOpacity
+              style={[styles.authButton, isLoading && styles.authButtonLoading]}
+              onPress={handleAuth}
+              disabled={isLoading}
+            >
+              <Text style={styles.authButtonText}>
+                {isLoading ? 'Please wait...' : 'Sign In'}
+              </Text>
+            </TouchableOpacity>
 
-            <View style={styles.inputWrapper}>
-              <Lock size={20} color="#FFFFFF" style={styles.inputIcon} />
-              <TextInput
-                style={[styles.textInput, styles.passwordInput]}
-                placeholder="Password"
-                placeholderTextColor="#FFFFFF"
-                value={password}
-                onChangeText={setPassword}
-                secureTextEntry={!showPassword}
-                autoCapitalize="none"
-                autoCorrect={false}
-              />
-              <TouchableOpacity
-                style={styles.eyeIcon}
-                onPress={() => setShowPassword(!showPassword)}
-              >
-                {showPassword ? (
-                  <EyeOff size={20} color="#FFFFFF" />
-                ) : (
-                  <Eye size={20} color="#FFFFFF" />
-                )}
+            <TouchableOpacity style={styles.forgotButton}>
+              <Text style={styles.forgotText}>Forgot your password?</Text>
+            </TouchableOpacity>
+
+            <View style={styles.switchContainer}>
+              <Text style={styles.switchText}>
+                Don't have an account?
+              </Text>
+              <TouchableOpacity onPress={handleGoToRegister}>
+                <Text style={styles.switchButton}>
+                  Sign Up
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
-
-          <TouchableOpacity
-            style={[styles.authButton, isLoading && styles.authButtonLoading]}
-            onPress={handleAuth}
-            disabled={isLoading}
-          >
-            <Text style={styles.authButtonText}>
-              {isLoading ? 'Please wait...' : 'Sign In'}
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.forgotButton}>
-            <Text style={styles.forgotText}>Forgot your password?</Text>
-          </TouchableOpacity>
-
-          <View style={styles.switchContainer}>
-            <Text style={styles.switchText}>
-              Don't have an account?
-            </Text>
-            <TouchableOpacity onPress={handleGoToRegister}>
-              <Text style={styles.switchButton}>
-                Sign Up
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-
+        </ScrollView>
       </KeyboardAvoidingView>
-      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -150,6 +149,10 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     flex: 1,
+  },
+  scrollContent: {
+    flexGrow: 1,
+    paddingBottom: 100,
   },
   keyboardView: {
     flex: 1,
