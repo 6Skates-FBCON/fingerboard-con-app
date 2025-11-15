@@ -76,6 +76,8 @@ export default function TicketsScreen() {
         throw new Error('Supabase configuration missing');
       }
 
+      console.log('Starting checkout...');
+
       const response = await fetch(`${supabaseUrl}/functions/v1/stripe-checkout`, {
         method: 'POST',
         headers: {
@@ -92,10 +94,23 @@ export default function TicketsScreen() {
       });
 
       const responseText = await response.text();
+      console.log('Response status:', response.status);
+      console.log('Response text:', responseText);
 
       if (!response.ok) {
         console.error('Error response:', responseText);
-        Alert.alert('Error', 'Failed to start checkout. Please try again.');
+
+        let errorMessage = 'Failed to start checkout. Please try again.';
+        try {
+          const errorData = JSON.parse(responseText);
+          if (errorData.error) {
+            errorMessage = errorData.error;
+          }
+        } catch (e) {
+          errorMessage = responseText || errorMessage;
+        }
+
+        Alert.alert('Checkout Error', errorMessage);
         return;
       }
 
@@ -107,13 +122,14 @@ export default function TicketsScreen() {
       }
 
       if (data.url) {
+        console.log('Opening checkout URL:', data.url);
         await Linking.openURL(data.url);
       } else {
         Alert.alert('Error', 'No checkout URL received');
       }
     } catch (error: any) {
       console.error('Purchase error:', error);
-      Alert.alert('Error', 'An error occurred during checkout');
+      Alert.alert('Error', error.message || 'An error occurred during checkout');
     } finally {
       setLoading(false);
     }
