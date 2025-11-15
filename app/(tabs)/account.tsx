@@ -108,22 +108,10 @@ export default function AccountScreen() {
   };
 
   const handleTransfer = (ticket: TicketData) => {
-    Alert.alert(
-      'Transfer Ticket',
-      `Transfer "${ticket.ticket_type}" (Ticket ${ticket.ticket_number})?`,
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Transfer',
-          onPress: () => {
-            router.push({
-              pathname: '/transfer-ticket',
-              params: { ticketId: ticket.id },
-            });
-          },
-        },
-      ]
-    );
+    router.push({
+      pathname: '/transfer-ticket',
+      params: { ticketId: ticket.id.toString() },
+    });
   };
 
   const getStatusColor = (status: string) => {
