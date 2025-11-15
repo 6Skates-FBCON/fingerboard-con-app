@@ -296,13 +296,6 @@ export default function AccountScreen() {
                         )}
                       </View>
 
-                      {ticket.was_transferred && (
-                        <View style={styles.transferBadge}>
-                          <Text style={styles.transferBadgeText}>
-                            {ticket.transfer_count > 0 ? `Transferred ${ticket.transfer_count}x` : 'Received'}
-                          </Text>
-                        </View>
-                      )}
                     </LinearGradient>
                   );
                 })}
@@ -604,20 +597,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '700',
     color: '#FFFFFF',
-  },
-  transferBadge: {
-    position: 'absolute',
-    top: 12,
-    right: 12,
-    backgroundColor: '#FFD700',
-    paddingVertical: 4,
-    paddingHorizontal: 10,
-    borderRadius: 12,
-  },
-  transferBadgeText: {
-    fontSize: 10,
-    fontWeight: '800',
-    color: '#2E7D32',
   },
   menuItem: {
     flexDirection: 'row',
