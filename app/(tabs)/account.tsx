@@ -102,8 +102,8 @@ export default function AccountScreen() {
                 return;
               }
 
-              console.log('Sign out successful, redirecting to home...');
-              router.replace('/(tabs)');
+              console.log('Sign out successful, redirecting to login...');
+              router.replace('/login');
             } catch (error) {
               console.error('Error signing out:', error);
               Alert.alert('Error', 'Failed to sign out. Please try again.');
