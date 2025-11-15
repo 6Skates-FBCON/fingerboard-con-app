@@ -77,18 +77,34 @@ export default function AccountScreen() {
   const handleSignOut = async () => {
     if (!supabase) return;
 
-    try {
-      console.log('Signing out...');
-      const { error } = await supabase.auth.signOut();
-      if (error) {
-        console.error('Sign out error:', error);
-        return;
-      }
-      console.log('Sign out successful, navigating to login...');
-      router.replace('/login');
-    } catch (error) {
-      console.error('Error signing out:', error);
-    }
+    Alert.alert(
+      'Sign Out',
+      'Are you sure you want to sign out?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Sign Out',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              const { error } = await supabase.auth.signOut();
+              if (error) {
+                console.error('Sign out error:', error);
+                Alert.alert('Error', 'Failed to sign out. Please try again.');
+                return;
+              }
+              router.replace('/');
+            } catch (error) {
+              console.error('Error signing out:', error);
+              Alert.alert('Error', 'Failed to sign out. Please try again.');
+            }
+          },
+        },
+      ]
+    );
   };
 
   const handleTransfer = (ticket: TicketData) => {
