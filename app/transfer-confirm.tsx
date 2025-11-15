@@ -21,55 +21,80 @@ export default function TransferConfirmScreen() {
   const [transferring, setTransferring] = useState(false);
 
   const handleConfirmTransfer = async () => {
+    console.log('Transfer button clicked');
+    console.log('Agreed to terms:', agreedToTerms);
+    console.log('Params:', { ticketId, recipientId, recipientEmail, ticketType, ticketNumber });
+    console.log('Session:', session);
+
     if (!agreedToTerms) {
       Alert.alert('Terms Required', 'Please check the box to confirm you understand the transfer terms.');
       return;
     }
 
     if (!ticketId || !recipientId || !session) {
-      Alert.alert('Error', 'Missing required information');
+      console.error('Missing required data:', { ticketId, recipientId, hasSession: !!session });
+      Alert.alert('Error', `Missing required information. Please try again.\n\nDebug: ticketId=${!!ticketId}, recipientId=${!!recipientId}, session=${!!session}`);
       return;
     }
 
     setTransferring(true);
 
     try {
-      const { error: transferError } = await supabase.from('ticket_transfers').insert({
+      console.log('Starting transfer...');
+
+      const transferData = {
         ticket_id: parseInt(ticketId),
         from_user_id: session.user.id,
         to_user_id: recipientId,
         transfer_status: 'completed',
         transferred_at: new Date().toISOString(),
-      });
+      };
+
+      console.log('Transfer data:', transferData);
+
+      const { data: transferResult, error: transferError } = await supabase
+        .from('ticket_transfers')
+        .insert(transferData)
+        .select();
+
+      console.log('Transfer result:', transferResult);
+      console.log('Transfer error:', transferError);
 
       if (transferError) {
         console.error('Error creating transfer:', transferError);
-        Alert.alert('Transfer Failed', 'Failed to transfer ticket. Please try again.');
+        Alert.alert('Transfer Failed', `Failed to transfer ticket: ${transferError.message}`);
         setTransferring(false);
         return;
       }
 
-      const { error: updateError } = await supabase
+      console.log('Updating ticket owner...');
+
+      const { data: updateResult, error: updateError } = await supabase
         .from('tickets')
         .update({
           owner_id: recipientId,
           status: 'active',
           updated_at: new Date().toISOString(),
         })
-        .eq('id', ticketId);
+        .eq('id', ticketId)
+        .select();
+
+      console.log('Update result:', updateResult);
+      console.log('Update error:', updateError);
 
       if (updateError) {
         console.error('Error updating ticket:', updateError);
-        Alert.alert('Transfer Failed', 'Failed to update ticket ownership. Please contact support.');
+        Alert.alert('Transfer Failed', `Failed to update ticket ownership: ${updateError.message}`);
         setTransferring(false);
         return;
       }
 
+      console.log('Transfer completed successfully!');
       setTransferring(false);
       router.replace('/account');
     } catch (error) {
       console.error('Error transferring ticket:', error);
-      Alert.alert('Error', 'An unexpected error occurred during transfer. Please try again.');
+      Alert.alert('Error', `An unexpected error occurred: ${error}`);
       setTransferring(false);
     }
   };
