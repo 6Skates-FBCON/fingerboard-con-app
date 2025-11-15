@@ -41,50 +41,26 @@ export default function TransferConfirmScreen() {
 
     try {
       console.log('Starting transfer...');
+      console.log('Calling transfer_ticket function with:', { ticketId: parseInt(ticketId), recipientId });
 
-      const transferData = {
-        ticket_id: parseInt(ticketId),
-        from_user_id: session.user.id,
-        to_user_id: recipientId,
-        transfer_status: 'completed',
-        transferred_at: new Date().toISOString(),
-      };
+      const { data: result, error } = await supabase.rpc('transfer_ticket', {
+        p_ticket_id: parseInt(ticketId),
+        p_to_user_id: recipientId,
+      });
 
-      console.log('Transfer data:', transferData);
+      console.log('Transfer result:', result);
+      console.log('Transfer error:', error);
 
-      const { data: transferResult, error: transferError } = await supabase
-        .from('ticket_transfers')
-        .insert(transferData)
-        .select();
-
-      console.log('Transfer result:', transferResult);
-      console.log('Transfer error:', transferError);
-
-      if (transferError) {
-        console.error('Error creating transfer:', transferError);
-        Alert.alert('Transfer Failed', `Failed to transfer ticket: ${transferError.message}`);
+      if (error) {
+        console.error('RPC error:', error);
+        Alert.alert('Transfer Failed', `Failed to transfer ticket: ${error.message}`);
         setTransferring(false);
         return;
       }
 
-      console.log('Updating ticket owner...');
-
-      const { data: updateResult, error: updateError } = await supabase
-        .from('tickets')
-        .update({
-          owner_id: recipientId,
-          status: 'active',
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', ticketId)
-        .select();
-
-      console.log('Update result:', updateResult);
-      console.log('Update error:', updateError);
-
-      if (updateError) {
-        console.error('Error updating ticket:', updateError);
-        Alert.alert('Transfer Failed', `Failed to update ticket ownership: ${updateError.message}`);
+      if (result && !result.success) {
+        console.error('Transfer function returned error:', result.error);
+        Alert.alert('Transfer Failed', result.error);
         setTransferring(false);
         return;
       }
