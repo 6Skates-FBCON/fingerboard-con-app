@@ -36,30 +36,51 @@ export default function TransferTicketScreen() {
   }, [ticketId]);
 
   const fetchTicket = async () => {
+    console.log('fetchTicket called with ticketId:', ticketId);
+    console.log('session exists:', !!session);
+    console.log('supabase exists:', !!supabase);
+
     if (!ticketId || !session || !supabase) {
+      console.log('Missing requirements - ticketId:', ticketId, 'session:', !!session, 'supabase:', !!supabase);
       setLoading(false);
       return;
     }
 
     try {
+      console.log('Querying tickets with id:', ticketId, 'owner_id:', session.user.id);
+
       const { data, error } = await supabase
         .from('tickets')
-        .select('id, ticket_type, ticket_number, background_color, event_name, event_date')
+        .select('id, ticket_type, ticket_number, background_color, event_name, event_date, status, owner_id')
         .eq('id', ticketId)
-        .eq('owner_id', session.user.id)
-        .eq('status', 'active')
         .maybeSingle();
+
+      console.log('Query result - data:', data, 'error:', error);
 
       if (error) {
         console.error('Error fetching ticket:', error);
-        Alert.alert('Error', 'Failed to load ticket');
+        Alert.alert('Error', `Failed to load ticket: ${error.message}`);
         setLoading(false);
         router.back();
         return;
       }
 
       if (!data) {
-        Alert.alert('Error', 'Ticket not found or you do not have permission to transfer it');
+        Alert.alert('Error', 'Ticket not found');
+        setLoading(false);
+        router.back();
+        return;
+      }
+
+      if (data.owner_id !== session.user.id) {
+        Alert.alert('Error', 'You do not own this ticket');
+        setLoading(false);
+        router.back();
+        return;
+      }
+
+      if (data.status !== 'active') {
+        Alert.alert('Error', `This ticket cannot be transferred (status: ${data.status})`);
         setLoading(false);
         router.back();
         return;
