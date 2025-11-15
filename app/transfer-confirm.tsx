@@ -38,12 +38,14 @@ export default function TransferConfirmScreen() {
         ticket_id: parseInt(ticketId),
         from_user_id: session.user.id,
         to_user_id: recipientId,
+        transfer_status: 'completed',
         transferred_at: new Date().toISOString(),
       });
 
       if (transferError) {
         console.error('Error creating transfer:', transferError);
         Alert.alert('Transfer Failed', 'Failed to transfer ticket. Please try again.');
+        setTransferring(false);
         return;
       }
 
@@ -59,23 +61,15 @@ export default function TransferConfirmScreen() {
       if (updateError) {
         console.error('Error updating ticket:', updateError);
         Alert.alert('Transfer Failed', 'Failed to update ticket ownership. Please contact support.');
+        setTransferring(false);
         return;
       }
 
-      Alert.alert(
-        'Transfer Successful',
-        `Your ticket has been transferred to ${recipientEmail}. They now have full access to the ticket.`,
-        [
-          {
-            text: 'OK',
-            onPress: () => router.replace('/account'),
-          },
-        ]
-      );
+      setTransferring(false);
+      router.replace('/account');
     } catch (error) {
       console.error('Error transferring ticket:', error);
       Alert.alert('Error', 'An unexpected error occurred during transfer. Please try again.');
-    } finally {
       setTransferring(false);
     }
   };
