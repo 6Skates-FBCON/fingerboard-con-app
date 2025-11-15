@@ -36,7 +36,10 @@ export default function TransferTicketScreen() {
   }, [ticketId]);
 
   const fetchTicket = async () => {
-    if (!ticketId || !session || !supabase) return;
+    if (!ticketId || !session || !supabase) {
+      setLoading(false);
+      return;
+    }
 
     try {
       const { data, error } = await supabase
@@ -45,11 +48,19 @@ export default function TransferTicketScreen() {
         .eq('id', ticketId)
         .eq('owner_id', session.user.id)
         .eq('status', 'active')
-        .single();
+        .maybeSingle();
 
       if (error) {
         console.error('Error fetching ticket:', error);
         Alert.alert('Error', 'Failed to load ticket');
+        setLoading(false);
+        router.back();
+        return;
+      }
+
+      if (!data) {
+        Alert.alert('Error', 'Ticket not found or you do not have permission to transfer it');
+        setLoading(false);
         router.back();
         return;
       }
