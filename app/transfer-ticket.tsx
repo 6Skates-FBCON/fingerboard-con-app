@@ -32,8 +32,10 @@ export default function TransferTicketScreen() {
   const [transferring, setTransferring] = useState(false);
 
   useEffect(() => {
-    fetchTicket();
-  }, [ticketId]);
+    if (session) {
+      fetchTicket();
+    }
+  }, [ticketId, session]);
 
   const fetchTicket = async () => {
     console.log('fetchTicket called with ticketId:', ticketId);
