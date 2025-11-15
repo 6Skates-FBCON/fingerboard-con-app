@@ -32,7 +32,7 @@ export default function TicketsScreen() {
         'Access to all public areas',
         'Vendor hall access',
       ],
-      stripePriceId: 'price_1QUQnFP5f7zuXwEQNMXPK3Ge',
+      stripePriceId: 'price_1SNP5KLz01V9GjOutNzMowcF',
     },
     {
       id: 'deck combo',
