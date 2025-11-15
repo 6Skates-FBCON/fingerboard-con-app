@@ -74,12 +74,7 @@ export default function AccountScreen() {
     fetchTickets();
   };
 
-  const handleSignOut = async () => {
-    if (!supabase) {
-      console.error('Supabase not available');
-      return;
-    }
-
+  const handleSignOut = () => {
     Alert.alert(
       'Sign Out',
       'Are you sure you want to sign out?',
@@ -93,20 +88,21 @@ export default function AccountScreen() {
           style: 'destructive',
           onPress: async () => {
             try {
-              console.log('Starting sign out...');
-              const { error } = await supabase.auth.signOut();
-
-              if (error) {
-                console.error('Sign out error:', error);
-                Alert.alert('Error', 'Failed to sign out. Please try again.');
+              if (!supabase) {
+                Alert.alert('Error', 'Supabase not available');
                 return;
               }
 
-              console.log('Sign out successful, redirecting to login...');
+              const { error } = await supabase.auth.signOut();
+
+              if (error) {
+                Alert.alert('Error', 'Failed to sign out: ' + error.message);
+                return;
+              }
+
               router.replace('/login');
             } catch (error) {
-              console.error('Error signing out:', error);
-              Alert.alert('Error', 'Failed to sign out. Please try again.');
+              Alert.alert('Error', 'Failed to sign out: ' + (error as Error).message);
             }
           },
         },
