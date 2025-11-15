@@ -32,11 +32,7 @@ export default function LoginScreen() {
       const result = await api.signIn(email, password);
       console.log('Sign in successful:', result);
 
-      // Auth state listener in _layout.tsx will handle navigation
-      // Reset loading after a brief moment to prevent UI stuck state
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 1000);
+      router.replace('/(tabs)');
     } catch (err: any) {
       console.error('Sign in error:', err);
       setError(err.message || 'An error occurred during authentication');
