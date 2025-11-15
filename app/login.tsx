@@ -54,10 +54,10 @@ export default function LoginScreen() {
           <View style={styles.navigationBar}>
             <TouchableOpacity
               style={styles.backButton}
-              onPress={() => router.back()}
+              onPress={() => router.push('/')}
             >
               <ArrowLeft size={24} color="#FFFFFF" />
-              <Text style={styles.backButtonText}>Back</Text>
+              <Text style={styles.backButtonText}>Home</Text>
             </TouchableOpacity>
           </View>
 
