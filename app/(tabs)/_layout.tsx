@@ -103,12 +103,6 @@ export default function TabLayout() {
           href: isAdmin ? '/staff' : null,
         }}
       />
-      <Tabs.Screen
-        name="my-tickets"
-        options={{
-          href: null,
-        }}
-      />
     </Tabs>
   );
 }
