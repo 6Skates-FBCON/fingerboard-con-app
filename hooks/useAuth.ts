@@ -56,7 +56,7 @@ export function useAuth(): AuthState {
         console.warn('Auth loading timeout - forcing completion');
         setLoading(false);
       }
-    }, 1500);
+    }, 5000);
 
     const initAuth = async () => {
       if (!supabase) {
@@ -68,15 +68,17 @@ export function useAuth(): AuthState {
       }
 
       try {
-        const sessionPromise = supabase.auth.getSession();
-        const timeoutPromise = new Promise((_, reject) =>
-          setTimeout(() => reject(new Error('Auth timeout')), 1000)
-        );
+        const { data: { session }, error } = await supabase.auth.getSession();
 
-        const { data: { session } } = await Promise.race([
-          sessionPromise,
-          timeoutPromise
-        ]) as any;
+        if (error) {
+          console.error('Error getting session:', error);
+          if (mounted) {
+            setSession(null);
+            setUser(null);
+            setRole(null);
+          }
+          return;
+        }
 
         if (!mounted) return;
 
