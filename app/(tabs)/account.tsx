@@ -74,40 +74,31 @@ export default function AccountScreen() {
     fetchTickets();
   };
 
-  const handleSignOut = () => {
-    Alert.alert(
-      'Sign Out',
-      'Are you sure you want to sign out?',
-      [
-        {
-          text: 'Cancel',
-          style: 'cancel',
-        },
-        {
-          text: 'Sign Out',
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              if (!supabase) {
-                Alert.alert('Error', 'Supabase not available');
-                return;
-              }
+  const handleSignOut = async () => {
+    console.log('===== SIGN OUT BUTTON CLICKED =====');
 
-              const { error } = await supabase.auth.signOut();
+    try {
+      if (!supabase) {
+        console.log('Supabase not available');
+        Alert.alert('Error', 'Supabase not available');
+        return;
+      }
 
-              if (error) {
-                Alert.alert('Error', 'Failed to sign out: ' + error.message);
-                return;
-              }
+      console.log('Calling supabase.auth.signOut()...');
+      const { error } = await supabase.auth.signOut();
 
-              router.replace('/login');
-            } catch (error) {
-              Alert.alert('Error', 'Failed to sign out: ' + (error as Error).message);
-            }
-          },
-        },
-      ]
-    );
+      if (error) {
+        console.log('Sign out error:', error);
+        Alert.alert('Error', 'Failed to sign out: ' + error.message);
+        return;
+      }
+
+      console.log('Sign out successful, redirecting to /login');
+      router.replace('/login');
+    } catch (error) {
+      console.log('Exception during sign out:', error);
+      Alert.alert('Error', 'Failed to sign out: ' + (error as Error).message);
+    }
   };
 
   const handleTransfer = (ticket: TicketData) => {
@@ -217,6 +208,7 @@ export default function AccountScreen() {
           <TouchableOpacity
             style={styles.signOutButton}
             onPress={handleSignOut}
+            activeOpacity={0.7}
           >
             <LogOut size={18} color="#FFFFFF" />
             <Text style={styles.signOutButtonText}>Sign Out</Text>
