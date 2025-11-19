@@ -2,7 +2,7 @@
   "expo": {
     "name": "Fingerboard Con",
     "slug": "fingerboard-con",
-    "version": "1.0.3",
+    "version": "2.0.0",
     "orientation": "portrait",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
@@ -10,7 +10,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.fingerboardcon.app",
-      "buildNumber": "6",
+      "buildNumber": "7",
       "infoPlist": {
         "NSCameraUsageDescription": "We use your camera so you can record fingerboard clips for the event.",
         "NSMicrophoneUsageDescription": "We use your microphone to capture audio while recording clips.",
@@ -20,7 +20,7 @@
     },
     "android": {
       "package": "com.fingerboardcon.app",
-      "versionCode": 5,
+      "versionCode": 6,
       "permissions": [
         "android.permission.CAMERA",
         "android.permission.RECORD_AUDIO",
