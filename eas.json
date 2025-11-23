@@ -8,6 +8,12 @@
       "ios": {
         "distribution": "store",
         "autoIncrement": true
+      },
+      "env": {
+        "EXPO_PUBLIC_SUPABASE_URL": "https://wwedufdnqkwreostvwqy.supabase.co",
+        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind3ZWR1ZmRucWt3cmVvc3R2d3F5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE2OTI3ODEsImV4cCI6MjA3NzI2ODc4MX0.hlpSG4R2Bc3-3qRZvrS9fmds4nmbeUsQXTnOSbYAuos",
+        "EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY": "pk_live_51SNOXDLz01V9GjOu3Zkf02OL6GlLlqvoxR1CX7szg5ATC3xZ7SxPJAMRwvRHP214In8hHC9ZGM77p2ol4F12DSYE002N0RiIyK",
+        "EXPO_PUBLIC_PRICE_ID": "price_1SNP5KLz01V9GjOutNzMowcF"
       }
     }
   },
