@@ -168,10 +168,7 @@ export default function LocationScreen() {
           <View style={styles.noteCard}>
             <Text style={styles.noteTitle}>🚫 Prohibited Items</Text>
             <Text style={styles.noteText}>
-              • Professional video equipment{'\n'}
               • Outside food and beverages{'\n'}
-              • Large bags or backpacks{'\n'}
-              • Any hazardous materials
             </Text>
           </View>
         </View>
