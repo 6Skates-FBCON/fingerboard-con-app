@@ -101,24 +101,26 @@ export default function EventsScreen() {
         time: '10:00 AM - 4:00 PM',
         location: 'Main Ballroom',
         type: 'social',
-        description: 'Open Session'
-      },
-      {
-        id: '10',
-        title: 'FBCon Vending',
-        time: '10:00 AM - 4:00 PM',
-        location: 'Main Ballroom',
-        type: 'retail',
-        participants: 16,
-        description: 'Getting cool stuff!'
-      },
-      {
-        id: '11',
-        title: 'Panel Discussions',
-        time: '12:00 PM - 3:00 PM',
-        location: 'Main Stage',
-        type: 'panels',
-        description: 'Talking about the FB Scene'
+        description: 'Open Session',
+        subEvents: [
+          {
+            id: '10',
+            title: 'FBCon Vending',
+            time: '10:00 AM - 4:00 PM',
+            location: 'Main Ballroom',
+            type: 'retail',
+            participants: 16,
+            description: 'Getting cool stuff!'
+          },
+          {
+            id: '11',
+            title: 'Panel Discussions',
+            time: '12:00 PM - 3:00 PM',
+            location: 'Main Stage',
+            type: 'panels',
+            description: 'Talking about the FB Scene'
+          },
+        ]
       },
     ],
   };
