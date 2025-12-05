@@ -68,7 +68,7 @@ export default function EventsScreen() {
       {
         id: '6',
         title: 'Official After Vous',
-        time: '6:00 PM - 12:00 AM',
+        time: '6:00 PM - 11:30 AM',
         location: 'Main Ballroom & Hotel Lobby',
         type: 'social',
         participants: 20,
