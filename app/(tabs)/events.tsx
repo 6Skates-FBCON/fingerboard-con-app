@@ -37,20 +37,20 @@ export default function EventsScreen() {
         description: 'Kick off the weekend fingerboarding and sponsored events!'
       },
       {
-        id: '3',
-        title: 'Blackriver Ramps Sponsored Event',
-        time: '8:30 PM - 11:30 PM',
-        location: 'Main Ballroom',
-        type: 'competition',
-        description: 'Your chance to beat a Blackriver pro and win sick prizes.'
-      },
-      {
         id: '4',
         title: 'Sponsored Event',
         time: '6:00 PM - 8:00 PM',
         location: 'Main Ballroom',
         type: 'social',
         description: 'Details to follow'
+      },
+      {
+        id: '3',
+        title: 'Blackriver Ramps Sponsored Event',
+        time: '8:30 PM - 11:30 PM',
+        location: 'Main Ballroom',
+        type: 'competition',
+        description: 'Your chance to beat a Blackriver pro and win sick prizes.'
       },
     ],
     saturday: [
