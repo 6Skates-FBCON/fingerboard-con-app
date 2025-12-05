@@ -86,7 +86,7 @@ export default function EventsScreen() {
           {
             id: '8',
             title: 'Sponsored Event',
-            time: '9:30 PM - 11:00 PM',
+            time: '9:30 PM - 11:30 PM',
             location: 'Main Ballroom',
             type: 'social',
             description: 'Details to follow'
