@@ -1,8 +1,7 @@
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Linking } from 'react-native';
-import { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Store, MapPin, Globe, Star, Filter } from 'lucide-react-native';
+import { Store, MapPin, Globe, Star } from 'lucide-react-native';
 
 interface Vendor {
   id: string;
@@ -16,8 +15,6 @@ interface Vendor {
 }
 
 export default function VendorsScreen() {
-  const [selectedCategory, setSelectedCategory] = useState('all');
-
   const vendors: Vendor[] = [
     {
       id: '1',
@@ -111,17 +108,6 @@ export default function VendorsScreen() {
     },
   ];
 
-  const categories = [
-    { id: 'all', label: 'All Vendors' },
-    { id: 'decks', label: 'Decks' },
-    { id: 'accessories', label: 'Accessories' },
-    { id: 'ramps', label: 'Ramps & Obstacles' },
-  ];
-
-  const filteredVendors = selectedCategory === 'all' 
-    ? vendors 
-    : vendors.filter(vendor => vendor.category === selectedCategory);
-
   const featuredVendors = vendors.filter(vendor => vendor.featured);
 
   const openWebsite = async (url?: string) => {
@@ -151,57 +137,31 @@ export default function VendorsScreen() {
         <Text style={styles.subtitle}>{vendors.length} vendors • Hall A & B</Text>
       </LinearGradient>
 
-      <View style={styles.categoryFilter}>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {categories.map((category) => (
-            <TouchableOpacity
-              key={category.id}
-              style={[
-                styles.categoryButton,
-                selectedCategory === category.id && styles.categoryButtonActive
-              ]}
-              onPress={() => setSelectedCategory(category.id)}
-            >
-              <Text style={[
-                styles.categoryText,
-                selectedCategory === category.id && styles.categoryTextActive
-              ]}>
-                {category.label}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
-      </View>
-
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-        {selectedCategory === 'all' && (
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>⭐ Featured Vendors</Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              {featuredVendors.map((vendor) => (
-                <View key={vendor.id} style={styles.featuredCard}>
-                  <View style={styles.featuredHeader}>
-                    <Text style={styles.featuredName}>{vendor.name}</Text>
-                    <Text style={styles.featuredBooth}>Booth {vendor.booth}</Text>
-                  </View>
-                  <Text style={styles.featuredDescription}>{vendor.description}</Text>
-                  {vendor.specialOffer && (
-                    <View style={styles.offerBadge}>
-                      <Text style={styles.offerText}>{vendor.specialOffer}</Text>
-                    </View>
-                  )}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>⭐ Featured Vendors</Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            {featuredVendors.map((vendor) => (
+              <View key={vendor.id} style={styles.featuredCard}>
+                <View style={styles.featuredHeader}>
+                  <Text style={styles.featuredName}>{vendor.name}</Text>
+                  <Text style={styles.featuredBooth}>Booth {vendor.booth}</Text>
                 </View>
-              ))}
-            </ScrollView>
-          </View>
-        )}
+                <Text style={styles.featuredDescription}>{vendor.description}</Text>
+                {vendor.specialOffer && (
+                  <View style={styles.offerBadge}>
+                    <Text style={styles.offerText}>{vendor.specialOffer}</Text>
+                  </View>
+                )}
+              </View>
+            ))}
+          </ScrollView>
+        </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>
-            {selectedCategory === 'all' ? 'All Vendors' : categories.find(c => c.id === selectedCategory)?.label}
-          </Text>
-          
-          {filteredVendors.map((vendor) => (
+          <Text style={styles.sectionTitle}>All Vendors</Text>
+
+          {vendors.map((vendor) => (
             <View key={vendor.id} style={styles.vendorCard}>
               <View style={styles.vendorHeader}>
                 <View style={styles.vendorIconContainer}>
@@ -293,34 +253,10 @@ const styles = StyleSheet.create({
     marginTop: 5,
     fontWeight: '600',
   },
-  categoryFilter: {
-    paddingHorizontal: 20,
-    paddingVertical: 15,
-  },
-  categoryButton: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
-    marginRight: 12,
-    backgroundColor: '#66BB6A',
-    borderWidth: 1,
-    borderColor: '#81C784',
-  },
-  categoryButtonActive: {
-    backgroundColor: '#FFD700',
-    borderColor: '#FFD700',
-  },
-  categoryText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#FFFFFF',
-  },
-  categoryTextActive: {
-    color: '#2E7D32',
-  },
   content: {
     flex: 1,
     paddingHorizontal: 20,
+    paddingTop: 20,
   },
   section: {
     marginBottom: 30,
