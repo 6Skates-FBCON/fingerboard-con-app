@@ -23,7 +23,7 @@ export default function EventsScreen() {
       {
         id: '1',
         title: 'Registration & Check-in',
-        time: '3:00 PM - 5:00 PM',
+        time: '4:00 PM - 6:00 PM',
         location: 'Ballroom Entrance',
         type: 'social',
         description: 'Get your wristbands.'
