@@ -13,6 +13,7 @@ interface Event {
   type: 'competition' | 'workshop' | 'social' | 'vendor' | 'retail' | 'panels';
   participants?: number;
   description: string;
+  subEvents?: Event[];
 }
 
 export default function EventsScreen() {
@@ -34,23 +35,25 @@ export default function EventsScreen() {
         time: '6:00 PM - 11:30 PM',
         location: 'Main Ballroom',
         type: 'social',
-        description: 'Kick off the weekend fingerboarding and sponsored events!'
-      },
-      {
-        id: '4',
-        title: 'Sponsored Event',
-        time: '6:00 PM - 8:00 PM',
-        location: 'Main Ballroom',
-        type: 'social',
-        description: 'Details to follow'
-      },
-      {
-        id: '3',
-        title: 'Blackriver Ramps Sponsored Event',
-        time: '8:30 PM - 11:30 PM',
-        location: 'Main Ballroom',
-        type: 'competition',
-        description: 'Your chance to beat a Blackriver pro and win sick prizes.'
+        description: 'Kick off the weekend fingerboarding and sponsored events!',
+        subEvents: [
+          {
+            id: '4',
+            title: 'Sponsored Event',
+            time: '6:00 PM - 8:00 PM',
+            location: 'Main Ballroom',
+            type: 'social',
+            description: 'Details to follow'
+          },
+          {
+            id: '3',
+            title: 'Blackriver Ramps Sponsored Event',
+            time: '8:30 PM - 11:30 PM',
+            location: 'Main Ballroom',
+            type: 'competition',
+            description: 'Your chance to beat a Blackriver pro and win sick prizes.'
+          },
+        ]
       },
     ],
     saturday: [
@@ -194,37 +197,75 @@ export default function EventsScreen() {
         {events[selectedDay]?.map((event) => {
           const IconComponent = getEventIcon(event.type);
           const eventColor = getEventColor(event.type);
-          
+
           return (
-            <View
-              key={event.id}
-              style={styles.eventCard}
-            >
-              <View style={styles.eventHeader}>
-                <View style={[styles.eventIcon, { backgroundColor: eventColor }]}>
-                  <IconComponent size={20} color="#000000" />
-                </View>
-                <View style={styles.eventInfo}>
-                  <Text style={styles.eventTitle}>{event.title}</Text>
-                  <View style={styles.eventMeta}>
-                    <Clock size={14} color="#888888" />
-                    <Text style={styles.eventTime}>{event.time}</Text>
+            <View key={event.id}>
+              <View style={styles.eventCard}>
+                <View style={styles.eventHeader}>
+                  <View style={[styles.eventIcon, { backgroundColor: eventColor }]}>
+                    <IconComponent size={20} color="#000000" />
                   </View>
-                  <View style={styles.eventMeta}>
-                    <MapPin size={14} color="#888888" />
-                    <Text style={styles.eventLocation}>{event.location}</Text>
-                  </View>
-                  {event.participants && (
+                  <View style={styles.eventInfo}>
+                    <Text style={styles.eventTitle}>{event.title}</Text>
                     <View style={styles.eventMeta}>
-                      <Users size={14} color="#888888" />
-                      <Text style={styles.eventParticipants}>
-                        {event.participants} participants
-                      </Text>
+                      <Clock size={14} color="#888888" />
+                      <Text style={styles.eventTime}>{event.time}</Text>
                     </View>
-                  )}
+                    <View style={styles.eventMeta}>
+                      <MapPin size={14} color="#888888" />
+                      <Text style={styles.eventLocation}>{event.location}</Text>
+                    </View>
+                    {event.participants && (
+                      <View style={styles.eventMeta}>
+                        <Users size={14} color="#888888" />
+                        <Text style={styles.eventParticipants}>
+                          {event.participants} participants
+                        </Text>
+                      </View>
+                    )}
+                  </View>
                 </View>
+                <Text style={styles.eventDescription}>{event.description}</Text>
               </View>
-              <Text style={styles.eventDescription}>{event.description}</Text>
+
+              {event.subEvents && event.subEvents.length > 0 && (
+                <View style={styles.subEventsContainer}>
+                  {event.subEvents.map((subEvent) => {
+                    const SubIconComponent = getEventIcon(subEvent.type);
+                    const subEventColor = getEventColor(subEvent.type);
+
+                    return (
+                      <View key={subEvent.id} style={styles.subEventCard}>
+                        <View style={styles.eventHeader}>
+                          <View style={[styles.eventIcon, { backgroundColor: subEventColor }]}>
+                            <SubIconComponent size={20} color="#000000" />
+                          </View>
+                          <View style={styles.eventInfo}>
+                            <Text style={styles.eventTitle}>{subEvent.title}</Text>
+                            <View style={styles.eventMeta}>
+                              <Clock size={14} color="#888888" />
+                              <Text style={styles.eventTime}>{subEvent.time}</Text>
+                            </View>
+                            <View style={styles.eventMeta}>
+                              <MapPin size={14} color="#888888" />
+                              <Text style={styles.eventLocation}>{subEvent.location}</Text>
+                            </View>
+                            {subEvent.participants && (
+                              <View style={styles.eventMeta}>
+                                <Users size={14} color="#888888" />
+                                <Text style={styles.eventParticipants}>
+                                  {subEvent.participants} participants
+                                </Text>
+                              </View>
+                            )}
+                          </View>
+                        </View>
+                        <Text style={styles.eventDescription}>{subEvent.description}</Text>
+                      </View>
+                    );
+                  })}
+                </View>
+              )}
             </View>
           );
         })}
@@ -369,5 +410,18 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#E8F5E8',
     lineHeight: 20,
+  },
+  subEventsContainer: {
+    marginLeft: 20,
+    marginTop: 8,
+    marginBottom: 8,
+  },
+  subEventCard: {
+    backgroundColor: '#388E3C',
+    borderRadius: 12,
+    padding: 14,
+    marginBottom: 12,
+    borderLeftWidth: 3,
+    borderLeftColor: '#FFD700',
   },
 });
