@@ -31,7 +31,7 @@ export default function EventsScreen() {
       {
         id: '2',
         title: 'Friday Night Pre Party',
-        time: '4:00 PM - 11:30 PM',
+        time: '5:00 PM - 11:30 PM',
         location: 'Main Ballroom',
         type: 'social',
         description: 'Kick off the weekend fingerboarding and sponsored events!'
