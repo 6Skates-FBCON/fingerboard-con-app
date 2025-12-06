@@ -193,6 +193,10 @@ export default function TicketsScreen() {
               ))}
             </View>
 
+            <View style={styles.specialOfferBanner}>
+              <Text style={styles.specialOfferText}>Special hotel room rate (limited qty)</Text>
+            </View>
+
             <TouchableOpacity
               style={[
                 styles.purchaseButton,
@@ -376,6 +380,19 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#E8F5E8',
     fontWeight: '600',
+  },
+  specialOfferBanner: {
+    backgroundColor: '#FFD700',
+    borderRadius: 8,
+    padding: 10,
+    marginBottom: 16,
+    alignItems: 'center',
+  },
+  specialOfferText: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: '#2E7D32',
+    textAlign: 'center',
   },
   purchaseButton: {
     backgroundColor: '#FFD700',
