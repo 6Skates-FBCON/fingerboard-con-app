@@ -159,7 +159,7 @@ export default function TicketsScreen() {
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.urgencyBanner}>
-          <Text style={styles.urgencyText}>⚡ Tickets are imited & required for all 3 days of events </Text>
+          <Text style={styles.urgencyText}>⚡ Tickets are limited & required for all 3 days of events</Text>
         </View>
 
         {ticketTypes.map((ticket) => (
@@ -301,15 +301,24 @@ const styles = StyleSheet.create({
   },
   urgencyBanner: {
     backgroundColor: '#FFD700',
-    borderRadius: 12,
-    padding: 16,
+    borderRadius: 16,
+    padding: 20,
     marginVertical: 20,
+    marginHorizontal: 4,
     alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    elevation: 6,
   },
   urgencyText: {
-    fontSize: 16,
+    fontSize: 17,
     fontWeight: '800',
     color: '#2E7D32',
+    textAlign: 'center',
+    lineHeight: 24,
+    letterSpacing: 0.3,
   },
   ticketCard: {
     backgroundColor: '#4CAF50',
