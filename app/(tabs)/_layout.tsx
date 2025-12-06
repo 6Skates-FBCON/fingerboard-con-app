@@ -1,5 +1,5 @@
 import { Tabs, Redirect } from 'expo-router';
-import { Chrome as Home, Calendar, ShoppingBag, Users, MapPin, UserCircle, Shield } from 'lucide-react-native';
+import { Chrome as Home, Calendar, ShoppingBag, Users, MapPin, UserCircle, Shield, Ticket } from 'lucide-react-native';
 import { useIsAdmin } from '@/hooks/useIsAdmin';
 import { useAuth } from '@/hooks/useAuth';
 
@@ -63,6 +63,15 @@ export default function TabLayout() {
           title: 'Buy',
           tabBarIcon: ({ size, color }) => (
             <ShoppingBag size={size} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="my-tickets"
+        options={{
+          title: 'My Tickets',
+          tabBarIcon: ({ size, color }) => (
+            <Ticket size={size} color={color} />
           ),
         }}
       />
