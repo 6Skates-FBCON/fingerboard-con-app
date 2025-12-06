@@ -37,7 +37,7 @@ export default function TicketsScreen() {
     {
       id: 'deck combo',
       name: 'Complete & Admission',
-      price: '$50',
+      price: '$60',
       popular: true,
       features: [
         'All 3 days access',
@@ -49,7 +49,7 @@ export default function TicketsScreen() {
     {
       id: 'blackriver deck combo',
       name: 'Blackriver FBCon Deck & Admission',
-      price: '$150',
+      price: '$70',
       features: [
         'All 3 days access',
         'Access to all public areas',
