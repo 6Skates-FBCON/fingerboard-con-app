@@ -239,7 +239,7 @@ export default function TicketsScreen() {
           <View style={styles.infoCard}>
             <Text style={styles.infoCardTitle}>❓ Need Help?</Text>
             <Text style={styles.infoCardText}>
-              Contact our support team:{'\n'}
+              Contact us at:{'\n'}
               📧 fingerboardcon@6skates.com{'\n'}
             </Text>
           </View>
