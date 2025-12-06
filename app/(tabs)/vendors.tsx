@@ -53,6 +53,8 @@ export default function VendorsScreen() {
       category: 'decks',
       booth: '4',
       featured: false,
+      website: '',
+      specialOffer: 'FBCon Exclusive drops',
     },
     {
       id: '5',
@@ -61,6 +63,8 @@ export default function VendorsScreen() {
       category: 'decks',
       booth: '5',
       featured: false,
+      website: '',
+      specialOffer: 'FBCon Exclusive drops',
     },
     {
       id: '6',
@@ -69,6 +73,8 @@ export default function VendorsScreen() {
       category: 'decks',
       booth: '6',
       featured: false,
+      website: '',
+      specialOffer: 'FBCon Exclusive drops',
     },
     {
       id: '7',
@@ -77,6 +83,8 @@ export default function VendorsScreen() {
       category: 'decks',
       booth: '7',
       featured: false,
+      website: '',
+      specialOffer: 'FBCon Exclusive drops',
     },
     {
       id: '8',
@@ -85,6 +93,8 @@ export default function VendorsScreen() {
       category: 'decks',
       booth: '8',
       featured: false,
+      website: '',
+      specialOffer: 'FBCon Exclusive drops',
     },
     {
       id: '9',
@@ -93,6 +103,8 @@ export default function VendorsScreen() {
       category: 'decks',
       booth: '9',
       featured: false,
+      website: '',
+      specialOffer: 'FBCon Exclusive drops',
     },
     {
       id: '10',
@@ -101,6 +113,8 @@ export default function VendorsScreen() {
       category: 'decks',
       booth: '10',
       featured: false,
+      website: '',
+      specialOffer: 'FBCon Exclusive drops',
     },
     {
       id: '11',
@@ -109,6 +123,8 @@ export default function VendorsScreen() {
       category: 'decks',
       booth: '11',
       featured: false,
+      website: '',
+      specialOffer: 'FBCon Exclusive drops',
     },
     {
       id: '12',
@@ -117,6 +133,8 @@ export default function VendorsScreen() {
       category: 'decks',
       booth: '12',
       featured: false,
+      website: '',
+      specialOffer: 'FBCon Exclusive drops',
     },
     {
       id: '13',
@@ -125,6 +143,8 @@ export default function VendorsScreen() {
       category: 'decks',
       booth: '13',
       featured: false,
+      website: '',
+      specialOffer: 'FBCon Exclusive drops',
     },
     {
       id: '14',
@@ -133,6 +153,8 @@ export default function VendorsScreen() {
       category: 'decks',
       booth: '14',
       featured: false,
+      website: '',
+      specialOffer: 'FBCon Exclusive drops',
     },
     {
       id: '15',
@@ -141,6 +163,8 @@ export default function VendorsScreen() {
       category: 'decks',
       booth: '15',
       featured: false,
+      website: '',
+      specialOffer: 'FBCon Exclusive drops',
     },
     {
       id: '16',
@@ -149,6 +173,8 @@ export default function VendorsScreen() {
       category: 'decks',
       booth: '16',
       featured: false,
+      website: '',
+      specialOffer: 'FBCon Exclusive drops',
     },
     {
       id: '17',
@@ -157,6 +183,8 @@ export default function VendorsScreen() {
       category: 'decks',
       booth: '17',
       featured: false,
+      website: '',
+      specialOffer: 'FBCon Exclusive drops',
     },
     {
       id: '18',
@@ -165,6 +193,8 @@ export default function VendorsScreen() {
       category: 'decks',
       booth: '18',
       featured: false,
+      website: '',
+      specialOffer: 'FBCon Exclusive drops',
     },
     {
       id: '19',
@@ -173,6 +203,8 @@ export default function VendorsScreen() {
       category: 'decks',
       booth: '19',
       featured: false,
+      website: '',
+      specialOffer: 'FBCon Exclusive drops',
     },
     {
       id: '20',
@@ -181,6 +213,8 @@ export default function VendorsScreen() {
       category: 'decks',
       booth: '20',
       featured: false,
+      website: '',
+      specialOffer: 'FBCon Exclusive drops',
     },
   ];
 
