@@ -13,6 +13,7 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.sixskates.fingerboardcon",
       "buildNumber": "1",
+      "icon": "./assets/images/icon.png",
       "infoPlist": {
         "NSCameraUsageDescription": "We use your camera so you can record fingerboard clips for the event.",
         "NSMicrophoneUsageDescription": "We use your microphone to capture audio while recording clips.",
