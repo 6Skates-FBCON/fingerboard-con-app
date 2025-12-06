@@ -217,7 +217,7 @@ export default function AccountScreen() {
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>
-            My Tickets ({tickets.length})
+            My Tickets {tickets.length > 0 && `(${tickets.length})`}
           </Text>
 
           {loading ? (
@@ -234,97 +234,111 @@ export default function AccountScreen() {
               </TouchableOpacity>
             </View>
           ) : (
-            Object.entries(groupedTickets).map(([orderId, orderTickets]) => (
-              <View key={orderId} style={styles.orderGroup}>
-                <Text style={styles.orderHeader}>
-                  Order #{orderId} • {orderTickets.length} Ticket{orderTickets.length !== 1 ? 's' : ''}
+            <>
+              {Object.entries(groupedTickets).map(([orderId, orderTickets]) => (
+                <View key={orderId} style={styles.orderGroup}>
+                  <Text style={styles.orderHeader}>
+                    Order #{orderId} • {orderTickets.length} Ticket{orderTickets.length !== 1 ? 's' : ''}
+                  </Text>
+
+                  {orderTickets.map((ticket) => {
+                    const StatusIcon = getStatusIcon(ticket.status);
+                    const statusColor = getStatusColor(ticket.status);
+
+                    return (
+                      <LinearGradient
+                        key={ticket.id}
+                        colors={[ticket.background_color, ticket.background_color + 'CC']}
+                        style={styles.ticketCard}
+                      >
+                        <View style={styles.ticketHeader}>
+                          <View style={styles.ticketInfo}>
+                            <Text style={styles.ticketType}>{ticket.ticket_type}</Text>
+                            <Text style={styles.ticketNumber}>
+                              Ticket {ticket.ticket_number} of {orderTickets.length}
+                            </Text>
+                            <Text style={styles.eventName}>{ticket.event_name}</Text>
+                            <Text style={styles.eventDate}>{ticket.event_date}</Text>
+                          </View>
+
+                          <View style={styles.qrContainer}>
+                            <QRCode value={ticket.qr_code_data} size={100} backgroundColor="white" />
+                          </View>
+                        </View>
+
+                        <View style={styles.ticketFooter}>
+                          <View style={styles.statusContainer}>
+                            <StatusIcon size={16} color={statusColor} />
+                            <Text style={[styles.statusText, { color: statusColor }]}>
+                              {ticket.status.toUpperCase()}
+                            </Text>
+                          </View>
+
+                          {ticket.status === 'active' && (
+                            <TouchableOpacity
+                              style={styles.transferButton}
+                              onPress={() => handleTransfer(ticket)}
+                            >
+                              <Send size={16} color="#FFFFFF" />
+                              <Text style={styles.transferButtonText}>Transfer</Text>
+                            </TouchableOpacity>
+                          )}
+                        </View>
+
+                      </LinearGradient>
+                    );
+                  })}
+                </View>
+              ))}
+
+              <View style={styles.specialRateBanner}>
+                <Text style={styles.specialRateBannerTitle}>Ticket Holder Exclusive</Text>
+                <Text style={styles.specialRateBannerText}>
+                  As a ticket holder, you qualify for our special hotel rate! Rooms are limited and going fast. Book now to secure your spot.
                 </Text>
-
-                {orderTickets.map((ticket) => {
-                  const StatusIcon = getStatusIcon(ticket.status);
-                  const statusColor = getStatusColor(ticket.status);
-
-                  return (
-                    <LinearGradient
-                      key={ticket.id}
-                      colors={[ticket.background_color, ticket.background_color + 'CC']}
-                      style={styles.ticketCard}
-                    >
-                      <View style={styles.ticketHeader}>
-                        <View style={styles.ticketInfo}>
-                          <Text style={styles.ticketType}>{ticket.ticket_type}</Text>
-                          <Text style={styles.ticketNumber}>
-                            Ticket {ticket.ticket_number} of {orderTickets.length}
-                          </Text>
-                          <Text style={styles.eventName}>{ticket.event_name}</Text>
-                          <Text style={styles.eventDate}>{ticket.event_date}</Text>
-                        </View>
-
-                        <View style={styles.qrContainer}>
-                          <QRCode value={ticket.qr_code_data} size={100} backgroundColor="white" />
-                        </View>
-                      </View>
-
-                      <View style={styles.ticketFooter}>
-                        <View style={styles.statusContainer}>
-                          <StatusIcon size={16} color={statusColor} />
-                          <Text style={[styles.statusText, { color: statusColor }]}>
-                            {ticket.status.toUpperCase()}
-                          </Text>
-                        </View>
-
-                        {ticket.status === 'active' && (
-                          <TouchableOpacity
-                            style={styles.transferButton}
-                            onPress={() => handleTransfer(ticket)}
-                          >
-                            <Send size={16} color="#FFFFFF" />
-                            <Text style={styles.transferButtonText}>Transfer</Text>
-                          </TouchableOpacity>
-                        )}
-                      </View>
-
-                    </LinearGradient>
-                  );
-                })}
               </View>
-            ))
+
+              <View style={styles.hotelCard}>
+                <Text style={styles.hotelName}>Hilton Garden Inn Tewksbury Andover</Text>
+
+                <View style={styles.hotelInfoRow}>
+                  <MapPin size={18} color="#FFD700" />
+                  <Text style={styles.hotelInfoText}>
+                    4 Highwood Dr, Tewksbury, MA 01876, USA
+                  </Text>
+                </View>
+
+                <View style={styles.hotelInfoRow}>
+                  <Phone size={18} color="#FFD700" />
+                  <Text style={styles.hotelInfoText}>
+                    (978) 640-9000
+                  </Text>
+                </View>
+
+                <TouchableOpacity
+                  style={styles.hotelBookButton}
+                  onPress={() => Linking.openURL('https://www.hilton.com/en/book/reservation/rooms/?ctyhocn=BEDTMGI&arrivalDate=2026-04-23&departureDate=2026-04-27&groupCode=90N&room1NumAdults=1&cid=OM%2CWW%2CHILTONLINK%2CEN%2CDirectLink')}
+                >
+                  <ExternalLink size={18} color="#2E7D32" />
+                  <Text style={styles.hotelBookButtonText}>
+                    Book Your Room at the Special Rate Now
+                  </Text>
+                </TouchableOpacity>
+              </View>
+
+              <View style={styles.infoSection}>
+                <Text style={styles.infoTitle}>Ticket Information</Text>
+                <Text style={styles.infoText}>
+                  • Each ticket has a unique QR code{'\n'}
+                  • Show your QR code at event check-in{'\n'}
+                  • Tickets can be transferred to other users{'\n'}
+                  • Once validated, tickets cannot be transferred{'\n'}
+                  • Pull down to refresh ticket status
+                </Text>
+              </View>
+            </>
           )}
         </View>
-
-        {tickets.length > 0 && (
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Hotel Information</Text>
-
-            <View style={styles.hotelCard}>
-              <Text style={styles.hotelName}>Hilton Garden Inn Tewksbury Andover</Text>
-
-              <View style={styles.hotelInfoRow}>
-                <MapPin size={18} color="#FFD700" />
-                <Text style={styles.hotelInfoText}>
-                  4 Highwood Dr, Tewksbury, MA 01876, USA
-                </Text>
-              </View>
-
-              <View style={styles.hotelInfoRow}>
-                <Phone size={18} color="#FFD700" />
-                <Text style={styles.hotelInfoText}>
-                  (978) 640-9000
-                </Text>
-              </View>
-
-              <TouchableOpacity
-                style={styles.hotelBookButton}
-                onPress={() => Linking.openURL('https://www.hilton.com/en/book/reservation/rooms/?ctyhocn=BEDTMGI&arrivalDate=2026-04-23&departureDate=2026-04-27&groupCode=90N&room1NumAdults=1&cid=OM%2CWW%2CHILTONLINK%2CEN%2CDirectLink')}
-              >
-                <ExternalLink size={18} color="#2E7D32" />
-                <Text style={styles.hotelBookButtonText}>
-                  Book Your Room at the Special Rate Now
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        )}
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Account Settings</Text>
@@ -344,19 +358,6 @@ export default function AccountScreen() {
             <Text style={styles.comingSoonBadge}>Soon</Text>
           </TouchableOpacity>
         </View>
-
-        {tickets.length > 0 && (
-          <View style={styles.infoSection}>
-            <Text style={styles.infoTitle}>Ticket Information</Text>
-            <Text style={styles.infoText}>
-              • Each ticket has a unique QR code{'\n'}
-              • Show your QR code at event check-in{'\n'}
-              • Tickets can be transferred to other users{'\n'}
-              • Once validated, tickets cannot be transferred{'\n'}
-              • Pull down to refresh ticket status
-            </Text>
-          </View>
-        )}
       </ScrollView>
     </SafeAreaView>
   );
@@ -648,8 +649,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#4CAF50',
     borderRadius: 12,
     padding: 16,
-    marginTop: 12,
-    marginBottom: 32,
+    marginTop: 20,
+    marginBottom: 20,
   },
   infoTitle: {
     fontSize: 16,
@@ -660,6 +661,29 @@ const styles = StyleSheet.create({
   infoText: {
     fontSize: 14,
     color: '#E8F5E8',
+    lineHeight: 22,
+  },
+  specialRateBanner: {
+    backgroundColor: '#FFD700',
+    borderRadius: 16,
+    padding: 20,
+    marginTop: 8,
+    marginBottom: 20,
+    borderWidth: 2,
+    borderColor: '#FFC107',
+  },
+  specialRateBannerTitle: {
+    fontSize: 18,
+    fontWeight: '900',
+    color: '#2E7D32',
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  specialRateBannerText: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#2E7D32',
+    textAlign: 'center',
     lineHeight: 22,
   },
   hotelCard: {
