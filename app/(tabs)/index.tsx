@@ -16,7 +16,7 @@ export default function HomeScreen() {
     {
       time: '2 hours ago',
       title: 'Ticket Sales Open January 2nd. 2026',
-      text: 'Tickets are limited and required for all thee days of the Con.',
+      text: 'Tickets are limited and required for all 3 days events.',
     },
     {
       time: '5 hours ago',
