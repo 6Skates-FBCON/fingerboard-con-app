@@ -241,7 +241,6 @@ export default function TicketsScreen() {
             <Text style={styles.infoCardText}>
               Contact our support team:{'\n'}
               📧 fingerboardcon@6skates.com{'\n'}
-              📞 (978) 640-9000
             </Text>
           </View>
         </View>
