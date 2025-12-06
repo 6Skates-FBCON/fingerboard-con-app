@@ -197,7 +197,6 @@ export default function TicketsScreen() {
               style={[
                 styles.purchaseButton,
                 ticket.soldOut && styles.soldOutButton,
-                ticket.popular && styles.popularButton,
                 !ticket.stripePriceId && styles.disabledButton,
               ]}
               disabled={ticket.soldOut || !ticket.stripePriceId || loading}
@@ -380,7 +379,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   purchaseButton: {
-    backgroundColor: '#66BB6A',
+    backgroundColor: '#FFD700',
     borderRadius: 12,
     paddingVertical: 16,
     paddingHorizontal: 20,
@@ -388,9 +387,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     gap: 8,
-  },
-  popularButton: {
-    backgroundColor: '#FFD700',
   },
   soldOutButton: {
     backgroundColor: '#81C784',
