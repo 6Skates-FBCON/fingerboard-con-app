@@ -54,7 +54,7 @@ export default function TicketsScreen() {
         'All 3 days access',
         'Access to all public areas',
         'Vendor access',
-        'Exclusive Blackriver Fingerboard',
+        'Exclusive FBCON Blackriver Fingerboard',
       ],
     },
   ];
