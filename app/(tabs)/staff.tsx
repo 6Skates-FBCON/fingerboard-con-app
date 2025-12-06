@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ScanLine, Shield, BarChart3, Users, Ticket } from 'lucide-react-native';
+import { ScanLine, Shield, BarChart3, Users, Ticket, Bell } from 'lucide-react-native';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
@@ -56,6 +56,13 @@ export default function StaffScreen() {
       description: 'Scan QR codes at entrance',
       route: '/validate-ticket',
       color: '#2E7D32',
+    },
+    {
+      icon: Bell,
+      title: 'Send Notifications',
+      description: 'Push notifications to attendees',
+      route: '/send-notification',
+      color: '#FF6B35',
     },
   ];
 

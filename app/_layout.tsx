@@ -2,11 +2,13 @@ import { useEffect } from 'react';
 import { Stack, SplashScreen } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useFrameworkReady } from '@/hooks/useFrameworkReady';
+import { useNotifications } from '@/hooks/useNotifications';
 
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const isReady = useFrameworkReady();
+  useNotifications();
 
   useEffect(() => {
     if (isReady) {
@@ -28,6 +30,7 @@ export default function RootLayout() {
         <Stack.Screen name="settings" />
         <Stack.Screen name="transfer-ticket" />
         <Stack.Screen name="validate-ticket" />
+        <Stack.Screen name="send-notification" />
         <Stack.Screen name="+not-found" />
       </Stack>
       <StatusBar style="light" backgroundColor="#000000" />
