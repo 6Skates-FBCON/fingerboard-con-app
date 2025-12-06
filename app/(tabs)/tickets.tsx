@@ -219,8 +219,8 @@ export default function TicketsScreen() {
             <Text style={styles.infoCardTitle}>🎫 Ticket Policies</Text>
             <Text style={styles.infoCardText}>
               • All sales are final – no refunds{'\n'}
-              • Tickets are transferable, but FBCon is not responsible for private resale transactions or ensuring legitimacy of secondhand sales{'\n'}
-              • Buying tickets for the sole purpose of resale is lame. Those found doing so will be publicly shames and made to fingerboard on three wheels all weekend!{'\n'}
+              • Tickets are transferable, but Fingerboard Con is not responsible for private resale transactions or ensuring legitimacy of secondhand sales{'\n'}
+              • Buying tickets for the sole purpose of resale is lame. Those found doing so will be publicly shamed and made to fingerboard on three wheels all weekend!{'\n'}
               • Valid ID required for entry{'\n'}
               • Children under 5 enter free with an adult{'\n'}
               • Non-fingerboarding companions also require a ticket
