@@ -302,20 +302,19 @@ export default function VendorsScreen() {
               )}
 
               <View style={styles.vendorActions}>
-                {vendor.website && (
-                  <TouchableOpacity
-                    style={styles.websiteButton}
-                    onPress={() => openWebsite(vendor.website)}
-                  >
-                    <Globe size={16} color="#00D4FF" />
-                    <Text style={styles.websiteButtonText}>Visit Website</Text>
-                  </TouchableOpacity>
-                )}
-                <TouchableOpacity 
+                <TouchableOpacity
+                  style={styles.websiteButton}
+                  onPress={() => openWebsite(vendor.website)}
+                  disabled={!vendor.website}
+                >
+                  <Globe size={18} color="#FFD700" />
+                  <Text style={styles.websiteButtonText}>Visit Website</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
                   style={styles.findButton}
                   onPress={() => findBooth(vendor.booth)}
                 >
-                  <MapPin size={16} color="#FFFFFF" />
+                  <MapPin size={18} color="#2E7D32" />
                   <Text style={styles.findButtonText}>Find Booth</Text>
                 </TouchableOpacity>
               </View>
@@ -506,17 +505,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 12,
+    paddingVertical: 14,
     paddingHorizontal: 16,
-    backgroundColor: '#66BB6A',
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#FFD700',
-    gap: 6,
+    backgroundColor: 'rgba(102, 187, 106, 0.3)',
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: '#66BB6A',
+    gap: 8,
   },
   websiteButtonText: {
-    fontSize: 14,
-    fontWeight: '600',
+    fontSize: 15,
+    fontWeight: '700',
     color: '#FFD700',
   },
   findButton: {
@@ -524,15 +523,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 12,
+    paddingVertical: 14,
     paddingHorizontal: 16,
     backgroundColor: '#FFD700',
-    borderRadius: 8,
-    gap: 6,
+    borderRadius: 12,
+    gap: 8,
   },
   findButtonText: {
-    fontSize: 14,
-    fontWeight: '600',
+    fontSize: 15,
+    fontWeight: '700',
     color: '#2E7D32',
   },
   mapSection: {
