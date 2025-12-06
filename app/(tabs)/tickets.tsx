@@ -45,6 +45,7 @@ export default function TicketsScreen() {
         'Vendor access',
         'Commemorative Complete Fingerboard',
       ],
+      stripePriceId: 'price_1SNPAPLz01V9GjOugWCFGU8z',
     },
     {
       id: 'blackriver deck combo',
@@ -56,6 +57,7 @@ export default function TicketsScreen() {
         'Vendor access',
         'Exclusive FBCON Blackriver Fingerboard',
       ],
+      stripePriceId: 'price_1SNPBDLz01V9GjOuOn3ajum9',
     },
   ];
 
