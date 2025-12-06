@@ -1,7 +1,7 @@
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, RefreshControl } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, RefreshControl, Linking } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Ticket, Send, Clock, CheckCircle, XCircle, LogOut, User, Mail, Bell, Settings } from 'lucide-react-native';
+import { Ticket, Send, Clock, CheckCircle, XCircle, LogOut, User, Mail, Bell, Settings, MapPin, Phone, ExternalLink } from 'lucide-react-native';
 import { useAuth } from '@/hooks/useAuth';
 import { useState, useEffect } from 'react';
 import { supabase, api } from '@/lib/supabase';
@@ -291,6 +291,40 @@ export default function AccountScreen() {
             ))
           )}
         </View>
+
+        {tickets.length > 0 && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Hotel Information</Text>
+
+            <View style={styles.hotelCard}>
+              <Text style={styles.hotelName}>Hilton Garden Inn Tewksbury Andover</Text>
+
+              <View style={styles.hotelInfoRow}>
+                <MapPin size={18} color="#FFD700" />
+                <Text style={styles.hotelInfoText}>
+                  4 Highwood Dr, Tewksbury, MA 01876, USA
+                </Text>
+              </View>
+
+              <View style={styles.hotelInfoRow}>
+                <Phone size={18} color="#FFD700" />
+                <Text style={styles.hotelInfoText}>
+                  (978) 640-9000
+                </Text>
+              </View>
+
+              <TouchableOpacity
+                style={styles.hotelBookButton}
+                onPress={() => Linking.openURL('https://www.hilton.com/en/book/reservation/rooms/?ctyhocn=BEDTMGI&arrivalDate=2026-04-23&departureDate=2026-04-27&groupCode=90N&room1NumAdults=1&cid=OM%2CWW%2CHILTONLINK%2CEN%2CDirectLink')}
+              >
+                <ExternalLink size={18} color="#2E7D32" />
+                <Text style={styles.hotelBookButtonText}>
+                  Book Your Room at the Special Rate Now
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Account Settings</Text>
@@ -627,5 +661,47 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#E8F5E8',
     lineHeight: 22,
+  },
+  hotelCard: {
+    backgroundColor: '#4CAF50',
+    borderRadius: 16,
+    padding: 20,
+    borderWidth: 2,
+    borderColor: '#FFD700',
+  },
+  hotelName: {
+    fontSize: 20,
+    fontWeight: '800',
+    color: '#FFFFFF',
+    marginBottom: 16,
+  },
+  hotelInfoRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    marginBottom: 12,
+  },
+  hotelInfoText: {
+    flex: 1,
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#E8F5E8',
+  },
+  hotelBookButton: {
+    backgroundColor: '#FFD700',
+    borderRadius: 12,
+    paddingVertical: 16,
+    paddingHorizontal: 20,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 10,
+    marginTop: 8,
+  },
+  hotelBookButtonText: {
+    fontSize: 15,
+    fontWeight: '800',
+    color: '#2E7D32',
+    textAlign: 'center',
   },
 });
