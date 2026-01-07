@@ -16,18 +16,26 @@ export default function Index() {
       }
 
       try {
-        const { data: { session } } = await supabase.auth.getSession();
-
+        // Check URL parameters first
         const urlParams = new URLSearchParams(window.location.search);
         const hashParams = new URLSearchParams(window.location.hash.substring(1));
         const type = urlParams.get('type') || hashParams.get('type');
+        const accessToken = urlParams.get('access_token') || hashParams.get('access_token');
 
-        if (type === 'recovery' || session?.user?.aud === 'authenticated') {
-          const accessToken = urlParams.get('access_token') || hashParams.get('access_token');
-          if (accessToken) {
-            setIsRecovery(true);
-          }
+        console.log('Recovery check - type:', type, 'accessToken:', accessToken ? 'present' : 'none');
+
+        // If we have a recovery type in the URL, this is definitely a password reset
+        if (type === 'recovery' && accessToken) {
+          console.log('Detected recovery token in URL');
+          setIsRecovery(true);
+          setCheckingRecovery(false);
+          return;
         }
+
+        // Also check the session
+        const { data: { session } } = await supabase.auth.getSession();
+        console.log('Session check:', session?.user ? 'user present' : 'no user');
+
       } catch (error) {
         console.error('Error checking recovery mode:', error);
       } finally {
