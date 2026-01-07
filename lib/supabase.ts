@@ -102,9 +102,40 @@ export const api = {
     if (!supabase) {
       throw new Error('Supabase not connected. Please connect to Supabase first.');
     }
-    
+
     const { error } = await supabase.auth.signOut();
-    
+
+    if (error) {
+      throw error;
+    }
+  },
+
+  sendPasswordResetEmail: async (email: string) => {
+    if (!supabase) {
+      throw new Error('Supabase not connected. Please connect to Supabase first.');
+    }
+
+    const Linking = await import('expo-linking');
+    const redirectTo = Linking.createURL('reset-password');
+
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo,
+    });
+
+    if (error) {
+      throw error;
+    }
+  },
+
+  updatePassword: async (newPassword: string) => {
+    if (!supabase) {
+      throw new Error('Supabase not connected. Please connect to Supabase first.');
+    }
+
+    const { error } = await supabase.auth.updateUser({
+      password: newPassword,
+    });
+
     if (error) {
       throw error;
     }

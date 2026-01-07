@@ -2,52 +2,46 @@ import { View, Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingVi
 import { ScrollView } from 'react-native';
 import { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Mail, Lock, Eye, EyeOff, ArrowLeft } from 'lucide-react-native';
+import { Mail, ArrowLeft } from 'lucide-react-native';
 import { router } from 'expo-router';
 import { api } from '@/lib/supabase';
 
-export default function LoginScreen() {
+export default function ForgotPasswordScreen() {
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
-  const handleAuth = async () => {
-    if (!email || !password) {
-      setError('Please fill in all fields');
+  const handleSendResetLink = async () => {
+    if (!email) {
+      setError('Please enter your email address');
       return;
     }
 
-    if (password.length < 6) {
-      setError('Password must be at least 6 characters');
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError('Please enter a valid email address');
       return;
     }
 
     setIsLoading(true);
     setError('');
+    setSuccess('');
 
     try {
-      console.log('Attempting sign in...');
-      const result = await api.signIn(email, password);
-      console.log('Sign in successful:', result);
-
-      await new Promise(resolve => setTimeout(resolve, 500));
-
-      router.replace('/(tabs)');
+      await api.sendPasswordResetEmail(email);
+      setSuccess('Password reset link sent! Check your email inbox.');
+      setEmail('');
     } catch (err: any) {
-      console.error('Sign in error:', err);
-      setError(err.message || 'An error occurred during authentication');
+      console.error('Password reset error:', err);
+      setError(err.message || 'Failed to send reset link. Please try again.');
+    } finally {
       setIsLoading(false);
     }
   };
 
-  const handleGoToRegister = () => {
-    router.push('/register');
-  };
-
-  const handleForgotPassword = () => {
-    router.push('/forgot-password');
+  const handleBackToLogin = () => {
+    router.back();
   };
 
   return (
@@ -60,10 +54,10 @@ export default function LoginScreen() {
           <View style={styles.navigationBar}>
             <TouchableOpacity
               style={styles.backButton}
-              onPress={() => router.push('/')}
+              onPress={handleBackToLogin}
             >
               <ArrowLeft size={24} color="#FFFFFF" />
-              <Text style={styles.backButtonText}>Home</Text>
+              <Text style={styles.backButtonText}>Back to Login</Text>
             </TouchableOpacity>
           </View>
 
@@ -81,12 +75,22 @@ export default function LoginScreen() {
 
           <View style={styles.form}>
             <Text style={styles.formTitle}>
-              Welcome Back
+              Reset Password
+            </Text>
+
+            <Text style={styles.description}>
+              Enter your email address and we'll send you a link to reset your password.
             </Text>
 
             {error ? (
               <View style={styles.errorContainer}>
                 <Text style={styles.errorText}>{error}</Text>
+              </View>
+            ) : null}
+
+            {success ? (
+              <View style={styles.successContainer}>
+                <Text style={styles.successText}>{success}</Text>
               </View>
             ) : null}
 
@@ -104,53 +108,25 @@ export default function LoginScreen() {
                   autoCorrect={false}
                 />
               </View>
-
-              <View style={styles.inputWrapper}>
-                <Lock size={20} color="#FFFFFF" style={styles.inputIcon} />
-                <TextInput
-                  style={[styles.textInput, styles.passwordInput]}
-                  placeholder="Password"
-                  placeholderTextColor="#FFFFFF"
-                  value={password}
-                  onChangeText={setPassword}
-                  secureTextEntry={!showPassword}
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                />
-                <TouchableOpacity
-                  style={styles.eyeIcon}
-                  onPress={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? (
-                    <EyeOff size={20} color="#FFFFFF" />
-                  ) : (
-                    <Eye size={20} color="#FFFFFF" />
-                  )}
-                </TouchableOpacity>
-              </View>
             </View>
 
             <TouchableOpacity
-              style={[styles.authButton, isLoading && styles.authButtonLoading]}
-              onPress={handleAuth}
+              style={[styles.sendButton, isLoading && styles.sendButtonLoading]}
+              onPress={handleSendResetLink}
               disabled={isLoading}
             >
-              <Text style={styles.authButtonText}>
-                {isLoading ? 'Please wait...' : 'Sign In'}
+              <Text style={styles.sendButtonText}>
+                {isLoading ? 'Sending...' : 'Send Reset Link'}
               </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.forgotButton} onPress={handleForgotPassword}>
-              <Text style={styles.forgotText}>Forgot your password?</Text>
             </TouchableOpacity>
 
             <View style={styles.switchContainer}>
               <Text style={styles.switchText}>
-                Don't have an account?
+                Remember your password?
               </Text>
-              <TouchableOpacity onPress={handleGoToRegister}>
+              <TouchableOpacity onPress={handleBackToLogin}>
                 <Text style={styles.switchButton}>
-                  Sign Up
+                  Sign In
                 </Text>
               </TouchableOpacity>
             </View>
@@ -160,7 +136,6 @@ export default function LoginScreen() {
     </SafeAreaView>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {
@@ -234,7 +209,14 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     color: '#1A1A1A',
     textAlign: 'center',
+    marginBottom: 16,
+  },
+  description: {
+    fontSize: 15,
+    color: '#E8F5E8',
+    textAlign: 'center',
     marginBottom: 32,
+    lineHeight: 22,
   },
   inputContainer: {
     marginBottom: 32,
@@ -244,7 +226,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#4CAF50',
     borderRadius: 16,
-    marginBottom: 20,
     borderWidth: 1,
     borderColor: '#66BB6A',
     paddingHorizontal: 20,
@@ -264,15 +245,7 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontWeight: '600',
   },
-  passwordInput: {
-    paddingRight: 48,
-  },
-  eyeIcon: {
-    position: 'absolute',
-    right: 20,
-    padding: 8,
-  },
-  authButton: {
+  sendButton: {
     backgroundColor: '#FFD700',
     borderRadius: 16,
     height: 60,
@@ -285,28 +258,20 @@ const styles = StyleSheet.create({
     shadowRadius: 12,
     elevation: 8,
   },
-  authButtonLoading: {
+  sendButtonLoading: {
     backgroundColor: '#FFC107',
   },
-  authButtonText: {
+  sendButtonText: {
     fontSize: 17,
     fontWeight: '800',
     color: '#2E7D32',
-  },
-  forgotButton: {
-    alignItems: 'center',
-    marginBottom: 32,
-  },
-  forgotText: {
-    fontSize: 15,
-    color: '#FFD700',
-    fontWeight: '600',
   },
   switchContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     gap: 8,
+    marginTop: 12,
   },
   switchText: {
     fontSize: 15,
@@ -324,6 +289,20 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   errorText: {
+    fontSize: 14,
+    color: '#FFFFFF',
+    fontWeight: '600',
+    textAlign: 'center',
+  },
+  successContainer: {
+    backgroundColor: '#4CAF50',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: '#66BB6A',
+  },
+  successText: {
     fontSize: 14,
     color: '#FFFFFF',
     fontWeight: '600',

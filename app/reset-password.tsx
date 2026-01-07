@@ -2,19 +2,21 @@ import { View, Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingVi
 import { ScrollView } from 'react-native';
 import { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Mail, Lock, Eye, EyeOff, ArrowLeft } from 'lucide-react-native';
+import { Lock, Eye, EyeOff } from 'lucide-react-native';
 import { router } from 'expo-router';
 import { api } from '@/lib/supabase';
 
-export default function LoginScreen() {
-  const [email, setEmail] = useState('');
+export default function ResetPasswordScreen() {
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
-  const handleAuth = async () => {
-    if (!email || !password) {
+  const handleResetPassword = async () => {
+    if (!password || !confirmPassword) {
       setError('Please fill in all fields');
       return;
     }
@@ -24,30 +26,29 @@ export default function LoginScreen() {
       return;
     }
 
+    if (password !== confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+
     setIsLoading(true);
     setError('');
+    setSuccess('');
 
     try {
-      console.log('Attempting sign in...');
-      const result = await api.signIn(email, password);
-      console.log('Sign in successful:', result);
+      await api.updatePassword(password);
+      setSuccess('Password updated successfully!');
+      setPassword('');
+      setConfirmPassword('');
 
-      await new Promise(resolve => setTimeout(resolve, 500));
-
-      router.replace('/(tabs)');
+      setTimeout(() => {
+        router.replace('/login');
+      }, 2000);
     } catch (err: any) {
-      console.error('Sign in error:', err);
-      setError(err.message || 'An error occurred during authentication');
+      console.error('Password reset error:', err);
+      setError(err.message || 'Failed to update password. Please try again.');
       setIsLoading(false);
     }
-  };
-
-  const handleGoToRegister = () => {
-    router.push('/register');
-  };
-
-  const handleForgotPassword = () => {
-    router.push('/forgot-password');
   };
 
   return (
@@ -57,16 +58,6 @@ export default function LoginScreen() {
         style={styles.keyboardView}
       >
         <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-          <View style={styles.navigationBar}>
-            <TouchableOpacity
-              style={styles.backButton}
-              onPress={() => router.push('/')}
-            >
-              <ArrowLeft size={24} color="#FFFFFF" />
-              <Text style={styles.backButtonText}>Home</Text>
-            </TouchableOpacity>
-          </View>
-
           <View style={styles.header}>
             <Image
               source={require('@/assets/images/fbcon_logo.png')}
@@ -81,7 +72,11 @@ export default function LoginScreen() {
 
           <View style={styles.form}>
             <Text style={styles.formTitle}>
-              Welcome Back
+              Create New Password
+            </Text>
+
+            <Text style={styles.description}>
+              Enter your new password below.
             </Text>
 
             {error ? (
@@ -90,26 +85,18 @@ export default function LoginScreen() {
               </View>
             ) : null}
 
-            <View style={styles.inputContainer}>
-              <View style={styles.inputWrapper}>
-                <Mail size={20} color="#FFFFFF" style={styles.inputIcon} />
-                <TextInput
-                  style={styles.textInput}
-                  placeholder="Email address"
-                  placeholderTextColor="#FFFFFF"
-                  value={email}
-                  onChangeText={setEmail}
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                />
+            {success ? (
+              <View style={styles.successContainer}>
+                <Text style={styles.successText}>{success}</Text>
               </View>
+            ) : null}
 
+            <View style={styles.inputContainer}>
               <View style={styles.inputWrapper}>
                 <Lock size={20} color="#FFFFFF" style={styles.inputIcon} />
                 <TextInput
                   style={[styles.textInput, styles.passwordInput]}
-                  placeholder="Password"
+                  placeholder="New Password"
                   placeholderTextColor="#FFFFFF"
                   value={password}
                   onChangeText={setPassword}
@@ -128,39 +115,47 @@ export default function LoginScreen() {
                   )}
                 </TouchableOpacity>
               </View>
+
+              <View style={styles.inputWrapper}>
+                <Lock size={20} color="#FFFFFF" style={styles.inputIcon} />
+                <TextInput
+                  style={[styles.textInput, styles.passwordInput]}
+                  placeholder="Confirm New Password"
+                  placeholderTextColor="#FFFFFF"
+                  value={confirmPassword}
+                  onChangeText={setConfirmPassword}
+                  secureTextEntry={!showConfirmPassword}
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                />
+                <TouchableOpacity
+                  style={styles.eyeIcon}
+                  onPress={() => setShowConfirmPassword(!showConfirmPassword)}
+                >
+                  {showConfirmPassword ? (
+                    <EyeOff size={20} color="#FFFFFF" />
+                  ) : (
+                    <Eye size={20} color="#FFFFFF" />
+                  )}
+                </TouchableOpacity>
+              </View>
             </View>
 
             <TouchableOpacity
-              style={[styles.authButton, isLoading && styles.authButtonLoading]}
-              onPress={handleAuth}
+              style={[styles.resetButton, isLoading && styles.resetButtonLoading]}
+              onPress={handleResetPassword}
               disabled={isLoading}
             >
-              <Text style={styles.authButtonText}>
-                {isLoading ? 'Please wait...' : 'Sign In'}
+              <Text style={styles.resetButtonText}>
+                {isLoading ? 'Updating...' : 'Update Password'}
               </Text>
             </TouchableOpacity>
-
-            <TouchableOpacity style={styles.forgotButton} onPress={handleForgotPassword}>
-              <Text style={styles.forgotText}>Forgot your password?</Text>
-            </TouchableOpacity>
-
-            <View style={styles.switchContainer}>
-              <Text style={styles.switchText}>
-                Don't have an account?
-              </Text>
-              <TouchableOpacity onPress={handleGoToRegister}>
-                <Text style={styles.switchButton}>
-                  Sign Up
-                </Text>
-              </TouchableOpacity>
-            </View>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {
@@ -176,23 +171,6 @@ const styles = StyleSheet.create({
   },
   keyboardView: {
     flex: 1,
-  },
-  navigationBar: {
-    backgroundColor: '#4CAF50',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: '#66BB6A',
-  },
-  backButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  backButtonText: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: '600',
   },
   header: {
     backgroundColor: '#76B84B',
@@ -234,7 +212,14 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     color: '#1A1A1A',
     textAlign: 'center',
+    marginBottom: 16,
+  },
+  description: {
+    fontSize: 15,
+    color: '#E8F5E8',
+    textAlign: 'center',
     marginBottom: 32,
+    lineHeight: 22,
   },
   inputContainer: {
     marginBottom: 32,
@@ -272,7 +257,7 @@ const styles = StyleSheet.create({
     right: 20,
     padding: 8,
   },
-  authButton: {
+  resetButton: {
     backgroundColor: '#FFD700',
     borderRadius: 16,
     height: 60,
@@ -285,37 +270,13 @@ const styles = StyleSheet.create({
     shadowRadius: 12,
     elevation: 8,
   },
-  authButtonLoading: {
+  resetButtonLoading: {
     backgroundColor: '#FFC107',
   },
-  authButtonText: {
+  resetButtonText: {
     fontSize: 17,
     fontWeight: '800',
     color: '#2E7D32',
-  },
-  forgotButton: {
-    alignItems: 'center',
-    marginBottom: 32,
-  },
-  forgotText: {
-    fontSize: 15,
-    color: '#FFD700',
-    fontWeight: '600',
-  },
-  switchContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: 8,
-  },
-  switchText: {
-    fontSize: 15,
-    color: '#E8F5E8',
-  },
-  switchButton: {
-    fontSize: 15,
-    color: '#FFD700',
-    fontWeight: '700',
   },
   errorContainer: {
     backgroundColor: '#FF5252',
@@ -324,6 +285,20 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   errorText: {
+    fontSize: 14,
+    color: '#FFFFFF',
+    fontWeight: '600',
+    textAlign: 'center',
+  },
+  successContainer: {
+    backgroundColor: '#4CAF50',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: '#66BB6A',
+  },
+  successText: {
     fontSize: 14,
     color: '#FFFFFF',
     fontWeight: '600',
