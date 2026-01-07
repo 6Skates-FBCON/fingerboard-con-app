@@ -1,10 +1,10 @@
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, Image } from 'react-native';
 import { ScrollView } from 'react-native';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Lock, Eye, EyeOff } from 'lucide-react-native';
 import { router } from 'expo-router';
-import { api } from '@/lib/supabase';
+import { api, supabase } from '@/lib/supabase';
 
 export default function ResetPasswordScreen() {
   const [password, setPassword] = useState('');
@@ -14,8 +14,41 @@ export default function ResetPasswordScreen() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [hasValidSession, setHasValidSession] = useState(false);
+  const [checkingSession, setCheckingSession] = useState(true);
+
+  useEffect(() => {
+    const checkSession = async () => {
+      if (!supabase) {
+        setError('Unable to connect to authentication service');
+        setCheckingSession(false);
+        return;
+      }
+
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.user) {
+          setHasValidSession(true);
+        } else {
+          setError('Invalid or expired reset link. Please request a new password reset.');
+        }
+      } catch (err) {
+        console.error('Error checking session:', err);
+        setError('Unable to verify reset link. Please try again.');
+      } finally {
+        setCheckingSession(false);
+      }
+    };
+
+    checkSession();
+  }, []);
 
   const handleResetPassword = async () => {
+    if (!hasValidSession) {
+      setError('Invalid session. Please request a new password reset link.');
+      return;
+    }
+
     if (!password || !confirmPassword) {
       setError('Please fill in all fields');
       return;
@@ -47,9 +80,20 @@ export default function ResetPasswordScreen() {
     } catch (err: any) {
       console.error('Password reset error:', err);
       setError(err.message || 'Failed to update password. Please try again.');
+    } finally {
       setIsLoading(false);
     }
   };
+
+  if (checkingSession) {
+    return (
+      <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
+        <View style={styles.loadingContainer}>
+          <Text style={styles.loadingText}>Verifying reset link...</Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
@@ -142,14 +186,25 @@ export default function ResetPasswordScreen() {
             </View>
 
             <TouchableOpacity
-              style={[styles.resetButton, isLoading && styles.resetButtonLoading]}
+              style={[styles.resetButton, (isLoading || !hasValidSession) && styles.resetButtonLoading]}
               onPress={handleResetPassword}
-              disabled={isLoading}
+              disabled={isLoading || !hasValidSession}
             >
               <Text style={styles.resetButtonText}>
                 {isLoading ? 'Updating...' : 'Update Password'}
               </Text>
             </TouchableOpacity>
+
+            {!hasValidSession && (
+              <TouchableOpacity
+                style={styles.backButton}
+                onPress={() => router.replace('/forgot-password')}
+              >
+                <Text style={styles.backButtonText}>
+                  Request New Reset Link
+                </Text>
+              </TouchableOpacity>
+            )}
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -303,5 +358,29 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontWeight: '600',
     textAlign: 'center',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    fontSize: 16,
+    color: '#FFFFFF',
+    fontWeight: '600',
+  },
+  backButton: {
+    backgroundColor: 'transparent',
+    borderRadius: 16,
+    height: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: '#FFFFFF',
+  },
+  backButtonText: {
+    fontSize: 17,
+    fontWeight: '800',
+    color: '#FFFFFF',
   },
 });

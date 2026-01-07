@@ -115,8 +115,9 @@ export const api = {
       throw new Error('Supabase not connected. Please connect to Supabase first.');
     }
 
-    const Linking = await import('expo-linking');
-    const redirectTo = Linking.createURL('reset-password');
+    const redirectTo = typeof window !== 'undefined'
+      ? `${window.location.origin}/reset-password`
+      : 'https://fingerboard-con-mobi-y0m1.bolt.host/reset-password';
 
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo,
