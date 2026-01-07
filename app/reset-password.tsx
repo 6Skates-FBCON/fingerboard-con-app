@@ -3,10 +3,11 @@ import { ScrollView } from 'react-native';
 import { useState, useEffect } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Lock, Eye, EyeOff } from 'lucide-react-native';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { api, supabase } from '@/lib/supabase';
 
 export default function ResetPasswordScreen() {
+  const { token_hash, type } = useLocalSearchParams<{ token_hash?: string; type?: string }>();
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -18,7 +19,7 @@ export default function ResetPasswordScreen() {
   const [checkingSession, setCheckingSession] = useState(true);
 
   useEffect(() => {
-    const checkSession = async () => {
+    const verifyResetToken = async () => {
       if (!supabase) {
         setError('Unable to connect to authentication service');
         setCheckingSession(false);
@@ -26,22 +27,44 @@ export default function ResetPasswordScreen() {
       }
 
       try {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (session?.user) {
-          setHasValidSession(true);
+        // If we have a token_hash from the email link, verify it
+        if (token_hash && type === 'recovery') {
+          const { data, error: verifyError } = await supabase.auth.verifyOtp({
+            token_hash,
+            type: 'recovery',
+          });
+
+          if (verifyError) {
+            console.error('Token verification error:', verifyError);
+            setError('Invalid or expired reset link. Please request a new password reset.');
+            setCheckingSession(false);
+            return;
+          }
+
+          if (data?.session) {
+            setHasValidSession(true);
+          } else {
+            setError('Unable to verify reset link. Please request a new password reset.');
+          }
         } else {
-          setError('Invalid or expired reset link. Please request a new password reset.');
+          // Check if there's already a valid session
+          const { data: { session } } = await supabase.auth.getSession();
+          if (session?.user) {
+            setHasValidSession(true);
+          } else {
+            setError('Invalid or expired reset link. Please request a new password reset.');
+          }
         }
       } catch (err) {
-        console.error('Error checking session:', err);
+        console.error('Error verifying reset link:', err);
         setError('Unable to verify reset link. Please try again.');
       } finally {
         setCheckingSession(false);
       }
     };
 
-    checkSession();
-  }, []);
+    verifyResetToken();
+  }, [token_hash, type]);
 
   const handleResetPassword = async () => {
     if (!hasValidSession) {
