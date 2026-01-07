@@ -32,6 +32,8 @@ export default function LoginScreen() {
       const result = await api.signIn(email, password);
       console.log('Sign in successful:', result);
 
+      await new Promise(resolve => setTimeout(resolve, 500));
+
       router.replace('/(tabs)');
     } catch (err: any) {
       console.error('Sign in error:', err);
