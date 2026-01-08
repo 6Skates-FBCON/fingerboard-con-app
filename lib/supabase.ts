@@ -115,9 +115,13 @@ export const api = {
       throw new Error('Supabase not connected. Please connect to Supabase first.');
     }
 
-    const redirectTo = typeof window !== 'undefined'
-      ? `${window.location.origin}/reset-password`
-      : 'https://fingerboard-con-mobi-y0m1.bolt.host/reset-password';
+    const baseUrl = typeof window !== 'undefined'
+      ? window.location.origin
+      : 'https://fingerboard-con-mobi-y0m1.bolt.host';
+
+    const redirectTo = `${baseUrl}/reset-password`;
+
+    console.log('Sending password reset email with redirectTo:', redirectTo);
 
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo,

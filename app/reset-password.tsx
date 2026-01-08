@@ -7,7 +7,10 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { api, supabase } from '@/lib/supabase';
 
 export default function ResetPasswordScreen() {
-  const { token_hash, type } = useLocalSearchParams<{ token_hash?: string; type?: string }>();
+  const params = useLocalSearchParams<{ token_hash?: string; type?: string }>();
+  const token_hash = Array.isArray(params.token_hash) ? params.token_hash[0] : params.token_hash;
+  const type = Array.isArray(params.type) ? params.type[0] : params.type;
+
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -20,6 +23,11 @@ export default function ResetPasswordScreen() {
 
   useEffect(() => {
     const verifyResetToken = async () => {
+      console.log('Reset password page loaded');
+      console.log('Token hash:', token_hash);
+      console.log('Type:', type);
+      console.log('Full URL:', typeof window !== 'undefined' ? window.location.href : 'N/A');
+
       if (!supabase) {
         setError('Unable to connect to authentication service');
         setCheckingSession(false);
@@ -29,10 +37,14 @@ export default function ResetPasswordScreen() {
       try {
         // If we have a token_hash from the email link, verify it
         if (token_hash && type === 'recovery') {
+          console.log('Attempting to verify OTP token...');
           const { data, error: verifyError } = await supabase.auth.verifyOtp({
             token_hash,
             type: 'recovery',
           });
+
+          console.log('Verify OTP result:', data);
+          console.log('Verify OTP error:', verifyError);
 
           if (verifyError) {
             console.error('Token verification error:', verifyError);
@@ -42,13 +54,17 @@ export default function ResetPasswordScreen() {
           }
 
           if (data?.session) {
+            console.log('Session created successfully');
             setHasValidSession(true);
           } else {
+            console.error('No session in response');
             setError('Unable to verify reset link. Please request a new password reset.');
           }
         } else {
+          console.log('No token_hash or type mismatch, checking existing session...');
           // Check if there's already a valid session
           const { data: { session } } = await supabase.auth.getSession();
+          console.log('Existing session:', session);
           if (session?.user) {
             setHasValidSession(true);
           } else {
