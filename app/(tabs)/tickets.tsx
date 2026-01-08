@@ -37,7 +37,7 @@ export default function TicketsScreen() {
     {
       id: 'deck combo',
       name: 'Complete & Admission',
-      price: '$60',
+      price: '$50',
       popular: true,
       features: [
         'All 3 days access',
