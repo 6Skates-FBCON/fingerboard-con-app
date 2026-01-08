@@ -20,8 +20,8 @@ export default function HomeScreen() {
     },
     {
       time: '5 hours ago',
-      title: 'Call for Vendors',
-      text: 'Many of the past vendors will be returning, there are very limited spaces for new vendors if you are interested please let us know.',
+      title: 'Vendor Announcment',
+      text: 'Many of the past vendors will be returning, we're also happy to welcome some new and exciting vendors!.',
     },
   ];
 
