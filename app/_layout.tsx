@@ -29,6 +29,7 @@ export default function RootLayout() {
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="settings" />
         <Stack.Screen name="transfer-ticket" />
+        <Stack.Screen name="transfer-confirm" />
         <Stack.Screen name="validate-ticket" />
         <Stack.Screen name="+not-found" />
       </Stack>
