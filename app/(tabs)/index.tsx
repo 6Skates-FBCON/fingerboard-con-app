@@ -21,7 +21,7 @@ export default function HomeScreen() {
     {
       time: '5 hours ago',
       title: 'Vendor Announcment',
-      text: 'Many of the past vendors will be returning, we're also happy to welcome some new and exciting vendors!.',
+      text: 'Many of the past vendors will be returning, we are also happy to welcome some new and exciting vendors!.',
     },
   ];
 
