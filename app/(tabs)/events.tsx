@@ -75,6 +75,14 @@ export default function EventsScreen() {
         description: 'Open Session, Hotel Restaurant & Bar Open',
         subEvents: [
           {
+            id: '11',
+            title: 'Panel Discussions',
+            time: '7:00 PM - 9:00 PM',
+            location: 'Main Stage',
+            type: 'panels',
+            description: 'Talking about the FB Scene'
+          },
+          {
             id: '8',
             title: 'Sponsored Event',
             time: '9:30 PM - 11:30 PM',
@@ -102,14 +110,6 @@ export default function EventsScreen() {
             type: 'retail',
             participants: 16,
             description: 'Getting cool stuff!'
-          },
-          {
-            id: '11',
-            title: 'Panel Discussions',
-            time: '12:00 PM - 3:00 PM',
-            location: 'Main Stage',
-            type: 'panels',
-            description: 'Talking about the FB Scene'
           },
         ]
       },
