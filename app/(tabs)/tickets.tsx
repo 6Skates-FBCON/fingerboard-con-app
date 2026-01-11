@@ -45,7 +45,7 @@ export default function TicketsScreen() {
         'Vendor access',
         'Commemorative Complete Fingerboard',
       ],
-      stripePriceId: 'price_1SNPAPLz01V9GjOugWCFGU8z',
+      stripePriceId: 'price_1SoWBnLz01V9GjOuJ3ef4l4w',
     },
     {
       id: 'blackriver deck combo',
