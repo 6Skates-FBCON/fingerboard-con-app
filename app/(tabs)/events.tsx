@@ -75,15 +75,6 @@ export default function EventsScreen() {
         description: 'Open Session, Hotel Restaurant & Bar Open',
         subEvents: [
           {
-            id: '7',
-            title: 'Sponsored Event',
-            time: '7:00 PM - 9:00 PM',
-            location: 'Main Ballroom',
-            type: 'competition',
-            participants: 32,
-            description: 'Details to follow'
-          },
-          {
             id: '8',
             title: 'Sponsored Event',
             time: '9:30 PM - 11:30 PM',
