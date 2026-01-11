@@ -59,6 +59,19 @@ export default function TicketsScreen() {
       ],
       stripePriceId: 'price_1SNPBDLz01V9GjOuOn3ajum9',
     },
+    {
+      id: 'vendor',
+      name: 'Vendor Package',
+      price: '$280',
+      features: [
+        'Official use of the Fingerboard Con logo for your event releases',
+        'Joint marketing + cross-promotion through our channels',
+        'Exclusive limited-edition Vendor FB Con fingerboard (only for vendors)',
+        '2 full admission passes to Fingerboard Con',
+        'Access to vendor-only networking event',
+      ],
+      stripePriceId: 'price_1SoWqNLz01V9GjOuKJ9cm8Wv',
+    },
   ];
 
   const handlePurchase = async (priceId: string) => {
