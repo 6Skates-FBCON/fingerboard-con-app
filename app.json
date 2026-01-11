@@ -2,7 +2,7 @@
   "expo": {
     "name": "Fingerboard Con",
     "slug": "fingerboard-con",
-    "version": "2.0.2",
+    "version": "2.0.3",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
@@ -12,7 +12,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.sixskates.fingerboardcon",
-      "buildNumber": "202",
+      "buildNumber": "203",
       "icon": "./assets/images/icon.png",
       "infoPlist": {
         "NSCameraUsageDescription": "We use your camera so you can record fingerboard clips for the event.",
@@ -24,7 +24,7 @@
 
     "android": {
       "package": "com.sixskates.fingerboardcon",
-      "versionCode": 202,
+      "versionCode": 203,
       "permissions": [
         "android.permission.CAMERA",
         "android.permission.RECORD_AUDIO",
