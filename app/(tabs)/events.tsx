@@ -94,6 +94,14 @@ export default function EventsScreen() {
     ],
     sunday: [
       {
+        id: '12',
+        title: 'Registration & Check-in',
+        time: '9:00 AM - 10:00 AM',
+        location: 'Ballroom Entrance',
+        type: 'social',
+        description: 'Get your wristbands.'
+      },
+      {
         id: '9',
         title: 'Fingerboard Con',
         time: '10:00 AM - 4:00 PM',
