@@ -230,13 +230,6 @@ export default function VendorsScreen() {
     }
   };
 
-  const findBooth = (boothNumber: string) => {
-    // TODO: Implement booth finding functionality
-    // This could navigate to a map view or show directions
-    console.log(`Finding booth ${boothNumber}`);
-    // For now, we'll show a simple alert-like behavior
-  };
-
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <LinearGradient
@@ -310,13 +303,6 @@ export default function VendorsScreen() {
                   <Globe size={18} color="#FFD700" />
                   <Text style={styles.websiteButtonText}>Visit Website</Text>
                 </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.findButton}
-                  onPress={() => findBooth(vendor.booth)}
-                >
-                  <MapPin size={18} color="#2E7D32" />
-                  <Text style={styles.findButtonText}>Find Booth</Text>
-                </TouchableOpacity>
               </View>
             </View>
           ))}
@@ -327,7 +313,7 @@ export default function VendorsScreen() {
           <View style={styles.mapPlaceholder}>
             <Text style={styles.mapText}>Interactive venue map coming soon!</Text>
             <Text style={styles.mapSubtext}>
-              Use the "Find Booth" buttons to get directions to specific vendors.
+              Check back for detailed booth locations and venue layout.
             </Text>
           </View>
         </View>
@@ -501,7 +487,6 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   websiteButton: {
-    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -517,22 +502,6 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '700',
     color: '#FFD700',
-  },
-  findButton: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 14,
-    paddingHorizontal: 16,
-    backgroundColor: '#FFD700',
-    borderRadius: 12,
-    gap: 8,
-  },
-  findButtonText: {
-    fontSize: 15,
-    fontWeight: '700',
-    color: '#2E7D32',
   },
   mapSection: {
     marginBottom: 40,
