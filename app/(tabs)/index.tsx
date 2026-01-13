@@ -15,7 +15,7 @@ export default function HomeScreen() {
   const updates = [
     {
       time: '2 hours ago',
-      title: 'Ticket Sales Open TBD 2026',
+      title: 'Ticket Sales Are Open!',
       text: 'Tickets are limited and required for all 3 days events.',
     },
     {
