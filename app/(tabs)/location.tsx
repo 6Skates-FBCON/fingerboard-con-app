@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Linking } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
-import { MapPin, Clock, Car, Bus, Plane, Phone, Mail, Wifi, Utensils, ShoppingBag } from 'lucide-react-native';
+import { MapPin, Clock, Car, Bus, Plane, Phone, Mail, Wifi, Utensils } from 'lucide-react-native';
 
 export default function LocationScreen() {
   const openMaps = async () => {
@@ -25,7 +25,6 @@ export default function LocationScreen() {
   const facilities = [
     { icon: Wifi, name: 'Free WiFi for Hotel Guests', description: 'High-speed internet throughout venue' },
     { icon: Utensils, name: 'Food & Drinks', description: 'The Hotel has a full service bar and restaurant' },
-    { icon: ShoppingBag, name: 'Vendor Mall', description: '50+ booths across two halls' },
     { icon: Car, name: 'Parking', description: 'Free on-site parking available' },
   ];
 
