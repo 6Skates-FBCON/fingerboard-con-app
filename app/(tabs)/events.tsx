@@ -35,7 +35,7 @@ export default function EventsScreen() {
         time: '6:00 PM - 11:30 PM',
         location: 'Main Ballroom',
         type: 'social',
-        description: 'Kick off the weekend fingerboarding and sponsored events!',
+        description: 'Kick off the weekend with fingerboarding and sponsored events!',
         subEvents: [
           {
             id: '4',
