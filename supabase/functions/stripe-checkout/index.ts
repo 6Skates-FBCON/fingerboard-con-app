@@ -41,7 +41,7 @@ Deno.serve(async (req) => {
       return corsResponse({ error: 'Method not allowed' }, 405);
     }
 
-    const { price_id, success_url, cancel_url, mode } = await req.json();
+    const { price_id, success_url, cancel_url, mode, vendor_code } = await req.json();
 
     const error = validateParameters(
       { price_id, success_url, cancel_url, mode },
@@ -55,6 +55,43 @@ Deno.serve(async (req) => {
 
     if (error) {
       return corsResponse({ error }, 400);
+    }
+
+    // Validate vendor code if provided
+    if (vendor_code) {
+      const { data: vendorCodeData, error: vendorCodeError } = await supabase
+        .from('vendor_codes')
+        .select('id, code, is_active, used_count, max_uses')
+        .eq('code', vendor_code.toUpperCase())
+        .maybeSingle();
+
+      if (vendorCodeError) {
+        console.error('Error validating vendor code:', vendorCodeError);
+        return corsResponse({ error: 'Failed to validate vendor code' }, 500);
+      }
+
+      if (!vendorCodeData) {
+        return corsResponse({ error: 'Invalid vendor code' }, 403);
+      }
+
+      if (!vendorCodeData.is_active) {
+        return corsResponse({ error: 'This vendor code is no longer active' }, 403);
+      }
+
+      if (vendorCodeData.max_uses !== null && vendorCodeData.used_count >= vendorCodeData.max_uses) {
+        return corsResponse({ error: 'This vendor code has reached its maximum number of uses' }, 403);
+      }
+
+      // Increment the used count
+      const { error: updateError } = await supabase
+        .from('vendor_codes')
+        .update({ used_count: vendorCodeData.used_count + 1 })
+        .eq('id', vendorCodeData.id);
+
+      if (updateError) {
+        console.error('Failed to increment vendor code usage:', updateError);
+        // Continue anyway - the code was valid
+      }
     }
 
     const authHeader = req.headers.get('Authorization')!;

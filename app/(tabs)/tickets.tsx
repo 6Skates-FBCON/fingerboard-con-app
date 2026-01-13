@@ -1,7 +1,7 @@
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Linking, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Linking, Alert, Modal, TextInput } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
-import { ExternalLink, Ticket, Star, Users, Calendar, Check } from 'lucide-react-native';
+import { ExternalLink, Ticket, Star, Users, Calendar, Check, X } from 'lucide-react-native';
 import { router } from 'expo-router';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/hooks/useAuth';
@@ -10,6 +10,10 @@ import { useState, useEffect } from 'react';
 export default function TicketsScreen() {
   const { session } = useAuth();
   const [loading, setLoading] = useState(false);
+  const [vendorCodeModalVisible, setVendorCodeModalVisible] = useState(false);
+  const [vendorCode, setVendorCode] = useState('');
+  const [pendingPriceId, setPendingPriceId] = useState<string | null>(null);
+  const [validatingCode, setValidatingCode] = useState(false);
 
   interface TicketType {
     id: string;
@@ -74,13 +78,80 @@ export default function TicketsScreen() {
     },
   ];
 
-  const handlePurchase = async (priceId: string) => {
+  const validateVendorCode = async (code: string): Promise<boolean> => {
+    if (!code.trim()) {
+      Alert.alert('Invalid Code', 'Please enter a vendor code.');
+      return false;
+    }
+
+    setValidatingCode(true);
+    try {
+      const { data, error } = await supabase
+        .from('vendor_codes')
+        .select('id, code, is_active, used_count, max_uses')
+        .eq('code', code.trim().toUpperCase())
+        .maybeSingle();
+
+      if (error) {
+        console.error('Error validating code:', error);
+        Alert.alert('Error', 'Failed to validate vendor code. Please try again.');
+        return false;
+      }
+
+      if (!data) {
+        Alert.alert('Invalid Code', 'This vendor code is not valid.');
+        return false;
+      }
+
+      if (!data.is_active) {
+        Alert.alert('Code Inactive', 'This vendor code is no longer active.');
+        return false;
+      }
+
+      if (data.max_uses !== null && data.used_count >= data.max_uses) {
+        Alert.alert('Code Expired', 'This vendor code has reached its maximum number of uses.');
+        return false;
+      }
+
+      return true;
+    } catch (error: any) {
+      console.error('Validation error:', error);
+      Alert.alert('Error', 'An error occurred while validating the code.');
+      return false;
+    } finally {
+      setValidatingCode(false);
+    }
+  };
+
+  const handleVendorCodeSubmit = async () => {
+    const isValid = await validateVendorCode(vendorCode);
+    if (isValid && pendingPriceId) {
+      setVendorCodeModalVisible(false);
+      await proceedWithPurchase(pendingPriceId, vendorCode.trim().toUpperCase());
+      setVendorCode('');
+      setPendingPriceId(null);
+    }
+  };
+
+  const handlePurchase = async (priceId: string, ticketId: string) => {
     if (!session) {
       Alert.alert('Authentication Required', 'Please log in to purchase tickets.');
       router.push('/login');
       return;
     }
 
+    // If this is a vendor ticket, show the code modal
+    if (ticketId === 'vendor') {
+      setPendingPriceId(priceId);
+      setVendorCodeModalVisible(true);
+      return;
+    }
+
+    // For non-vendor tickets, proceed directly
+    await proceedWithPurchase(priceId);
+  };
+
+  const proceedWithPurchase = async (priceId: string, vendorCode?: string) => {
     setLoading(true);
 
     try {
@@ -93,6 +164,17 @@ export default function TicketsScreen() {
 
       console.log('Starting checkout...');
 
+      const requestBody: any = {
+        price_id: priceId,
+        mode: 'payment',
+        success_url: 'fingerboardcon://tickets?success=true',
+        cancel_url: 'fingerboardcon://tickets?canceled=true',
+      };
+
+      if (vendorCode) {
+        requestBody.vendor_code = vendorCode;
+      }
+
       const response = await fetch(`${supabaseUrl}/functions/v1/stripe-checkout`, {
         method: 'POST',
         headers: {
@@ -100,12 +182,7 @@ export default function TicketsScreen() {
           'Content-Type': 'application/json',
           'apikey': supabaseAnonKey,
         },
-        body: JSON.stringify({
-          price_id: priceId,
-          mode: 'payment',
-          success_url: 'fingerboardcon://tickets?success=true',
-          cancel_url: 'fingerboardcon://tickets?canceled=true',
-        }),
+        body: JSON.stringify(requestBody),
       });
 
       const responseText = await response.text();
@@ -217,7 +294,7 @@ export default function TicketsScreen() {
                 !ticket.stripePriceId && styles.disabledButton,
               ]}
               disabled={ticket.soldOut || !ticket.stripePriceId || loading}
-              onPress={() => ticket.stripePriceId && handlePurchase(ticket.stripePriceId)}
+              onPress={() => ticket.stripePriceId && handlePurchase(ticket.stripePriceId, ticket.id)}
             >
               <Text style={[
                 styles.purchaseButtonText,
@@ -262,6 +339,60 @@ export default function TicketsScreen() {
           </View>
         </View>
       </ScrollView>
+
+      <Modal
+        visible={vendorCodeModalVisible}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => {
+          setVendorCodeModalVisible(false);
+          setVendorCode('');
+          setPendingPriceId(null);
+        }}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Vendor Access Code Required</Text>
+              <TouchableOpacity
+                onPress={() => {
+                  setVendorCodeModalVisible(false);
+                  setVendorCode('');
+                  setPendingPriceId(null);
+                }}
+                style={styles.closeButton}
+              >
+                <X size={24} color="#FFFFFF" />
+              </TouchableOpacity>
+            </View>
+
+            <Text style={styles.modalDescription}>
+              Please enter your vendor access code to purchase the Vendor Package.
+            </Text>
+
+            <TextInput
+              style={styles.codeInput}
+              placeholder="Enter vendor code"
+              placeholderTextColor="#81C784"
+              value={vendorCode}
+              onChangeText={setVendorCode}
+              autoCapitalize="characters"
+              autoCorrect={false}
+              editable={!validatingCode}
+            />
+
+            <TouchableOpacity
+              style={[styles.submitButton, validatingCode && styles.submitButtonDisabled]}
+              onPress={handleVendorCodeSubmit}
+              disabled={validatingCode || !vendorCode.trim()}
+            >
+              <Text style={styles.submitButtonText}>
+                {validatingCode ? 'Validating...' : 'Continue to Checkout'}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -456,5 +587,68 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#E8F5E8',
     lineHeight: 20,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  modalContent: {
+    backgroundColor: '#2E7D32',
+    borderRadius: 20,
+    padding: 24,
+    width: '100%',
+    maxWidth: 400,
+    borderWidth: 2,
+    borderColor: '#4CAF50',
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: '800',
+    color: '#FFFFFF',
+    flex: 1,
+  },
+  closeButton: {
+    padding: 4,
+  },
+  modalDescription: {
+    fontSize: 15,
+    color: '#E8F5E8',
+    marginBottom: 20,
+    lineHeight: 22,
+  },
+  codeInput: {
+    backgroundColor: '#4CAF50',
+    borderRadius: 12,
+    padding: 16,
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#FFFFFF',
+    borderWidth: 2,
+    borderColor: '#66BB6A',
+    marginBottom: 20,
+  },
+  submitButton: {
+    backgroundColor: '#FFD700',
+    borderRadius: 12,
+    paddingVertical: 16,
+    paddingHorizontal: 20,
+    alignItems: 'center',
+  },
+  submitButtonDisabled: {
+    opacity: 0.5,
+  },
+  submitButtonText: {
+    fontSize: 16,
+    fontWeight: '800',
+    color: '#2E7D32',
   },
 });
