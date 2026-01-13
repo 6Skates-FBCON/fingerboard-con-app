@@ -148,7 +148,7 @@ export default function LocationScreen() {
           <View style={styles.noteCard}>
             <Text style={styles.noteTitle}>🎫 Entry Requirements</Text>
             <Text style={styles.noteText}>
-              • Valid ticket and ID required for entry{'\n'}
+              • Valid ticket and ID required for entry for all 3 days{'\n'}
               • Security check at main entrance{'\n'}
               • Please remain in designated event areas (hotel lobby, restaurant, or main ballroom)
             </Text>
