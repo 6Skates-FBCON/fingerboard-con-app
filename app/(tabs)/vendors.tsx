@@ -48,13 +48,13 @@ export default function VendorsScreen() {
     },
     {
       id: '4',
-      name: 'TBD',
-      description: 'Vendor details coming soon',
+      name: 'FlatFace Fingerboards',
+      description: 'The home of Premium Fingerboard Brands',
       category: 'decks',
       booth: '4',
       featured: false,
       website: '',
-      specialOffer: 'FBCon Exclusive drops',
+      specialOffer: 'FlatFace, Blistered & Duck Decks',
     },
     {
       id: '5',
