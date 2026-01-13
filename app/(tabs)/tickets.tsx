@@ -130,6 +130,10 @@ export default function TicketsScreen() {
       await proceedWithPurchase(pendingPriceId, vendorCode.trim().toUpperCase());
       setVendorCode('');
       setPendingPriceId(null);
+    } else {
+      setVendorCodeModalVisible(false);
+      setVendorCode('');
+      setPendingPriceId(null);
     }
   };
 
