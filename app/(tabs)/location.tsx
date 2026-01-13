@@ -125,7 +125,7 @@ export default function LocationScreen() {
             <View style={styles.contactRow}>
               <Phone size={20} color="#00D4FF" />
               <View style={styles.contactInfo}>
-                <Text style={styles.contactLabel}>Event Hotline</Text>
+                <Text style={styles.contactLabel}>Hotel Contact</Text>
                 <TouchableOpacity onPress={callVenue}>
                   <Text style={styles.contactValue}>(978)-640-9000</Text>
                 </TouchableOpacity>
