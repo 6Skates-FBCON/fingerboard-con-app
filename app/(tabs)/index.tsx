@@ -75,18 +75,6 @@ export default function HomeScreen() {
             </View>
           ))}
         </View>
-
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Event Highlights</Text>
-          <View style={styles.highlightCard}>
-            <Text style={styles.highlightTitle}>Blackriver Ramps Sponsored Event</Text>
-            <Text style={styles.highlightText}>Friday 7:00 PM - Main Ballroom</Text>
-          </View>
-          <View style={styles.highlightCard}>
-            <Text style={styles.highlightTitle}>FBCon Main Event</Text>
-            <Text style={styles.highlightText}>Synday 9:00 AM - Main Ballroom</Text>
-          </View>
-        </View>
       </View>
       </ScrollView>
     </SafeAreaView>
@@ -254,27 +242,5 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: '#E8F5E8',
     lineHeight: 22,
-  },
-  highlightCard: {
-    backgroundColor: '#4CAF50',
-    borderRadius: 16,
-    padding: 20,
-    marginBottom: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
-    shadowRadius: 8,
-    elevation: 4,
-  },
-  highlightTitle: {
-    fontSize: 17,
-    fontWeight: '700',
-    color: '#FFFFFF',
-    marginBottom: 8,
-  },
-  highlightText: {
-    fontSize: 15,
-    color: '#FFD700',
-    fontWeight: '600',
   },
 });
