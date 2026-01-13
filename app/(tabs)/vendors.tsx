@@ -237,7 +237,7 @@ export default function VendorsScreen() {
         style={styles.header}
       >
         <Text style={styles.title}>Vendor Directory</Text>
-        <Text style={styles.subtitle}>{vendors.length} vendors • Hall A & B</Text>
+        <Text style={styles.subtitle}>{vendors.length} vendors • Main Ballroom</Text>
       </LinearGradient>
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
