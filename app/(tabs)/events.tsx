@@ -58,20 +58,20 @@ export default function EventsScreen() {
     ],
     saturday: [
       {
-        id: '13',
-        title: 'Registration & Check-in',
-        time: '4:00 PM - 6:00 PM',
-        location: 'Ballroom Entrance',
-        type: 'social',
-        description: 'Get your wristbands.'
-      },
-      {
         id: '5',
         title: 'FlatFace Rendezvous',
         time: '12:00 PM - 5:30 PM',
         location: 'FlatFace Warehouse, 54 Chuck Dr, Dracut, MA 01826',
         type: 'social',
         description: 'Open Fingerboard Session'
+      },
+      {
+        id: '13',
+        title: 'Registration & Check-in',
+        time: '4:00 PM - 6:00 PM',
+        location: 'Ballroom Entrance',
+        type: 'social',
+        description: 'Get your wristbands.'
       },
       {
         id: '6',
