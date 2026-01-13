@@ -268,9 +268,9 @@ const styles = StyleSheet.create({
   },
   ticketNoticeText: {
     flex: 1,
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: '800',
     color: '#2E7D32',
-    lineHeight: 28,
+    lineHeight: 24,
   },
 });
