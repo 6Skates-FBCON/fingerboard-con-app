@@ -24,7 +24,7 @@ export default function LocationScreen() {
 
   const facilities = [
     { icon: Wifi, name: 'Free WiFi for Hotel Guests', description: 'High-speed internet throughout venue' },
-    { icon: Utensils, name: 'Food Court', description: 'Multiple dining options available' },
+    { icon: Utensils, name: 'Food & Drinks', description: 'The Hotel has a full service bar and restaurant' },
     { icon: ShoppingBag, name: 'Vendor Mall', description: '50+ booths across two halls' },
     { icon: Car, name: 'Parking', description: 'Free on-site parking available' },
   ];
