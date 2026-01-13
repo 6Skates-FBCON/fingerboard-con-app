@@ -66,7 +66,7 @@ export default function LocationScreen() {
             </View>
             <View style={styles.dayRow}>
               <Text style={styles.dayText}>Sunday, April 26</Text>
-              <Text style={styles.timeText}>10:00 AM - 6:00 PM</Text>
+              <Text style={styles.timeText}>10:00 AM - 4:00 PM</Text>
             </View>
           </View>
         </View>
