@@ -145,7 +145,9 @@ async function generateTicketsForOrder(orderId: number, customerId: string, sess
     const userId = customerData.user_id;
 
     // Get line items to determine quantity and ticket type
-    const lineItems = await stripe.checkout.sessions.listLineItems(session.id);
+    const lineItems = await stripe.checkout.sessions.listLineItems(session.id, {
+      expand: ['data.price'],
+    });
 
     if (!lineItems.data || lineItems.data.length === 0) {
       console.error('No line items found for session:', session.id);
@@ -153,8 +155,18 @@ async function generateTicketsForOrder(orderId: number, customerId: string, sess
     }
 
     const lineItem = lineItems.data[0];
-    const quantity = lineItem.quantity || 1;
-    const ticketType = lineItem.description || 'General Admission';
+    const priceId = lineItem.price?.id;
+    let quantity = lineItem.quantity || 1;
+    let ticketType = lineItem.description || 'General Admission';
+
+    // Vendor Package price ID - creates 2 admission tickets
+    const VENDOR_PACKAGE_PRICE_ID = 'price_1SoWqNLz01V9GjOuKJ9cm8Wv';
+
+    // If this is a vendor package, create 2 individual admission tickets
+    if (priceId === VENDOR_PACKAGE_PRICE_ID) {
+      quantity = 2;
+      ticketType = 'Vendor Package - Admission';
+    }
 
     // Define color palette for tickets
     const ticketColors = ['#4CAF50', '#2196F3', '#FF9800', '#9C27B0', '#F44336', '#00BCD4', '#8BC34A', '#FFC107'];
