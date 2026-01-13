@@ -71,7 +71,7 @@ export default function EventsScreen() {
         time: '6:00 PM - 11:30 AM',
         location: 'Main Ballroom & Hotel Lobby',
         type: 'social',
-        description: 'Open Session, Food available and drinks available at the Hotel Restaurant & Bar for a fee',
+        description: 'Open Session, Food and drinks available at the Hotel Restaurant & Bar for a fee',
         subEvents: [
           {
             id: '11',
