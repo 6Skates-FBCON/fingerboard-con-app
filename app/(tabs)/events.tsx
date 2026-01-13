@@ -115,7 +115,6 @@ export default function EventsScreen() {
             time: '10:00 AM - 4:00 PM',
             location: 'Main Ballroom',
             type: 'retail',
-            participants: 16,
             description: 'Getting cool stuff!'
           },
         ]
