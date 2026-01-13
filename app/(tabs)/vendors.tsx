@@ -216,6 +216,36 @@ export default function VendorsScreen() {
       website: '',
       specialOffer: 'FBCon Exclusive drops',
     },
+    {
+      id: '21',
+      name: 'TBD',
+      description: 'Vendor details coming soon',
+      category: 'decks',
+      booth: '21',
+      featured: false,
+      website: '',
+      specialOffer: 'FBCon Exclusive drops',
+    },
+    {
+      id: '22',
+      name: 'TBD',
+      description: 'Vendor details coming soon',
+      category: 'decks',
+      booth: '22',
+      featured: false,
+      website: '',
+      specialOffer: 'FBCon Exclusive drops',
+    },
+    {
+      id: '23',
+      name: 'TBD',
+      description: 'Vendor details coming soon',
+      category: 'decks',
+      booth: '23',
+      featured: false,
+      website: '',
+      specialOffer: 'FBCon Exclusive drops',
+    },
   ];
 
   const featuredVendors = vendors.filter(vendor => vendor.featured);
