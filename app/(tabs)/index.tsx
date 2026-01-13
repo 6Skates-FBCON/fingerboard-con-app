@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Calendar, Users, ShoppingBag, MapPin, Bell } from 'lucide-react-native';
+import { Calendar, Users, ShoppingBag, MapPin, Bell, Clock } from 'lucide-react-native';
 import { router } from 'expo-router';
 
 export default function HomeScreen() {
@@ -59,6 +59,24 @@ export default function HomeScreen() {
                 <Text style={styles.actionText}>{action.label}</Text>
               </TouchableOpacity>
             ))}
+          </View>
+        </View>
+
+        <View style={styles.registrationCard}>
+          <View style={styles.registrationIconContainer}>
+            <Users size={32} color="#2E7D32" />
+          </View>
+          <View style={styles.registrationContent}>
+            <Text style={styles.registrationTitle}>Registration & Check-in</Text>
+            <View style={styles.registrationMeta}>
+              <Clock size={16} color="#2E7D32" />
+              <Text style={styles.registrationTime}>4:00 PM - 6:00 PM</Text>
+            </View>
+            <View style={styles.registrationMeta}>
+              <MapPin size={16} color="#2E7D32" />
+              <Text style={styles.registrationLocation}>Ballroom Entrance</Text>
+            </View>
+            <Text style={styles.registrationDescription}>Get your wristbands.</Text>
           </View>
         </View>
 
@@ -242,5 +260,59 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: '#E8F5E8',
     lineHeight: 22,
+  },
+  registrationCard: {
+    backgroundColor: '#FFD700',
+    borderRadius: 16,
+    padding: 20,
+    marginBottom: 32,
+    flexDirection: 'row',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  registrationIconContainer: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    backgroundColor: '#00D4FF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 16,
+  },
+  registrationContent: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  registrationTitle: {
+    fontSize: 20,
+    fontWeight: '800',
+    color: '#2E7D32',
+    marginBottom: 8,
+  },
+  registrationMeta: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 4,
+  },
+  registrationTime: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#2E7D32',
+    marginLeft: 8,
+  },
+  registrationLocation: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#2E7D32',
+    marginLeft: 8,
+  },
+  registrationDescription: {
+    fontSize: 14,
+    color: '#2E7D32',
+    marginTop: 8,
+    fontWeight: '600',
   },
 });
