@@ -19,9 +19,9 @@ export default function HomeScreen() {
       text: 'Tickets are limited and required for all 3 days events.',
     },
     {
-      time: '5 hours ago',
-      title: 'Vendor Announcment',
-      text: 'Many of the past vendors will be returning, we are also happy to welcome some new and exciting vendors!.',
+      time: 'Coming Soon',
+      title: 'Vendor Announcments',
+      text: 'Many of the past vendors will be returning, we are also happy to welcome some new exciting vendors!.',
     },
   ];
 
