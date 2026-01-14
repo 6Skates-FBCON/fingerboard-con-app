@@ -6,14 +6,16 @@ import { router } from 'expo-router';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/hooks/useAuth';
 import { useState, useEffect } from 'react';
+import LoginPromptModal from '@/components/LoginPromptModal';
 
 export default function TicketsScreen() {
-  const { session } = useAuth();
+  const { session, isAuthenticated } = useAuth();
   const [loading, setLoading] = useState(false);
   const [vendorCodeModalVisible, setVendorCodeModalVisible] = useState(false);
   const [vendorCode, setVendorCode] = useState('');
   const [pendingPriceId, setPendingPriceId] = useState<string | null>(null);
   const [validatingCode, setValidatingCode] = useState(false);
+  const [showLoginPrompt, setShowLoginPrompt] = useState(false);
 
   interface TicketType {
     id: string;
@@ -138,9 +140,8 @@ export default function TicketsScreen() {
   };
 
   const handlePurchase = async (priceId: string, ticketId: string) => {
-    if (!session) {
-      Alert.alert('Authentication Required', 'Please log in to purchase tickets.');
-      router.push('/login');
+    if (!isAuthenticated) {
+      setShowLoginPrompt(true);
       return;
     }
 
@@ -397,6 +398,12 @@ export default function TicketsScreen() {
           </View>
         </View>
       </Modal>
+
+      <LoginPromptModal
+        visible={showLoginPrompt}
+        onClose={() => setShowLoginPrompt(false)}
+        message="You need to sign in to purchase tickets. Create an account or sign in to continue."
+      />
     </SafeAreaView>
   );
 }

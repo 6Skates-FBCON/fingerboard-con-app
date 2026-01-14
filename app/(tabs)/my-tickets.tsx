@@ -27,7 +27,7 @@ interface TicketData {
 }
 
 export default function MyTicketsScreen() {
-  const { session } = useAuth();
+  const { session, isAuthenticated } = useAuth();
   const [tickets, setTickets] = useState<TicketData[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -118,6 +118,30 @@ export default function MyTicketsScreen() {
     acc[ticket.order_id].push(ticket);
     return acc;
   }, {} as Record<number, TicketData[]>);
+
+  if (!isAuthenticated) {
+    return (
+      <SafeAreaView style={styles.container} edges={['top']}>
+        <LinearGradient colors={['#4CAF50', '#2E7D32']} style={styles.header}>
+          <Text style={styles.title}>My Tickets & Hotel</Text>
+        </LinearGradient>
+
+        <View style={styles.notSignedInContainer}>
+          <Ticket size={80} color="#66BB6A" strokeWidth={1.5} />
+          <Text style={styles.notSignedInTitle}>Sign in required</Text>
+          <Text style={styles.notSignedInText}>
+            Sign in to view your purchased tickets and access your hotel booking information.
+          </Text>
+          <TouchableOpacity
+            style={styles.signInButton}
+            onPress={() => router.push('/login')}
+          >
+            <Text style={styles.signInButtonText}>Sign In</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
@@ -494,5 +518,41 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#E8F5E8',
     lineHeight: 22,
+  },
+  notSignedInContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 40,
+  },
+  notSignedInTitle: {
+    fontSize: 28,
+    fontWeight: '900',
+    color: '#FFFFFF',
+    marginTop: 24,
+  },
+  notSignedInText: {
+    fontSize: 16,
+    color: '#E8F5E8',
+    textAlign: 'center',
+    marginTop: 12,
+    lineHeight: 24,
+  },
+  signInButton: {
+    backgroundColor: '#FFD700',
+    paddingVertical: 16,
+    paddingHorizontal: 48,
+    borderRadius: 12,
+    marginTop: 32,
+    shadowColor: '#FFD700',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  signInButtonText: {
+    fontSize: 17,
+    fontWeight: '800',
+    color: '#2E7D32',
   },
 });

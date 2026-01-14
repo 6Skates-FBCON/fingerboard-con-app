@@ -2,11 +2,13 @@ import { Redirect } from 'expo-router';
 import { useAuth } from '@/hooks/useAuth';
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Index() {
   const { isAuthenticated, loading } = useAuth();
   const [isRecovery, setIsRecovery] = useState(false);
   const [checkingRecovery, setCheckingRecovery] = useState(true);
+  const [isBrowsingMode, setIsBrowsingMode] = useState<boolean | null>(null);
 
   useEffect(() => {
     const checkRecoveryMode = async () => {
@@ -16,7 +18,6 @@ export default function Index() {
       }
 
       try {
-        // Check URL parameters first
         const urlParams = new URLSearchParams(window.location.search);
         const hashParams = new URLSearchParams(window.location.hash.substring(1));
         const type = urlParams.get('type') || hashParams.get('type');
@@ -24,7 +25,6 @@ export default function Index() {
 
         console.log('Recovery check - type:', type, 'accessToken:', accessToken ? 'present' : 'none');
 
-        // If we have a recovery type in the URL, this is definitely a password reset
         if (type === 'recovery' && accessToken) {
           console.log('Detected recovery token in URL');
           setIsRecovery(true);
@@ -32,7 +32,6 @@ export default function Index() {
           return;
         }
 
-        // Also check the session
         const { data: { session } } = await supabase.auth.getSession();
         console.log('Session check:', session?.user ? 'user present' : 'no user');
 
@@ -43,10 +42,21 @@ export default function Index() {
       }
     };
 
+    const checkBrowsingMode = async () => {
+      try {
+        const mode = await AsyncStorage.getItem('browsing_mode');
+        setIsBrowsingMode(mode === 'true');
+      } catch (error) {
+        console.error('Error checking browsing mode:', error);
+        setIsBrowsingMode(false);
+      }
+    };
+
     checkRecoveryMode();
+    checkBrowsingMode();
   }, []);
 
-  if (loading || checkingRecovery) {
+  if (loading || checkingRecovery || isBrowsingMode === null) {
     return null;
   }
 
@@ -58,5 +68,9 @@ export default function Index() {
     return <Redirect href="/(tabs)" />;
   }
 
-  return <Redirect href="/login" />;
+  if (isBrowsingMode) {
+    return <Redirect href="/(tabs)" />;
+  }
+
+  return <Redirect href="/welcome" />;
 }
