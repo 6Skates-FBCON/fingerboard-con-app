@@ -1,13 +1,16 @@
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
-import { LogOut, User, Mail, Bell, Settings } from 'lucide-react-native';
+import { LogOut, User, Mail, Bell, Settings, Trash2 } from 'lucide-react-native';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/lib/supabase';
 import { router } from 'expo-router';
+import { useState } from 'react';
+import { DeleteAccountModal } from '@/components/DeleteAccountModal';
 
 export default function AccountScreen() {
   const { user, session, role } = useAuth();
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const handleSignOut = async () => {
     console.log('===== SIGN OUT BUTTON CLICKED =====');
@@ -33,6 +36,44 @@ export default function AccountScreen() {
     } catch (error) {
       console.log('Exception during sign out:', error);
       Alert.alert('Error', 'Failed to sign out: ' + (error as Error).message);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    try {
+      if (!supabase || !session) {
+        Alert.alert('Error', 'Authentication error');
+        return;
+      }
+
+      const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL;
+      const apiUrl = `${supabaseUrl}/functions/v1/delete-account`;
+
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${session.access_token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to delete account');
+      }
+
+      await supabase.auth.signOut();
+
+      router.replace('/welcome');
+
+      setTimeout(() => {
+        Alert.alert('Account Deleted', 'Your account has been permanently deleted.');
+      }, 500);
+    } catch (error) {
+      console.error('Error deleting account:', error);
+      Alert.alert('Error', 'Failed to delete account: ' + (error as Error).message);
+      throw error;
     }
   };
 
@@ -122,7 +163,26 @@ export default function AccountScreen() {
             <Text style={styles.comingSoonBadge}>Soon</Text>
           </TouchableOpacity>
         </View>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Danger Zone</Text>
+
+          <TouchableOpacity
+            style={styles.deleteMenuItem}
+            onPress={() => setShowDeleteModal(true)}
+          >
+            <Trash2 size={20} color="#FF5252" />
+            <Text style={styles.deleteMenuItemText}>Delete Account</Text>
+          </TouchableOpacity>
+        </View>
       </ScrollView>
+
+      <DeleteAccountModal
+        visible={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        onConfirm={handleDeleteAccount}
+        userEmail={user.email || ''}
+      />
     </SafeAreaView>
   );
 }
@@ -287,5 +347,22 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     paddingHorizontal: 10,
     borderRadius: 8,
+  },
+  deleteMenuItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 12,
+    gap: 12,
+    borderWidth: 2,
+    borderColor: '#FF5252',
+  },
+  deleteMenuItemText: {
+    flex: 1,
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#FF5252',
   },
 });
