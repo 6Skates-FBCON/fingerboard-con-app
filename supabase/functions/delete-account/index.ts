@@ -48,22 +48,49 @@ Deno.serve(async (req: Request) => {
 
     console.log(`Starting account deletion for user: ${userId}`);
 
-    const { error: ticketsError } = await supabaseClient
+    const { error: ticketsOwnedError } = await supabaseClient
       .from('tickets')
       .delete()
       .eq('owner_id', userId);
 
-    if (ticketsError) {
-      console.error('Error deleting tickets:', ticketsError);
+    if (ticketsOwnedError) {
+      console.error('Error deleting owned tickets:', ticketsOwnedError);
     }
 
-    const { error: transfersError } = await supabaseClient
-      .from('ticket_transfers')
-      .delete()
-      .or(`from_user_id.eq.${userId},to_user_id.eq.${userId}`);
+    const { error: ticketsPurchaserError } = await supabaseClient
+      .from('tickets')
+      .update({ original_purchaser_id: null })
+      .eq('original_purchaser_id', userId);
 
-    if (transfersError) {
-      console.error('Error deleting ticket transfers:', transfersError);
+    if (ticketsPurchaserError) {
+      console.error('Error clearing original_purchaser_id:', ticketsPurchaserError);
+    }
+
+    const { error: ticketsValidatorError } = await supabaseClient
+      .from('tickets')
+      .update({ validated_by: null })
+      .eq('validated_by', userId);
+
+    if (ticketsValidatorError) {
+      console.error('Error clearing validated_by:', ticketsValidatorError);
+    }
+
+    const { error: transfersFromError } = await supabaseClient
+      .from('ticket_transfers')
+      .update({ from_user_id: null })
+      .eq('from_user_id', userId);
+
+    if (transfersFromError) {
+      console.error('Error clearing from_user_id:', transfersFromError);
+    }
+
+    const { error: transfersToError } = await supabaseClient
+      .from('ticket_transfers')
+      .update({ to_user_id: null })
+      .eq('to_user_id', userId);
+
+    if (transfersToError) {
+      console.error('Error clearing to_user_id:', transfersToError);
     }
 
     const { error: customersError } = await supabaseClient
