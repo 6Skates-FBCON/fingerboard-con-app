@@ -2,13 +2,11 @@ import { Redirect } from 'expo-router';
 import { useAuth } from '@/hooks/useAuth';
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Index() {
-  const { isAuthenticated, loading } = useAuth();
+  const { loading } = useAuth();
   const [isRecovery, setIsRecovery] = useState(false);
   const [checkingRecovery, setCheckingRecovery] = useState(true);
-  const [isBrowsingMode, setIsBrowsingMode] = useState<boolean | null>(null);
 
   useEffect(() => {
     const checkRecoveryMode = async () => {
@@ -42,21 +40,10 @@ export default function Index() {
       }
     };
 
-    const checkBrowsingMode = async () => {
-      try {
-        const mode = await AsyncStorage.getItem('browsing_mode');
-        setIsBrowsingMode(mode === 'true');
-      } catch (error) {
-        console.error('Error checking browsing mode:', error);
-        setIsBrowsingMode(false);
-      }
-    };
-
     checkRecoveryMode();
-    checkBrowsingMode();
   }, []);
 
-  if (loading || checkingRecovery || isBrowsingMode === null) {
+  if (loading || checkingRecovery) {
     return null;
   }
 
@@ -64,13 +51,5 @@ export default function Index() {
     return <Redirect href="/reset-password" />;
   }
 
-  if (isAuthenticated) {
-    return <Redirect href="/(tabs)" />;
-  }
-
-  if (isBrowsingMode) {
-    return <Redirect href="/(tabs)" />;
-  }
-
-  return <Redirect href="/welcome" />;
+  return <Redirect href="/(tabs)" />;
 }
