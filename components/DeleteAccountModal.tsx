@@ -21,6 +21,8 @@ export function DeleteAccountModal({ visible, onClose, onConfirm, userEmail }: D
     setIsDeleting(true);
     try {
       await onConfirm();
+      setConfirmText('');
+      onClose();
     } catch (error) {
       setIsDeleting(false);
     }
