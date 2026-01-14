@@ -65,7 +65,7 @@ export default function AccountScreen() {
 
       await supabase.auth.signOut();
 
-      router.replace('/welcome');
+      router.replace('/(tabs)');
 
       setTimeout(() => {
         Alert.alert('Account Deleted', 'Your account has been permanently deleted.');
