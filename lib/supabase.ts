@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import { Platform } from 'react-native';
 
 // Supabase configuration - these will be available after connecting to Supabase
 const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL || '';
@@ -115,11 +116,9 @@ export const api = {
       throw new Error('Supabase not connected. Please connect to Supabase first.');
     }
 
-    const baseUrl = typeof window !== 'undefined'
-      ? window.location.origin
-      : 'https://fingerboard-con-mobi-y0m1.bolt.host';
-
-    const redirectTo = `${baseUrl}/reset-password`;
+    const redirectTo = Platform.OS === 'web' && typeof window !== 'undefined' && window.location
+      ? `${window.location.origin}/reset-password`
+      : 'myapp://reset-password';
 
     console.log('Sending password reset email with redirectTo:', redirectTo);
 
