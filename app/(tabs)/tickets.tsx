@@ -460,7 +460,7 @@ export default function TicketsScreen() {
             </View>
 
             <Text style={styles.modalDescription}>
-              Please enter the access code to purchase this ticket. Contact fingerboardcon@6skates.com if you need the access code.
+              Tickets will be available for purchase shortly. Please follow us on Instagram for the latest information.
             </Text>
 
             <TextInput
