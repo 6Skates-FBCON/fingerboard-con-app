@@ -12,7 +12,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.sixskates.fingerboardcon",
-      "buildNumber": "204",
+      "buildNumber": "205",
       "icon": "./assets/images/icon.png",
       "infoPlist": {
         "NSCameraUsageDescription": "We use your camera so you can record fingerboard clips for the event.",
@@ -24,7 +24,7 @@
 
     "android": {
       "package": "com.sixskates.fingerboardcon",
-      "versionCode": 204,
+      "versionCode": 205,
       "permissions": [
         "android.permission.CAMERA",
         "android.permission.RECORD_AUDIO",
