@@ -20,6 +20,8 @@ export interface UserProfile {
   id: string;
   email: string;
   role: UserRole;
+  first_name?: string;
+  last_name?: string;
   phone_number?: string;
   address?: string;
   city?: string;

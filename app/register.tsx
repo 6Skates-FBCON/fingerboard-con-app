@@ -2,11 +2,13 @@ import { View, Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingVi
 import { ScrollView } from 'react-native';
 import { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Mail, Lock, Eye, EyeOff, ArrowLeft, Phone, MapPin, Globe } from 'lucide-react-native';
+import { Mail, Lock, Eye, EyeOff, ArrowLeft, Phone, MapPin, Globe, User } from 'lucide-react-native';
 import { router } from 'expo-router';
 import { api } from '@/lib/supabase';
 
 export default function RegisterScreen() {
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -23,7 +25,7 @@ export default function RegisterScreen() {
   const [success, setSuccess] = useState('');
 
   const validateForm = () => {
-    if (!email || !password || !confirmPassword || !phoneNumber || !address || !city || !country) {
+    if (!firstName || !lastName || !email || !password || !confirmPassword || !phoneNumber || !address || !city || !country) {
       setError('Please fill in all required fields');
       return false;
     }
@@ -79,6 +81,8 @@ export default function RegisterScreen() {
 
       try {
         await api.updateUserProfile(userId, {
+          first_name: firstName,
+          last_name: lastName,
           phone_number: phoneNumber,
           address,
           city,
@@ -93,6 +97,8 @@ export default function RegisterScreen() {
 
       setSuccess('Registration successful! Please check your email for a confirmation link. You can sign in once you verify your email address.');
 
+      setFirstName('');
+      setLastName('');
       setEmail('');
       setPassword('');
       setConfirmPassword('');
@@ -149,6 +155,34 @@ export default function RegisterScreen() {
           ) : null}
 
           <View style={styles.inputContainer}>
+            <View style={styles.rowInputs}>
+              <View style={[styles.inputWrapper, styles.halfWidth]}>
+                <User size={20} color="#FFFFFF" style={styles.inputIcon} />
+                <TextInput
+                  style={styles.textInput}
+                  placeholder="First Name"
+                  placeholderTextColor="#FFFFFF"
+                  value={firstName}
+                  onChangeText={setFirstName}
+                  autoCapitalize="words"
+                  autoCorrect={false}
+                />
+              </View>
+
+              <View style={[styles.inputWrapper, styles.halfWidth]}>
+                <User size={20} color="#FFFFFF" style={styles.inputIcon} />
+                <TextInput
+                  style={styles.textInput}
+                  placeholder="Last Name"
+                  placeholderTextColor="#FFFFFF"
+                  value={lastName}
+                  onChangeText={setLastName}
+                  autoCapitalize="words"
+                  autoCorrect={false}
+                />
+              </View>
+            </View>
+
             <View style={styles.inputWrapper}>
               <Mail size={20} color="#FFFFFF" style={styles.inputIcon} />
               <TextInput
