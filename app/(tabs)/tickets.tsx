@@ -91,15 +91,22 @@ export default function TicketsScreen() {
 
     setValidatingCode(true);
     try {
-      const { data, error } = await supabase
+      // Add timeout to prevent hanging
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Request timeout')), 10000)
+      );
+
+      const queryPromise = supabase
         .from('vendor_codes')
         .select('id, code, is_active, used_count, max_uses')
         .eq('code', code.trim().toUpperCase())
         .maybeSingle();
 
+      const { data, error } = await Promise.race([queryPromise, timeoutPromise]) as any;
+
       if (error) {
         console.error('Error validating code:', error);
-        Alert.alert('Error', 'Failed to validate vendor code. Please try again.');
+        Alert.alert('Error', `Failed to validate vendor code: ${error.message || 'Please try again.'}`);
         return false;
       }
 
@@ -121,7 +128,10 @@ export default function TicketsScreen() {
       return true;
     } catch (error: any) {
       console.error('Validation error:', error);
-      Alert.alert('Error', 'An error occurred while validating the code.');
+      const message = error.message === 'Request timeout'
+        ? 'The request timed out. Please check your internet connection and try again.'
+        : 'An error occurred while validating the code. Please try again.';
+      Alert.alert('Error', message);
       return false;
     } finally {
       setValidatingCode(false);
