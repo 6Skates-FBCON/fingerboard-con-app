@@ -192,6 +192,8 @@ This document contains the custom email templates for FBCon that should be confi
 
 **Subject:** Reset Your FBCon Password
 
+### Option A: Full Styled Template (Recommended)
+
 **Body (HTML):**
 
 ```html
@@ -267,6 +269,37 @@ This document contains the custom email templates for FBCon that should be confi
   </table>
 </body>
 </html>
+```
+
+### Option B: Simple Template (For Custom Redirect URL)
+
+Use this if you need to manually specify the redirect URL. This is useful when you need explicit control over where users are sent after clicking the reset link.
+
+**Body (HTML):**
+
+```html
+<h2>Reset Your Fingerboard Con Password</h2>
+
+<p>Hi there,</p>
+
+<p>You requested a password reset for your Fingerboard Con Boston 2026 account.</p>
+
+<p>Click the button below to set a new password:</p>
+
+<p><a href="https://fingerboardcon.com/reset-password?token_hash={{ .TokenHash }}&type=recovery" style="display: inline-block; padding: 12px 24px; background-color: #FFD700; color: #2E7D32; text-decoration: none; font-weight: bold; border-radius: 8px;">Reset Password</a></p>
+
+<p>Or copy and paste this link into your browser:</p>
+<p>https://fingerboardcon.com/reset-password?token_hash={{ .TokenHash }}&type=recovery</p>
+
+<p><strong>This link will expire in 1 hour.</strong></p>
+
+<p>If you didn't request this password reset, you can safely ignore this email.</p>
+
+<p>See you at Fingerboard Con Boston 2026!<br>
+April 24-26, 2026 • Tewksbury, MA</p>
+
+<hr>
+<p style="font-size: 12px; color: #666;">This email was sent to {{ .Email }}</p>
 ```
 
 ---
