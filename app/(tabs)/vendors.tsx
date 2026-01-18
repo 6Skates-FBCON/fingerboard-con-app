@@ -53,7 +53,7 @@ export default function VendorsScreen() {
       category: 'decks',
       booth: '4',
       featured: false,
-      website: '',
+      website: 'https://www.flatfacefingerboards.com/',
       specialOffer: 'FlatFace, Blistered & Duck Decks',
     },
     {
