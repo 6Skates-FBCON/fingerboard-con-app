@@ -91,7 +91,7 @@ export default function RegisterScreen() {
         console.error('Error updating profile:', profileError);
       }
 
-      setSuccess('Registration successful! You can now sign in with your email and password.');
+      setSuccess('Registration successful! Please check your email for a confirmation link. You can sign in once you verify your email address.');
 
       setEmail('');
       setPassword('');
