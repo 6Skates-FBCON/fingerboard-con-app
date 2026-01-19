@@ -99,12 +99,12 @@ export default function VendorsScreen() {
     {
       id: '9',
       name: 'Skatestation',
-      description: 'Vendor details coming soon',
+      description: 'Physical & online fingerboard shop carrying brands from all over the world',
       category: 'decks',
       booth: '',
       featured: false,
       website: 'https://skatestation.shop/',
-      specialOffer: 'Fingerboard stuff',
+      specialOffer: 'FBCon Exclusive drops',
     },
     {
       id: '10',
