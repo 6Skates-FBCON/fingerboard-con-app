@@ -119,7 +119,7 @@ export default function VendorsScreen() {
     {
       id: '11',
       name: 'Silent Obstacles',
-      description: 'Vendor details coming soon',
+      description: 'The world’s first silent fingerboard obstacles',
       category: 'decks',
       booth: '',
       featured: false,
