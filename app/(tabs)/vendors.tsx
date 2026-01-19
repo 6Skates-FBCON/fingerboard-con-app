@@ -68,13 +68,13 @@ export default function VendorsScreen() {
     },
     {
       id: '6',
-      name: 'TBD',
+      name: 'Zeg Heads',
       description: 'Vendor details coming soon',
       category: 'decks',
       booth: '6',
       featured: false,
-      website: '',
-      specialOffer: 'FBCon Exclusive drops',
+      website: 'https://www.zegheads.com',
+      specialOffer: 'Fingerboard stuff',
     },
     {
       id: '7',
