@@ -79,12 +79,12 @@ export default function VendorsScreen() {
     {
       id: '7',
       name: 'Doom Lagoon',
-      description: 'Vendor details coming soon',
+      description: 'Progressive fingerboards handmade in Texas',
       category: 'decks',
       booth: '',
       featured: false,
       website: 'https://doomlagoon.com/',
-      specialOffer: 'Fingerboard stuff',
+      specialOffer: 'Exclusive Fingerboard Con exo ply decks',
     },
     {
       id: '8',
