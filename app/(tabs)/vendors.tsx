@@ -161,7 +161,7 @@ export default function VendorsScreen() {
       name: 'TBD',
       description: 'Vendor details coming soon',
       category: 'decks',
-      booth: '15',
+      booth: '',
       featured: false,
       website: '',
       specialOffer: 'FBCon Exclusive drops',
