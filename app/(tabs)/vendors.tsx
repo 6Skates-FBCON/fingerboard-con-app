@@ -98,13 +98,13 @@ export default function VendorsScreen() {
     },
     {
       id: '9',
-      name: 'TBD',
+      name: 'DeliDecks',
       description: 'Vendor details coming soon',
       category: 'decks',
       booth: '9',
       featured: false,
-      website: '',
-      specialOffer: 'FBCon Exclusive drops',
+      website: 'https://delidecksusa.com',
+      specialOffer: 'Fingerboard stuff',
     },
     {
       id: '10',
