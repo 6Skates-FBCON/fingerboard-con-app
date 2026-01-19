@@ -129,7 +129,7 @@ export default function VendorsScreen() {
     {
       id: '12',
       name: 'Ritual Concrete',
-      description: 'Vendor details coming soon',
+      description: 'Handcrafted concrete obstacles made to perform The Ritual',
       category: 'decks',
       booth: '',
       featured: false,
