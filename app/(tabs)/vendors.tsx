@@ -128,13 +128,13 @@ export default function VendorsScreen() {
     },
     {
       id: '12',
-      name: 'TBD',
+      name: 'Ritual Concrete',
       description: 'Vendor details coming soon',
       category: 'decks',
       booth: '12',
       featured: false,
-      website: '',
-      specialOffer: 'FBCon Exclusive drops',
+      website: 'https://ritualism.bigcartel.com',
+      specialOffer: 'Fingerboard stuff',
     },
     {
       id: '13',
