@@ -74,7 +74,7 @@ export default function VendorsScreen() {
       booth: '',
       featured: false,
       website: 'https://www.zegheads.com',
-      specialOffer: 'Stickers, exclusives & collab drops',
+      specialOffer: 'Stickers, Exclusives & Collab Drops',
     },
     {
       id: '7',
