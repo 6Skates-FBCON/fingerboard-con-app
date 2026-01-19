@@ -78,13 +78,13 @@ export default function VendorsScreen() {
     },
     {
       id: '7',
-      name: 'TBD',
+      name: 'Doom Lagoon',
       description: 'Vendor details coming soon',
       category: 'decks',
       booth: '7',
       featured: false,
-      website: '',
-      specialOffer: 'FBCon Exclusive drops',
+      website: 'https://doomlagoon.com/',
+      specialOffer: 'Fingerboard stuff',
     },
     {
       id: '8',
