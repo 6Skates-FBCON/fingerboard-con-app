@@ -108,13 +108,13 @@ export default function VendorsScreen() {
     },
     {
       id: '10',
-      name: 'TBD',
+      name: 'Teak Tuning & Session Fingerboards',
       description: 'Vendor details coming soon',
       category: 'decks',
       booth: '10',
       featured: false,
-      website: '',
-      specialOffer: 'FBCon Exclusive drops',
+      website: 'https://www.teaktuning.com',
+      specialOffer: 'Fingerboard stuff',
     },
     {
       id: '11',
