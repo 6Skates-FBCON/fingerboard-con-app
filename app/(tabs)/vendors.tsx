@@ -64,7 +64,7 @@ export default function VendorsScreen() {
       booth: '',
       featured: false,
       website: 'https://www.refindsupplyco.com',
-      specialOffer: 'Fingerboard stuff',
+      specialOffer: 'Fingerboard Con Exclusive Drops',
     },
     {
       id: '6',
