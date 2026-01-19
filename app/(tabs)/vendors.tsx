@@ -94,7 +94,7 @@ export default function VendorsScreen() {
       booth: '',
       featured: false,
       website: '',
-      specialOffer: 'FBCon Exclusive drops',
+      specialOffer: 'Fingerboard stuff',
     },
     {
       id: '9',
@@ -154,7 +154,7 @@ export default function VendorsScreen() {
       booth: '',
       featured: false,
       website: 'https://silentobstacles.com',
-      specialOffer: 'FBCon Exclusive drops',
+      specialOffer: 'Fingerboard stuff',
     },
     {
       id: '15',
