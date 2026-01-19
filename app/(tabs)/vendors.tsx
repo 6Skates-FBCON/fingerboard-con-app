@@ -109,12 +109,12 @@ export default function VendorsScreen() {
     {
       id: '10',
       name: 'Teak Tuning & Session Fingerboards',
-      description: 'Vendor details coming soon',
+      description: 'Fingerboard brand based in Rochester, NY offering high-quality decks, wheels, components, and obstacles.',
       category: 'decks',
       booth: '',
       featured: false,
       website: 'https://www.teaktuning.com',
-      specialOffer: 'Fingerboard stuff',
+      specialOffer: 'Fingerboard Con Exclusive Drops',
     },
     {
       id: '11',
