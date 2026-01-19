@@ -101,9 +101,9 @@ export default function VendorsScreen() {
       name: 'Skatestation',
       description: 'Vendor details coming soon',
       category: 'decks',
-      booth: 'https://skatestation.shop/',
+      booth: '',
       featured: false,
-      website: 'https://delidecksusa.com',
+      website: 'https://skatestation.shop/',
       specialOffer: 'Fingerboard stuff',
     },
     {
