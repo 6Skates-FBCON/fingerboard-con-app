@@ -138,12 +138,12 @@ export default function VendorsScreen() {
     },
     {
       id: '13',
-      name: 'TBD',
+      name: 'Skatestation',
       description: 'Vendor details coming soon',
       category: 'decks',
       booth: '',
       featured: false,
-      website: '',
+      website: 'https://skatestation.shop/',
       specialOffer: 'FBCon Exclusive drops',
     },
     {
