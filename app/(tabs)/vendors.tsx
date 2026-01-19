@@ -123,7 +123,7 @@ export default function VendorsScreen() {
       category: 'decks',
       booth: '',
       featured: false,
-      website: '',
+      website: 'https://silentobstacles.com/',
       specialOffer: 'Fingerboard Stuff',
     },
     {
