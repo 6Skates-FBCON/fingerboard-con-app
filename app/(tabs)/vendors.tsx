@@ -69,12 +69,12 @@ export default function VendorsScreen() {
     {
       id: '6',
       name: 'Zeg Heads',
-      description: 'Vendor details coming soon',
+      description: 'DIY fingerboard print shop selling select premium brands, mini skate rip sticker sheets, and original art',
       category: 'decks',
       booth: '',
       featured: false,
       website: 'https://www.zegheads.com',
-      specialOffer: 'Fingerboard stuff',
+      specialOffer: 'Stickers, exclusives & collab drops',
     },
     {
       id: '7',
