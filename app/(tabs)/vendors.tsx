@@ -138,12 +138,12 @@ export default function VendorsScreen() {
     },
     {
       id: '13',
-      name: 'TBD',
-      description: 'Vendor details coming soon',
+      name: 'Future Bound Prints',
+      description: 'Home of the Original FB Props & Decor since 2021',
       category: 'decks',
       booth: '',
       featured: false,
-      website: '',
+      website: 'https://www.futureboundprints.com/',
       specialOffer: 'FBCon Exclusive drops',
     },
     {
