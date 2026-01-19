@@ -59,7 +59,7 @@ export default function VendorsScreen() {
     {
       id: '5',
       name: 'Refind Supply Co.',
-      description: 'Vendor details coming soon',
+      description: 'Handcrafted Refind Decks, Custom apparel and accessories',
       category: 'decks',
       booth: '',
       featured: false,
