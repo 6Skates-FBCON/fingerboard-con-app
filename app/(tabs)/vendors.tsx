@@ -118,13 +118,13 @@ export default function VendorsScreen() {
     },
     {
       id: '11',
-      name: 'TBD',
+      name: 'Silent Obstacles',
       description: 'Vendor details coming soon',
       category: 'decks',
       booth: '',
       featured: false,
       website: '',
-      specialOffer: 'FBCon Exclusive drops',
+      specialOffer: 'Fingerboard Stuff',
     },
     {
       id: '12',
@@ -148,12 +148,12 @@ export default function VendorsScreen() {
     },
     {
       id: '14',
-      name: 'Silent Obstacles',
+      name: 'TBD',
       description: 'Vendor details coming soon',
       category: 'decks',
       booth: '',
       featured: false,
-      website: 'https://silentobstacles.com',
+      website: '',
       specialOffer: 'Fingerboard stuff',
     },
     {
