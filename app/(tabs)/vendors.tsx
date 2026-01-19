@@ -153,7 +153,7 @@ export default function VendorsScreen() {
       category: 'decks',
       booth: '',
       featured: false,
-      website: '',
+      website: 'https://fattys.world/',
       specialOffer: 'Decks, Wheels, Merch, & Other Oddities.',
     },
     {
