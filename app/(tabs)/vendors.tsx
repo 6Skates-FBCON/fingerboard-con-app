@@ -134,7 +134,7 @@ export default function VendorsScreen() {
       booth: '',
       featured: false,
       website: 'https://ritualism.bigcartel.com',
-      specialOffer: 'Fingerboard stuff',
+      specialOffer: 'Concrete Obstacles, Accessories & More',
     },
     {
       id: '13',
