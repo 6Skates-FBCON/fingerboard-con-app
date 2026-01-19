@@ -58,13 +58,13 @@ export default function VendorsScreen() {
     },
     {
       id: '5',
-      name: 'TBD',
+      name: 'Refind Supply Co.',
       description: 'Vendor details coming soon',
       category: 'decks',
-      booth: '5',
+      booth: '',
       featured: false,
-      website: '',
-      specialOffer: 'FBCon Exclusive drops',
+      website: 'https://www.refindsupplyco.com',
+      specialOffer: 'Fingerboard stuff',
     },
     {
       id: '6',
