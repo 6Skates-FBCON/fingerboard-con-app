@@ -149,12 +149,12 @@ export default function VendorsScreen() {
     {
       id: '14',
       name: 'TBD',
-      description: 'Vendor details coming soon',
+      description: 'Fingerboarding may not be the first thing that comes to mind when you think of Fatty’s, but they’re deeply rooted in the FB community',
       category: 'decks',
       booth: '',
       featured: false,
       website: '',
-      specialOffer: 'Fingerboard stuff',
+      specialOffer: 'Decks, Wheels, Merch, & Other Oddities.',
     },
     {
       id: '15',
