@@ -41,7 +41,7 @@ export default function VendorsScreen() {
       name: 'Blackriver Ramps',
       description: 'Hand-crafted wooden fingerboards and obstacles',
       category: 'decks',
-      booth: '3 & 4',
+      booth: '3',
       featured: true,
       website: 'https://www.blackriver-shop.com',
       specialOffer: 'FBCon Exclusive drops',
