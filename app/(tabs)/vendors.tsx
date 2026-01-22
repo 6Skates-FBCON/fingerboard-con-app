@@ -163,8 +163,8 @@ export default function VendorsScreen() {
       category: 'decks',
       booth: '',
       featured: false,
-      website: '',
-      specialOffer: 'FBCon Exclusive drops',
+      website: 'https://www.mapleleafdecks.com',
+      specialOffer: 'Vendor details coming soon',
     },
     {
       id: '16',
