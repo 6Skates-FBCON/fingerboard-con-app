@@ -39,7 +39,7 @@ export default function EventsScreen() {
         subEvents: [
           {
             id: '4',
-            title: 'Sponsored Event',
+            title: 'Blackriver Ramps Sponsored Event',
             time: '6:00 PM - 8:00 PM',
             location: 'Main Ballroom',
             type: 'social',
@@ -47,8 +47,8 @@ export default function EventsScreen() {
           },
           {
             id: '3',
-            title: 'Blackriver Ramps Sponsored Event',
-            time: '8:30 PM - 11:30 PM',
+            title: 'Sponsored Event',
+            time: '8:30 PM - 10:30 PM',
             location: 'Main Ballroom',
             type: 'competition',
             description: 'Your chance to beat a Blackriver pro and win sick prizes.'
