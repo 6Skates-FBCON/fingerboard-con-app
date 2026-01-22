@@ -43,15 +43,15 @@ export default function EventsScreen() {
             time: '6:00 PM - 8:00 PM',
             location: 'Main Ballroom',
             type: 'social',
-            description: 'Details to follow'
+            description: 'our chance to beat a Blackriver pro and win sick prizes.'
           },
           {
             id: '3',
             title: 'Sponsored Event',
             time: '8:30 PM - 10:30 PM',
             location: 'Main Ballroom',
-            type: 'competition',
-            description: 'Your chance to beat a Blackriver pro and win sick prizes.'
+            type: 'TBD',
+            description: 'Details to follow.'
           },
         ]
       },
