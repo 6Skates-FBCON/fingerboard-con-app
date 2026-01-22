@@ -158,7 +158,7 @@ export default function VendorsScreen() {
     },
     {
       id: '15',
-      name: 'TBD',
+      name: 'Maple Leaf Decks',
       description: 'Vendor details coming soon',
       category: 'decks',
       booth: '',
