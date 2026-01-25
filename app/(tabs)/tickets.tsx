@@ -16,6 +16,8 @@ export default function TicketsScreen() {
   const [pendingPriceId, setPendingPriceId] = useState<string | null>(null);
   const [validatingCode, setValidatingCode] = useState(false);
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
+  const [pendingTicketName, setPendingTicketName] = useState<string>('');
+  const [productsRequiringCode, setProductsRequiringCode] = useState<Set<string>>(new Set());
 
   interface TicketType {
     id: string;
@@ -27,6 +29,32 @@ export default function TicketsScreen() {
     soldOut?: boolean;
     stripePriceId?: string;
   }
+
+  useEffect(() => {
+    const fetchProductRequirements = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('stripe_products')
+          .select('name, requires_access_code')
+          .eq('active', true)
+          .eq('requires_access_code', true);
+
+        if (error) {
+          console.error('Error fetching product requirements:', error);
+          return;
+        }
+
+        if (data) {
+          const productNames = new Set(data.map(p => p.name));
+          setProductsRequiringCode(productNames);
+        }
+      } catch (error) {
+        console.error('Error loading product requirements:', error);
+      }
+    };
+
+    fetchProductRequirements();
+  }, []);
 
   const ticketTypes: TicketType[] = [
     {
@@ -82,7 +110,7 @@ export default function TicketsScreen() {
 
   const validateVendorCode = async (code: string): Promise<boolean> => {
     if (!code.trim()) {
-      Alert.alert('Invalid Code', 'Please enter a vendor code.');
+      Alert.alert('Invalid Code', 'Please enter an access code.');
       return false;
     }
 
@@ -103,22 +131,22 @@ export default function TicketsScreen() {
 
       if (error) {
         console.error('Error validating code:', error);
-        Alert.alert('Error', `Failed to validate vendor code: ${error.message || 'Please try again.'}`);
+        Alert.alert('Error', `Failed to validate access code: ${error.message || 'Please try again.'}`);
         return false;
       }
 
       if (!data) {
-        Alert.alert('Invalid Code', 'This vendor code is not valid.');
+        Alert.alert('Invalid Code', 'This access code is not valid.');
         return false;
       }
 
       if (!data.is_active) {
-        Alert.alert('Code Inactive', 'This vendor code is no longer active.');
+        Alert.alert('Code Inactive', 'This access code is no longer active.');
         return false;
       }
 
       if (data.max_uses !== null && data.used_count >= data.max_uses) {
-        Alert.alert('Code Expired', 'This vendor code has reached its maximum number of uses.');
+        Alert.alert('Code Expired', 'This access code has reached its maximum number of uses.');
         return false;
       }
 
@@ -142,22 +170,25 @@ export default function TicketsScreen() {
       await proceedWithPurchase(pendingPriceId, vendorCode.trim().toUpperCase());
       setVendorCode('');
       setPendingPriceId(null);
+      setPendingTicketName('');
     } else {
       setVendorCodeModalVisible(false);
       setVendorCode('');
       setPendingPriceId(null);
+      setPendingTicketName('');
     }
   };
 
-  const handlePurchase = async (priceId: string, ticketId: string) => {
+  const handlePurchase = async (priceId: string, ticketId: string, ticketName: string) => {
     if (!isAuthenticated) {
       setShowLoginPrompt(true);
       return;
     }
 
-    // If this is a vendor ticket, show the vendor code modal
-    if (ticketId === 'vendor') {
+    // If this ticket requires an access code, show the modal
+    if (productsRequiringCode.has(ticketName)) {
       setPendingPriceId(priceId);
+      setPendingTicketName(ticketName);
       setVendorCodeModalVisible(true);
       return;
     }
@@ -309,7 +340,7 @@ export default function TicketsScreen() {
                 !ticket.stripePriceId && styles.disabledButton,
               ]}
               disabled={ticket.soldOut || !ticket.stripePriceId || loading}
-              onPress={() => ticket.stripePriceId && handlePurchase(ticket.stripePriceId, ticket.id)}
+              onPress={() => ticket.stripePriceId && handlePurchase(ticket.stripePriceId, ticket.id, ticket.name)}
             >
               <Text style={[
                 styles.purchaseButtonText,
@@ -363,17 +394,21 @@ export default function TicketsScreen() {
           setVendorCodeModalVisible(false);
           setVendorCode('');
           setPendingPriceId(null);
+          setPendingTicketName('');
         }}
       >
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
             <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Vendor Access Code Required</Text>
+              <Text style={styles.modalTitle}>
+                {pendingTicketName === 'Vendor Package' ? 'Vendor Access Code Required' : 'Access Code Required'}
+              </Text>
               <TouchableOpacity
                 onPress={() => {
                   setVendorCodeModalVisible(false);
                   setVendorCode('');
                   setPendingPriceId(null);
+                  setPendingTicketName('');
                 }}
                 style={styles.closeButton}
               >
@@ -382,12 +417,14 @@ export default function TicketsScreen() {
             </View>
 
             <Text style={styles.modalDescription}>
-              Please enter your vendor access code to purchase the Vendor Package.
+              {pendingTicketName === 'Vendor Package'
+                ? 'Please enter your vendor access code to purchase the Vendor Package.'
+                : `Please enter your access code to purchase ${pendingTicketName}.`}
             </Text>
 
             <TextInput
               style={styles.codeInput}
-              placeholder="Enter vendor code"
+              placeholder={pendingTicketName === 'Vendor Package' ? 'Enter vendor code' : 'Enter access code'}
               placeholderTextColor="#81C784"
               value={vendorCode}
               onChangeText={setVendorCode}
