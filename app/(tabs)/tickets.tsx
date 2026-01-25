@@ -13,10 +13,7 @@ export default function TicketsScreen() {
   const [loading, setLoading] = useState(false);
   const [vendorCodeModalVisible, setVendorCodeModalVisible] = useState(false);
   const [vendorCode, setVendorCode] = useState('');
-  const [accessCodeModalVisible, setAccessCodeModalVisible] = useState(false);
-  const [accessCode, setAccessCode] = useState('');
   const [pendingPriceId, setPendingPriceId] = useState<string | null>(null);
-  const [pendingTicketId, setPendingTicketId] = useState<string | null>(null);
   const [validatingCode, setValidatingCode] = useState(false);
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
 
@@ -152,26 +149,6 @@ export default function TicketsScreen() {
     }
   };
 
-  const validateAccessCode = (code: string): boolean => {
-    const validCode = process.env.EXPO_PUBLIC_TICKET_ACCESS_CODE || '6Skates';
-    return code.trim() === validCode;
-  };
-
-  const handleAccessCodeSubmit = async () => {
-    if (!validateAccessCode(accessCode)) {
-      Alert.alert('Invalid Code', 'The access code you entered is incorrect. Please try again.');
-      return;
-    }
-
-    if (pendingPriceId) {
-      setAccessCodeModalVisible(false);
-      await proceedWithPurchase(pendingPriceId);
-      setAccessCode('');
-      setPendingPriceId(null);
-      setPendingTicketId(null);
-    }
-  };
-
   const handlePurchase = async (priceId: string, ticketId: string) => {
     if (!isAuthenticated) {
       setShowLoginPrompt(true);
@@ -182,15 +159,6 @@ export default function TicketsScreen() {
     if (ticketId === 'vendor') {
       setPendingPriceId(priceId);
       setVendorCodeModalVisible(true);
-      return;
-    }
-
-    // If this ticket requires an access code, show the access code modal
-    const requiresAccessCode = ['general', 'deck combo', 'blackriver deck combo'].includes(ticketId);
-    if (requiresAccessCode) {
-      setPendingPriceId(priceId);
-      setPendingTicketId(ticketId);
-      setAccessCodeModalVisible(true);
       return;
     }
 
@@ -435,60 +403,6 @@ export default function TicketsScreen() {
             >
               <Text style={styles.submitButtonText}>
                 {validatingCode ? 'Validating...' : 'Continue to Checkout'}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
-
-      <Modal
-        visible={accessCodeModalVisible}
-        transparent={true}
-        animationType="fade"
-        onRequestClose={() => {
-          setAccessCodeModalVisible(false);
-          setAccessCode('');
-          setPendingPriceId(null);
-          setPendingTicketId(null);
-        }}
-      >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Access Code Required</Text>
-              <TouchableOpacity
-                onPress={() => {
-                  setAccessCodeModalVisible(false);
-                  setAccessCode('');
-                  setPendingPriceId(null);
-                  setPendingTicketId(null);
-                }}
-                style={styles.closeButton}
-              >
-                <X size={24} color="#FFFFFF" />
-              </TouchableOpacity>
-            </View>
-
-            <Text style={styles.modalDescription}>
-              Tickets will be available for purchase shortly. Please follow us on Instagram for the latest information.
-            </Text>
-
-            <TextInput
-              style={styles.codeInput}
-              placeholder="Enter access code"
-              placeholderTextColor="#81C784"
-              value={accessCode}
-              onChangeText={setAccessCode}
-              autoCorrect={false}
-            />
-
-            <TouchableOpacity
-              style={[styles.submitButton, !accessCode.trim() && styles.submitButtonDisabled]}
-              onPress={handleAccessCodeSubmit}
-              disabled={!accessCode.trim()}
-            >
-              <Text style={styles.submitButtonText}>
-                Continue to Checkout
               </Text>
             </TouchableOpacity>
           </View>
