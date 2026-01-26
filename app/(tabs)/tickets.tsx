@@ -338,15 +338,23 @@ export default function TicketsScreen() {
                 styles.purchaseButton,
                 ticket.soldOut && styles.soldOutButton,
                 !ticket.stripePriceId && styles.disabledButton,
+                (productsRequiringCode.has(ticket.name) && ticket.name !== 'Vendor Package') && styles.soldOutButton,
               ]}
-              disabled={ticket.soldOut || !ticket.stripePriceId || loading}
+              disabled={ticket.soldOut || !ticket.stripePriceId || loading || (productsRequiringCode.has(ticket.name) && ticket.name !== 'Vendor Package')}
               onPress={() => ticket.stripePriceId && handlePurchase(ticket.stripePriceId, ticket.id, ticket.name)}
             >
               <Text style={[
                 styles.purchaseButtonText,
                 ticket.soldOut && styles.soldOutButtonText,
+                (productsRequiringCode.has(ticket.name) && ticket.name !== 'Vendor Package') && styles.soldOutButtonText,
               ]}>
-                {ticket.soldOut ? 'SOLD OUT' : ticket.stripePriceId ? (loading ? 'LOADING...' : 'BUY NOW') : 'AVAILABLE SOON'}
+                {ticket.soldOut
+                  ? 'SOLD OUT'
+                  : (productsRequiringCode.has(ticket.name) && ticket.name !== 'Vendor Package')
+                  ? 'TICKET SALES SUSPENDED'
+                  : ticket.stripePriceId
+                  ? (loading ? 'LOADING...' : 'BUY NOW')
+                  : 'AVAILABLE SOON'}
               </Text>
             </TouchableOpacity>
           </View>
