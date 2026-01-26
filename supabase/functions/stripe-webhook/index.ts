@@ -60,6 +60,12 @@ async function handleEvent(event: Stripe.Event) {
     return;
   }
 
+  // Handle refund events
+  if (event.type === 'charge.refunded') {
+    await handleRefund(event.data.object as Stripe.Charge);
+    return;
+  }
+
   if (!('customer' in stripeData)) {
     return;
   }
@@ -124,6 +130,65 @@ async function handleEvent(event: Stripe.Event) {
         console.error('Error processing one-time payment:', error);
       }
     }
+  }
+}
+
+// Handle refunds by cancelling associated tickets
+async function handleRefund(charge: Stripe.Charge) {
+  try {
+    const paymentIntentId = charge.payment_intent;
+
+    if (!paymentIntentId || typeof paymentIntentId !== 'string') {
+      console.error('No payment intent ID found in charge:', charge.id);
+      return;
+    }
+
+    console.info(`Processing refund for payment intent: ${paymentIntentId}`);
+
+    // Find the order associated with this payment intent
+    const { data: order, error: orderError } = await supabase
+      .from('stripe_orders')
+      .select('id')
+      .eq('payment_intent_id', paymentIntentId)
+      .maybeSingle();
+
+    if (orderError) {
+      console.error('Error finding order for refund:', orderError);
+      return;
+    }
+
+    if (!order) {
+      console.warn(`No order found for payment intent: ${paymentIntentId}`);
+      return;
+    }
+
+    // Cancel all tickets associated with this order
+    const { data: cancelledTickets, error: ticketsError } = await supabase
+      .from('tickets')
+      .update({ status: 'cancelled' })
+      .eq('order_id', order.id)
+      .neq('status', 'validated')
+      .select();
+
+    if (ticketsError) {
+      console.error('Error cancelling tickets:', ticketsError);
+      return;
+    }
+
+    // Update order status to cancelled
+    const { error: orderUpdateError } = await supabase
+      .from('stripe_orders')
+      .update({ status: 'canceled' })
+      .eq('id', order.id);
+
+    if (orderUpdateError) {
+      console.error('Error updating order status:', orderUpdateError);
+      return;
+    }
+
+    console.info(`Successfully cancelled ${cancelledTickets?.length || 0} ticket(s) for order ${order.id} due to refund`);
+  } catch (error) {
+    console.error('Error handling refund:', error);
   }
 }
 
