@@ -419,7 +419,7 @@ export default function TicketsScreen() {
             <Text style={styles.modalDescription}>
               {pendingTicketName === 'Vendor Package'
                 ? 'Please enter your vendor access code to purchase the Vendor Package.'
-                : `Please enter your access code to purchase ${pendingTicketName}.`}
+                : 'We have reached capacity. If tickets become available we will open ticket sales again.'}
             </Text>
 
             <TextInput
