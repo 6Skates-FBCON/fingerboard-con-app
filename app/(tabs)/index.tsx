@@ -15,13 +15,13 @@ export default function HomeScreen() {
   const updates = [
     {
       time: '',
-      title: 'Ticket Sales Open soon!',
-      text: 'Tickets are limited and required for all 3 days events.',
+      title: 'Ticket Drop Update',
+      text: 'Today\'s ticket drop was way bigger than anything we expected. The traffic was massive, and the site slowed down and glitched at times under the load.\n\nThank you to everyone who grabbed tickets. Due to checkout issues, some people accidentally purchased multiple tickets. The event is currently sold out, and ticket sales are temporarily suspended.\n\nWe\'re reviewing orders and processing refunds for any extra tickets that weren\'t intended. As those are refunded, a small number of tickets may become available, but we don\'t yet know how many.',
     },
     {
-      time: 'Coming Soon',
-      title: 'Vendor Announcments',
-      text: 'Many of the past vendors will be returning, we are also happy to welcome some new exciting vendors!.',
+      time: 'What to do now',
+      title: 'Next Steps',
+      text: '• Log into your Fingerboard Con account and double-check your tickets\n• If you see extra tickets or need help, email helpme@6skates.com and include your name, email address used to purchase, and any order details\n• Email is the best way to reach us for ticket issues — please avoid DMs\n\nWe\'ll be reviewing everything over the next couple of days. Thank you for the patience, support, and insane energy today.',
     },
   ];
 
