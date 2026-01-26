@@ -49,6 +49,7 @@ export default function MyTicketsScreen() {
         .from('ticket_details')
         .select('*')
         .eq('owner_id', session.user.id)
+        .eq('status', 'active')
         .order('created_at', { ascending: false });
 
       if (error) {
