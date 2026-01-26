@@ -16,7 +16,7 @@ export default function HomeScreen() {
     {
       time: '',
       title: 'Ticket Drop Update',
-      text: 'Today\'s ticket drop was way bigger than anything we expected. The traffic was massive, and the site slowed down and glitched at times under the load.\n\nThank you to everyone who grabbed tickets. Due to checkout issues, some people accidentally purchased multiple tickets. The event is currently sold out, and ticket sales are temporarily suspended.\n\nWe\'re reviewing orders and processing refunds for any extra tickets that weren\'t intended. As those are refunded, a small number of tickets may become available, but we don\'t yet know how many.',
+      text: 'The ticket drop was way bigger than anything we expected. Traffic was massive, and the site slowed down and glitched at times under the load.\n\nThank you to everyone who grabbed tickets. Due to checkout issues, some people accidentally purchased multiple tickets. The event is currently sold out, and ticket sales are temporarily suspended.\n\nWe\'re reviewing orders and processing refunds for any extra tickets that weren\'t intended. As those are refunded, a small number of tickets may become available, but we don\'t yet know how many.',
     },
     {
       time: 'What to do now',
