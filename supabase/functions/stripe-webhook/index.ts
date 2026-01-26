@@ -62,7 +62,12 @@ async function handleEvent(event: Stripe.Event) {
 
   // Handle refund events
   if (event.type === 'charge.refunded') {
-    await handleRefund(event.data.object as Stripe.Charge);
+    await handleChargeRefund(event.data.object as Stripe.Charge);
+    return;
+  }
+
+  if (event.type === 'refund.updated') {
+    await handleRefundUpdated(event.data.object as Stripe.Refund);
     return;
   }
 
@@ -133,8 +138,48 @@ async function handleEvent(event: Stripe.Event) {
   }
 }
 
-// Handle refunds by cancelling associated tickets
-async function handleRefund(charge: Stripe.Charge) {
+async function cancelTicketsByPaymentIntent(paymentIntentId: string, source: string) {
+  const { data: order, error: orderError } = await supabase
+    .from('stripe_orders')
+    .select('id')
+    .eq('payment_intent_id', paymentIntentId)
+    .maybeSingle();
+
+  if (orderError) {
+    console.error(`Error finding order for ${source}:`, orderError);
+    return null;
+  }
+
+  if (!order) {
+    console.warn(`No order found for payment intent: ${paymentIntentId}`);
+    return null;
+  }
+
+  const { data: cancelledTickets, error: ticketsError } = await supabase
+    .from('tickets')
+    .update({ status: 'cancelled', updated_at: new Date().toISOString() })
+    .eq('order_id', order.id)
+    .neq('status', 'validated')
+    .select();
+
+  if (ticketsError) {
+    console.error('Error cancelling tickets:', ticketsError);
+    return null;
+  }
+
+  const { error: orderUpdateError } = await supabase
+    .from('stripe_orders')
+    .update({ status: 'canceled' })
+    .eq('id', order.id);
+
+  if (orderUpdateError) {
+    console.error('Error updating order status:', orderUpdateError);
+  }
+
+  return { orderId: order.id, ticketCount: cancelledTickets?.length || 0 };
+}
+
+async function handleChargeRefund(charge: Stripe.Charge) {
   try {
     const paymentIntentId = charge.payment_intent;
 
@@ -143,52 +188,50 @@ async function handleRefund(charge: Stripe.Charge) {
       return;
     }
 
-    console.info(`Processing refund for payment intent: ${paymentIntentId}`);
+    console.info(`Processing charge.refunded for payment intent: ${paymentIntentId}`);
 
-    // Find the order associated with this payment intent
-    const { data: order, error: orderError } = await supabase
-      .from('stripe_orders')
-      .select('id')
-      .eq('payment_intent_id', paymentIntentId)
-      .maybeSingle();
+    const result = await cancelTicketsByPaymentIntent(paymentIntentId, 'charge.refunded');
 
-    if (orderError) {
-      console.error('Error finding order for refund:', orderError);
-      return;
+    if (result) {
+      console.info(`Successfully cancelled ${result.ticketCount} ticket(s) for order ${result.orderId} due to charge.refunded`);
     }
-
-    if (!order) {
-      console.warn(`No order found for payment intent: ${paymentIntentId}`);
-      return;
-    }
-
-    // Cancel all tickets associated with this order
-    const { data: cancelledTickets, error: ticketsError } = await supabase
-      .from('tickets')
-      .update({ status: 'cancelled' })
-      .eq('order_id', order.id)
-      .neq('status', 'validated')
-      .select();
-
-    if (ticketsError) {
-      console.error('Error cancelling tickets:', ticketsError);
-      return;
-    }
-
-    // Update order status to cancelled
-    const { error: orderUpdateError } = await supabase
-      .from('stripe_orders')
-      .update({ status: 'canceled' })
-      .eq('id', order.id);
-
-    if (orderUpdateError) {
-      console.error('Error updating order status:', orderUpdateError);
-      return;
-    }
-
-    console.info(`Successfully cancelled ${cancelledTickets?.length || 0} ticket(s) for order ${order.id} due to refund`);
   } catch (error) {
-    console.error('Error handling refund:', error);
+    console.error('Error handling charge.refunded:', error);
+  }
+}
+
+async function handleRefundUpdated(refund: Stripe.Refund) {
+  try {
+    if (refund.status !== 'succeeded') {
+      console.info(`Refund ${refund.id} status is ${refund.status}, skipping cancellation`);
+      return;
+    }
+
+    let paymentIntentId: string | null = null;
+
+    if (refund.payment_intent && typeof refund.payment_intent === 'string') {
+      paymentIntentId = refund.payment_intent;
+    } else if (refund.charge && typeof refund.charge === 'string') {
+      const charge = await stripe.charges.retrieve(refund.charge);
+      if (charge.payment_intent && typeof charge.payment_intent === 'string') {
+        paymentIntentId = charge.payment_intent;
+      }
+    }
+
+    if (!paymentIntentId) {
+      console.error('No payment intent ID found for refund:', refund.id);
+      return;
+    }
+
+    console.info(`Processing refund.updated for payment intent: ${paymentIntentId}`);
+
+    const result = await cancelTicketsByPaymentIntent(paymentIntentId, 'refund.updated');
+
+    if (result) {
+      console.info(`Successfully cancelled ${result.ticketCount} ticket(s) for order ${result.orderId} due to refund.updated`);
+    }
+  } catch (error) {
+    console.error('Error handling refund.updated:', error);
   }
 }
 
