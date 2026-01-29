@@ -213,7 +213,7 @@ export default function VendorsScreen() {
       category: 'decks',
       booth: 'TBD',
       featured: false,
-      website: '',
+      website: 'https://www.loftfingerboarding.com',
       specialOffer: 'FBCon Exclusive drops',
     },
     {
