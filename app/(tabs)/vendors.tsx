@@ -197,7 +197,7 @@ export default function VendorsScreen() {
       specialOffer: 'FBCon Exclusive drops',
     },
     {
-      id: '19',
+      id: 'FlockDecks',
       name: 'TBD',
       description: 'Vendor details coming soon',
       category: 'decks',
