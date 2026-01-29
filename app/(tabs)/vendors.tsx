@@ -61,7 +61,7 @@ export default function VendorsScreen() {
       name: 'Refind Supply Co.',
       description: 'Handcrafted Refind Decks, Custom Apparel and Accessories',
       category: 'decks',
-      booth: '',
+      booth: 'TBD',
       featured: false,
       website: 'https://www.refindsupplyco.com',
       specialOffer: 'Fingerboard Con Exclusive Drops',
