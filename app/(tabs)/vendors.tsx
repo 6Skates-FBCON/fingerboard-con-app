@@ -178,7 +178,7 @@ export default function VendorsScreen() {
     },
     {
       id: '17',
-      name: 'TBD',
+      name: 'Bonk Benches',
       description: 'Vendor details coming soon',
       category: 'decks',
       booth: 'TBD',
@@ -188,7 +188,7 @@ export default function VendorsScreen() {
     },
     {
       id: '18',
-      name: 'TBD',
+      name: 'Cryptic Collective',
       description: 'Vendor details coming soon',
       category: 'decks',
       booth: 'TBD',
