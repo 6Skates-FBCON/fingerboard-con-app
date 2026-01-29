@@ -168,8 +168,8 @@ export default function VendorsScreen() {
     },
     {
       id: '16',
-      name: 'TBD',
-      description: 'Vendor details coming soon',
+      name: 'ABC Parks',
+      description: 'Fingerboard Parks, Obstacles and Decks',
       category: 'decks',
       booth: 'TBD',
       featured: false,
