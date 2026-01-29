@@ -197,8 +197,8 @@ export default function VendorsScreen() {
       specialOffer: 'FBCon Exclusive drops',
     },
     {
-      id: 'FlockDecks',
-      name: 'TBD',
+      id: '19',
+      name: 'FlockDecks',
       description: 'Vendor details coming soon',
       category: 'decks',
       booth: 'TBD',
@@ -207,8 +207,8 @@ export default function VendorsScreen() {
       specialOffer: 'FBCon Exclusive drops',
     },
     {
-      id: 'Loft Fingerboarding',
-      name: 'TBD',
+      id: '20',
+      name: 'Loft Fingerboarding',
       description: 'Vendor details coming soon',
       category: 'decks',
       booth: 'TBD',
@@ -217,8 +217,8 @@ export default function VendorsScreen() {
       specialOffer: 'FBCon Exclusive drops',
     },
     {
-      id: 'Maple Wheels',
-      name: 'TBD',
+      id: '21',
+      name: 'Maple Wheels',
       description: 'Vendor details coming soon',
       category: 'decks',
       booth: 'TBD',
