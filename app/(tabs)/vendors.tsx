@@ -223,7 +223,7 @@ export default function VendorsScreen() {
       category: 'decks',
       booth: 'TBD',
       featured: false,
-      website: '',
+      website: 'https://maplewheelsfb.com/',
       specialOffer: 'FBCon Exclusive drops',
     },
     {
