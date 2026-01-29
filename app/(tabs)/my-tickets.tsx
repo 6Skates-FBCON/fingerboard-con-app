@@ -168,10 +168,6 @@ export default function MyTicketsScreen() {
             <View style={styles.emptyTicketsContainer}>
               <Ticket size={48} color="#66BB6A" />
               <Text style={styles.emptyTicketsTitle}>No Tickets Yet</Text>
-              <Text style={styles.emptyTicketsText}>Purchase tickets to see them here</Text>
-              <TouchableOpacity style={styles.buyButton} onPress={() => router.push('/tickets')}>
-                <Text style={styles.buyButtonText}>Buy Tickets</Text>
-              </TouchableOpacity>
             </View>
           ) : (
             <>
@@ -336,24 +332,6 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     color: '#FFFFFF',
     marginTop: 12,
-  },
-  emptyTicketsText: {
-    fontSize: 14,
-    color: '#E8F5E8',
-    marginTop: 8,
-    textAlign: 'center',
-  },
-  buyButton: {
-    backgroundColor: '#FFD700',
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 12,
-    marginTop: 20,
-  },
-  buyButtonText: {
-    fontSize: 15,
-    fontWeight: '800',
-    color: '#2E7D32',
   },
   orderGroup: {
     marginBottom: 20,
