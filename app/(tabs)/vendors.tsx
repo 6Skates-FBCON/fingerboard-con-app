@@ -233,7 +233,7 @@ export default function VendorsScreen() {
       category: 'decks',
       booth: 'TBD',
       featured: false,
-      website: '',
+      website: 'https://sweetskendamas.com',
       specialOffer: 'FBCon Exclusive drops',
     },
     {
