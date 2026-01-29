@@ -193,7 +193,7 @@ export default function VendorsScreen() {
       category: 'decks',
       booth: 'TBD',
       featured: false,
-      website: '',
+      website: 'https://www.crypticcollective.com',
       specialOffer: 'FBCon Exclusive drops',
     },
     {
