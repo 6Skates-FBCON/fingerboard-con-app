@@ -207,7 +207,7 @@ export default function VendorsScreen() {
       specialOffer: 'FBCon Exclusive drops',
     },
     {
-      id: '20',
+      id: 'Loft Fingerboarding',
       name: 'TBD',
       description: 'Vendor details coming soon',
       category: 'decks',
@@ -217,7 +217,7 @@ export default function VendorsScreen() {
       specialOffer: 'FBCon Exclusive drops',
     },
     {
-      id: '21',
+      id: 'Maple Wheels',
       name: 'TBD',
       description: 'Vendor details coming soon',
       category: 'decks',
@@ -228,7 +228,7 @@ export default function VendorsScreen() {
     },
     {
       id: '22',
-      name: 'TBD',
+      name: 'Sweets Kendamas',
       description: 'Vendor details coming soon',
       category: 'decks',
       booth: 'TBD',
