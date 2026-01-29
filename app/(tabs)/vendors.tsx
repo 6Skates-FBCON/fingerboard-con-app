@@ -203,7 +203,7 @@ export default function VendorsScreen() {
       category: 'decks',
       booth: 'TBD',
       featured: false,
-      website: '',
+      website: 'https://www.flockdecks.com',
       specialOffer: 'FBCon Exclusive drops',
     },
     {
