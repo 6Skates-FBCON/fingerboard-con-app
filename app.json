@@ -79,7 +79,10 @@
     },
 
     "updates": {
-      "url": "https://u.expo.dev/007abce3-7c10-4267-874e-2d0709de130b"
+      "url": "https://u.expo.dev/007abce3-7c10-4267-874e-2d0709de130b",
+      "enabled": true,
+      "checkAutomatically": "ON_LOAD",
+      "fallbackToCacheTimeout": 0
     }
   }
 }
