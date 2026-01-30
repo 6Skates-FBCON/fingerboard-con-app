@@ -91,7 +91,7 @@ export default function EventsScreen() {
           },
           {
             id: '8',
-            title: 'Sponsored Event',
+            title: 'Teak Tuning / Session Fingerboards',
             time: '9:30 PM - 11:30 PM',
             location: 'Main Ballroom',
             type: 'social',
