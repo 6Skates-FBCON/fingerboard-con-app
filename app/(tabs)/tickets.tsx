@@ -67,6 +67,7 @@ export default function TicketsScreen() {
         'Vendor hall access',
       ],
       stripePriceId: 'price_1SNP5KLz01V9GjOutNzMowcF',
+      soldOut: true,
     },
     {
       id: 'deck combo',
@@ -80,6 +81,7 @@ export default function TicketsScreen() {
         'Commemorative Complete Fingerboard',
       ],
       stripePriceId: 'price_1SoWBnLz01V9GjOuJ3ef4l4w',
+      soldOut: true,
     },
     {
       id: 'blackriver deck combo',
@@ -92,6 +94,7 @@ export default function TicketsScreen() {
         'Exclusive FBCON Blackriver Fingerboard',
       ],
       stripePriceId: 'price_1SNPBDLz01V9GjOuOn3ajum9',
+      soldOut: true,
     },
     {
       id: 'vendor',
@@ -347,7 +350,7 @@ export default function TicketsScreen() {
                 ticket.soldOut && styles.soldOutButtonText,
               ]}>
                 {ticket.soldOut
-                  ? 'SOLD OUT'
+                  ? 'NOT AVAILABLE'
                   : ticket.stripePriceId
                   ? (loading ? 'LOADING...' : 'BUY NOW')
                   : 'AVAILABLE SOON'}
