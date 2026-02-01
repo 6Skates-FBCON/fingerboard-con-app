@@ -60,7 +60,6 @@ export default function TabLayout() {
           tabBarIcon: ({ size, color }) => (
             <ShoppingBag size={size} color={color} />
           ),
-          href: null,
         }}
       />
       <Tabs.Screen
