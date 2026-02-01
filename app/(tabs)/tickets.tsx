@@ -338,20 +338,16 @@ export default function TicketsScreen() {
                 styles.purchaseButton,
                 ticket.soldOut && styles.soldOutButton,
                 !ticket.stripePriceId && styles.disabledButton,
-                (productsRequiringCode.has(ticket.name) && ticket.name !== 'Vendor Package') && styles.soldOutButton,
               ]}
-              disabled={ticket.soldOut || !ticket.stripePriceId || loading || (productsRequiringCode.has(ticket.name) && ticket.name !== 'Vendor Package')}
+              disabled={ticket.soldOut || !ticket.stripePriceId || loading}
               onPress={() => ticket.stripePriceId && handlePurchase(ticket.stripePriceId, ticket.id, ticket.name)}
             >
               <Text style={[
                 styles.purchaseButtonText,
                 ticket.soldOut && styles.soldOutButtonText,
-                (productsRequiringCode.has(ticket.name) && ticket.name !== 'Vendor Package') && styles.soldOutButtonText,
               ]}>
                 {ticket.soldOut
                   ? 'SOLD OUT'
-                  : (productsRequiringCode.has(ticket.name) && ticket.name !== 'Vendor Package')
-                  ? 'TICKET SALES SUSPENDED'
                   : ticket.stripePriceId
                   ? (loading ? 'LOADING...' : 'BUY NOW')
                   : 'AVAILABLE SOON'}
@@ -408,9 +404,7 @@ export default function TicketsScreen() {
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
             <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>
-                {pendingTicketName === 'Vendor Package' ? 'Vendor Access Code Required' : 'Access Code Required'}
-              </Text>
+              <Text style={styles.modalTitle}>Access Code Required</Text>
               <TouchableOpacity
                 onPress={() => {
                   setVendorCodeModalVisible(false);
@@ -425,9 +419,7 @@ export default function TicketsScreen() {
             </View>
 
             <Text style={styles.modalDescription}>
-              {pendingTicketName === 'Vendor Package'
-                ? 'Please enter your vendor access code to purchase the Vendor Package.'
-                : 'We have reached capacity. If tickets become available we will open ticket sales again.'}
+              Please enter your access code to continue with your purchase.
             </Text>
 
             <TextInput
