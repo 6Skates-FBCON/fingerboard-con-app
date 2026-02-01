@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Linking, Alert, Modal, TextInput } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
-import { ExternalLink, Ticket, Star, Users, Calendar, Check, X } from 'lucide-react-native';
+import { Ticket, Star, Users, Calendar, Check, X } from 'lucide-react-native';
 import { router } from 'expo-router';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/hooks/useAuth';
@@ -391,20 +391,6 @@ export default function TicketsScreen() {
             </Text>
           </View>
         </View>
-
-        <View style={styles.externalPurchaseSection}>
-          <Text style={styles.externalPurchaseTitle}>Alternative Purchase Option</Text>
-          <Text style={styles.externalPurchaseDescription}>
-            You can also purchase tickets directly through our Stripe checkout page
-          </Text>
-          <TouchableOpacity
-            style={styles.externalButton}
-            onPress={() => Linking.openURL('https://buy.stripe.com/4gw2b78Bk9hQ15S001')}
-          >
-            <ExternalLink size={20} color="#2E7D32" />
-            <Text style={styles.externalButtonText}>Buy Tickets Online</Text>
-          </TouchableOpacity>
-        </View>
       </ScrollView>
 
       <Modal
@@ -722,46 +708,6 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   submitButtonText: {
-    fontSize: 16,
-    fontWeight: '800',
-    color: '#2E7D32',
-  },
-  externalPurchaseSection: {
-    backgroundColor: '#4CAF50',
-    borderRadius: 16,
-    padding: 20,
-    marginVertical: 20,
-    marginHorizontal: 4,
-    alignItems: 'center',
-    borderWidth: 2,
-    borderColor: '#66BB6A',
-  },
-  externalPurchaseTitle: {
-    fontSize: 18,
-    fontWeight: '800',
-    color: '#FFFFFF',
-    marginBottom: 8,
-    textAlign: 'center',
-  },
-  externalPurchaseDescription: {
-    fontSize: 14,
-    color: '#E8F5E8',
-    marginBottom: 16,
-    textAlign: 'center',
-    lineHeight: 20,
-  },
-  externalButton: {
-    backgroundColor: '#FFD700',
-    borderRadius: 12,
-    paddingVertical: 14,
-    paddingHorizontal: 24,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    width: '100%',
-    justifyContent: 'center',
-  },
-  externalButtonText: {
     fontSize: 16,
     fontWeight: '800',
     color: '#2E7D32',
