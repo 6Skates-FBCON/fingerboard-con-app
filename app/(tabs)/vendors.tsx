@@ -169,7 +169,7 @@ export default function VendorsScreen() {
     {
       id: '16',
       name: 'ABC Parks',
-      description: 'Fingerboard Parks, Obstacles and Decks',
+      description: 'Handcrafted fingerboard obstacles built for performance and creativity — from modular park systems and storage-ready ledges to pro fingerboard decks and custom fingerboard parks. We specialize in obstacles, large custom builds, real-life park replicas, & pro fingerboards. All made by fingerboarders, for fingerboarders',
       category: 'decks',
       booth: 'TBD',
       featured: false,
