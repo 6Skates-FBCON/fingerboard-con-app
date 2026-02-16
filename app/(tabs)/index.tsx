@@ -39,6 +39,7 @@ export default function HomeScreen() {
           
           <View style={styles.eventCard}>
             <Text style={styles.eventDate}>April 24-26, 2026 • Tewksbury, MA</Text>
+            <Text style={styles.soldOutText}>Sold Out</Text>
           </View>
         </View>
       </View>
@@ -142,7 +143,13 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '700',
     color: '#FFFFFF',
-    marginBottom: 12,
+    marginBottom: 8,
+  },
+  soldOutText: {
+    fontSize: 20,
+    fontWeight: '800',
+    color: '#FF0000',
+    textAlign: 'center',
   },
   liveIndicator: {
     flexDirection: 'row',
