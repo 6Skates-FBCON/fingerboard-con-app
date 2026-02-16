@@ -7,6 +7,7 @@ import { router } from 'expo-router';
 export default function HomeScreen() {
   const quickActions = [
     { icon: Calendar, label: 'Schedule', route: '/events' },
+    { icon: ShoppingBag, label: 'Tickets', route: '/tickets' },
     { icon: Users, label: 'Vendors', route: '/vendors' },
     { icon: MapPin, label: 'Location', route: '/location' },
   ];
