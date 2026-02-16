@@ -46,8 +46,22 @@ export default function MyTicketsScreen() {
 
     try {
       const { data, error } = await supabase
-        .from('ticket_details')
-        .select('*')
+        .from('tickets')
+        .select(`
+          id,
+          order_id,
+          ticket_type,
+          ticket_number,
+          qr_code_data,
+          owner_id,
+          original_purchaser_id,
+          status,
+          validated_at,
+          background_color,
+          event_name,
+          event_date,
+          created_at
+        `)
         .eq('owner_id', session.user.id)
         .eq('status', 'active')
         .order('created_at', { ascending: false });
@@ -57,7 +71,13 @@ export default function MyTicketsScreen() {
         return;
       }
 
-      setTickets(data || []);
+      const ticketsWithTransferInfo = (data || []).map(ticket => ({
+        ...ticket,
+        transfer_count: 0,
+        was_transferred: ticket.owner_id !== ticket.original_purchaser_id,
+      }));
+
+      setTickets(ticketsWithTransferInfo);
     } catch (error) {
       console.error('Error fetching tickets:', error);
     } finally {
