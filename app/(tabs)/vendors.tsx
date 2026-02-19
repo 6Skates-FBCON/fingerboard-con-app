@@ -259,7 +259,7 @@ export default function VendorsScreen() {
     {
       id: '25',
       name: 'Kickflick Fingerboards',
-      description: 'Quality products made in MA!',
+      description: 'Mini skateboards for your fingers',
       category: 'decks',
       booth: 'TBD',
       featured: false,
@@ -268,7 +268,7 @@ export default function VendorsScreen() {
     },
     {
       id: '26',
-      name: 'TBD',
+      name: 'Run it Back',
       description: 'Vendor details coming soon',
       category: 'decks',
       booth: 'TBD',
