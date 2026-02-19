@@ -15,8 +15,8 @@ export default function HomeScreen() {
   const updates = [
     {
       time: '',
-      title: 'Ticket Drop Update',
-      text: 'The ticket drop was way bigger than anything we expected. Traffic was massive, and the site slowed down and glitched at times under the load.\n\nThank you to everyone who grabbed tickets. Due to checkout issues, some people accidentally purchased multiple tickets. The event is currently sold out, and ticket sales are temporarily suspended.\n\nWe\'re reviewing orders and processing refunds for any extra tickets that weren\'t intended. As those are refunded, a small number of tickets may become available, but we don\'t yet know how many.',
+      title: 'FINGERBOARD CON — OFFICIALLY 100% SOLD OUT',
+      text: 'The ticket drop was bigger than anything we expected — the demand was massive!\n\nThank you. The support from this community is unreal. We\'re incredibly grateful that you continue to show up and trust us to bring this event to life.\n\nWe also understand how disappointing it is if you weren\'t able to secure a ticket. We don\'t take that lightly.\n\nImportant:\n\n• Tickets are required for entry on all three days of the event.\n• Tickets will be checked daily.\n• The hotel has required tighter access control this year for safety and capacity reasons.\n• No tickets will be available at the door.\n• Non-ticket holders will not be permitted entry.\n\nIf you come across tickets on the secondary market, please proceed carefully. We strongly recommend only purchasing from someone you personally know and trust. FBCon is not responsible for any losses related to fake or invalid tickets.\n\nEvery year we learn, adjust, and improve. Thank you for allowing us to keep building this for the community. We\'re committed to making it better every time.\n\nBoston is going to be something special.',
     },
   ];
 
