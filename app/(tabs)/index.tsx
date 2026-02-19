@@ -61,7 +61,7 @@ export default function HomeScreen() {
         <View style={styles.ticketNotice}>
           <Zap size={24} color="#2E7D32" style={styles.ticketNoticeIcon} />
           <Text style={styles.ticketNoticeText}>
-            Tickets are Solt Out & required for all 3 days of events.
+            Tickets are Sold Out & required for all 3 days of events.
           </Text>
         </View>
 
