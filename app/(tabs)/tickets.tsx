@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Linking, Alert, Modal, TextInput } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Linking, Alert, Modal, TextInput, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ticket, Star, Users, Calendar, Check, X } from 'lucide-react-native';
@@ -212,11 +212,19 @@ export default function TicketsScreen() {
 
       console.log('Starting checkout...');
 
+      const baseUrl = Platform.OS === 'web'
+        ? window.location.origin
+        : 'myapp://';
+
       const requestBody: any = {
         price_id: priceId,
         mode: 'payment',
-        success_url: 'fingerboardcon://tickets?success=true',
-        cancel_url: 'fingerboardcon://tickets?canceled=true',
+        success_url: Platform.OS === 'web'
+          ? `${baseUrl}/tickets?success=true`
+          : `${baseUrl}tickets?success=true`,
+        cancel_url: Platform.OS === 'web'
+          ? `${baseUrl}/tickets?canceled=true`
+          : `${baseUrl}tickets?canceled=true`,
       };
 
       if (vendorCode) {
