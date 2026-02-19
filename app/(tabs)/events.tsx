@@ -43,7 +43,7 @@ export default function EventsScreen() {
             time: '6:00 PM - 8:00 PM',
             location: 'Main Ballroom',
             type: 'social',
-            description: 'our chance to beat a Blackriver pro and win sick prizes.'
+            description: '8 teams enter. Only one claims fingerboarding supremacy.'
           },
           {
             id: '3',
