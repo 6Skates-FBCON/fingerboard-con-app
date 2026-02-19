@@ -248,12 +248,12 @@ export default function VendorsScreen() {
     },
     {
       id: '24',
-      name: 'TBD',
-      description: 'Vendor details coming soon',
+      name: 'Board Corks',
+      description: 'Fingerboard Display Solutions,
       category: 'decks',
       booth: 'TBD',
       featured: false,
-      website: '',
+      website: 'https://www.boardcorks.com',
       specialOffer: 'FBCon Exclusive drops',
     },
     {
