@@ -238,12 +238,12 @@ export default function VendorsScreen() {
     },
     {
       id: '23',
-      name: 'TBD',
+      name: '3face',
       description: 'Vendor details coming soon',
       category: 'decks',
       booth: 'TBD',
       featured: false,
-      website: '',
+      website: 'https://www.3face.us/',
       specialOffer: 'FBCon Exclusive drops',
     },
     {
