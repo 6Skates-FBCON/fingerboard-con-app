@@ -67,7 +67,6 @@ export default function TicketsScreen() {
         'Vendor hall access',
       ],
       stripePriceId: 'price_1SNP5KLz01V9GjOutNzMowcF',
-      soldOut: true,
     },
     {
       id: 'deck combo',
