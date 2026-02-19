@@ -269,11 +269,11 @@ export default function VendorsScreen() {
     {
       id: '26',
       name: 'Run it Back',
-      description: 'Vendor details coming soon',
+      description: 'Used Fingerboard Gear Shop',
       category: 'decks',
       booth: 'TBD',
       featured: false,
-      website: '',
+      website: 'https://clued.shop/runitbackfb',
       specialOffer: 'FBCon Exclusive drops',
     },
   ];
