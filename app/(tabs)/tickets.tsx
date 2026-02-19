@@ -298,7 +298,7 @@ export default function TicketsScreen() {
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.urgencyBanner}>
-          <Text style={styles.urgencyText}>⚡ Tickets are limited & required for all 3 days of events</Text>
+          <Text style={styles.urgencyText}>⚡ Tickets are SOLD OUT & required for all 3 days of events. Tickets will be checked at the door. Non tickets holders will not be permited</Text>
         </View>
 
         {ticketTypes.map((ticket) => (
