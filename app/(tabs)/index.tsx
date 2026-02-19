@@ -69,10 +69,6 @@ export default function HomeScreen() {
           <Text style={styles.sectionTitle}>Latest Updates</Text>
           {updates.map((update, index) => (
             <View key={index} style={styles.updateCard}>
-              <View style={styles.updateHeader}>
-                <View style={styles.updateDot} />
-                <Text style={styles.updateTime}>{update.time}</Text>
-              </View>
               <Text style={styles.updateTitle}>{update.title}</Text>
               <Text style={styles.updateText}>{update.text}</Text>
             </View>
@@ -246,6 +242,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#FFFFFF',
     marginBottom: 8,
+    textAlign: 'center',
   },
   updateText: {
     fontSize: 15,
