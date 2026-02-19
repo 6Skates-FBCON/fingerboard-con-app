@@ -39,7 +39,7 @@ export default function EventsScreen() {
         subEvents: [
           {
             id: '4',
-            title: 'Blackriver Ramps Sponsored Event',
+            title: 'Skate Station -  PSL Bracket',
             time: '6:00 PM - 8:00 PM',
             location: 'Main Ballroom',
             type: 'social',
