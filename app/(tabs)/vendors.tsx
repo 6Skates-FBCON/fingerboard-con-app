@@ -258,12 +258,12 @@ export default function VendorsScreen() {
     },
     {
       id: '25',
-      name: 'TBD',
-      description: 'Vendor details coming soon',
+      name: 'Kickflick Fingerboards',
+      description: 'Quality products made in MA!',
       category: 'decks',
       booth: 'TBD',
       featured: false,
-      website: '',
+      website: 'https://www.kickflickfingerboards.com/',
       specialOffer: 'FBCon Exclusive drops',
     },
     {
