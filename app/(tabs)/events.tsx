@@ -87,7 +87,7 @@ export default function EventsScreen() {
             time: '6:00 PM - 8:00 PM',
             location: 'Main Ballroom',
             type: 'blackriver',
-            description: 'Details to follow'
+            description: 'Product Release Party & Video Premiere'
           },
           {
             id: '8',
