@@ -42,7 +42,7 @@ export default function EventsScreen() {
             title: 'Skate Station -  PSL Bracket',
             time: '6:00 PM - 8:00 PM',
             location: 'Main Ballroom',
-            type: 'social',
+            type: 'competition',
             description: '8 teams enter. Only one claims fingerboarding supremacy.'
           },
           {
