@@ -89,7 +89,7 @@ export default function VendorsScreen() {
     {
       id: '8',
       name: 'DeliDecks',
-      description: 'Vendor details coming soon',
+      description: 'Crafting premium fingerboards since 2015. Offering decks, trux, wheels & more!',
       category: 'decks',
       booth: 'TBD',
       featured: false,
