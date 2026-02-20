@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -10,7 +10,7 @@ interface Event {
   title: string;
   time: string;
   location: string;
-  type: 'competition' | 'workshop' | 'social' | 'vendor' | 'retail' | 'panels';
+  type: 'competition' | 'workshop' | 'social' | 'vendor' | 'retail' | 'panels' | 'blackriver';
   participants?: number;
   description: string;
   subEvents?: Event[];
@@ -86,7 +86,7 @@ export default function EventsScreen() {
             title: 'Blackriver Ramps',
             time: '6:00 PM - 8:00 PM',
             location: 'Main Ballroom',
-            type: 'social',
+            type: 'blackriver',
             description: 'Details to follow'
           },
           {
@@ -163,6 +163,8 @@ export default function EventsScreen() {
         return '#FFD700';
       case 'panels':
         return '#9B59B6';
+      case 'blackriver':
+        return '#000000';
       default:
         return '#FFFFFF';
     }
@@ -255,7 +257,15 @@ export default function EventsScreen() {
                       <View key={subEvent.id} style={styles.subEventCard}>
                         <View style={styles.eventHeader}>
                           <View style={[styles.eventIcon, { backgroundColor: subEventColor }]}>
-                            <SubIconComponent size={20} color="#000000" />
+                            {subEvent.type === 'blackriver' ? (
+                              <Image
+                                source={require('@/assets/images/Blackriver Skull Logo.png')}
+                                style={styles.blackriverLogo}
+                                resizeMode="contain"
+                              />
+                            ) : (
+                              <SubIconComponent size={20} color="#000000" />
+                            )}
                           </View>
                           <View style={styles.eventInfo}>
                             <Text style={styles.eventTitle}>{subEvent.title}</Text>
@@ -376,6 +386,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
+  },
+  blackriverLogo: {
+    width: 28,
+    height: 28,
   },
   logoContainer: {
     width: 40,
