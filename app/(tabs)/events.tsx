@@ -47,7 +47,7 @@ export default function EventsScreen() {
           },
           {
             id: '11',
-            title: 'Panel Discussions',
+            title: 'Panel Discussions Presented by the Big Spin Podcast & FB.Christopher',
             time: '8:30 PM - 11:30 PM',
             location: 'Main Stage',
             type: 'panels',
