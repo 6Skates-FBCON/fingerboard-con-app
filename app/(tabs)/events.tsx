@@ -51,7 +51,7 @@ export default function EventsScreen() {
             time: '8:30 PM - 11:30 PM',
             location: 'Main Stage',
             type: 'panels',
-            description: 'Talking about the FB Scene'
+            description: 'Panels, Pods and Fun'
           },
         ]
       },
