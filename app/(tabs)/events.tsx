@@ -45,6 +45,14 @@ export default function EventsScreen() {
             type: 'competition',
             description: '8 teams enter. Only one claims fingerboarding supremacy.'
           },
+          {
+            id: '11',
+            title: 'Panel Discussions',
+            time: '8:30 PM - 11:30 PM',
+            location: 'Main Stage',
+            type: 'panels',
+            description: 'Talking about the FB Scene'
+          },
         ]
       },
     ],
@@ -73,14 +81,6 @@ export default function EventsScreen() {
         type: 'social',
         description: 'Open Session, Food and drinks available at the Hotel Restaurant & Bar for a fee',
         subEvents: [
-          {
-            id: '11',
-            title: 'Panel Discussions',
-            time: '7:00 PM - 9:00 PM',
-            location: 'Main Stage',
-            type: 'panels',
-            description: 'Talking about the FB Scene'
-          },
           {
             id: '8',
             title: 'Teak Tuning / Session Fingerboards',
