@@ -94,7 +94,7 @@ export default function VendorsScreen() {
       booth: 'TBD',
       featured: false,
       website: 'https://delidecksusa.com',
-      specialOffer: 'Fingerboard stuff',
+      specialOffer: 'FBCon Exclusive drops',
     },
     {
       id: '9',
