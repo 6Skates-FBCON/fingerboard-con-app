@@ -82,6 +82,14 @@ export default function EventsScreen() {
         description: 'Open Session, Food and drinks available at the Hotel Restaurant & Bar for a fee',
         subEvents: [
           {
+            id: '14',
+            title: 'BlackRiver Ramps',
+            time: '6:00 PM - 8:00 PM',
+            location: 'Main Ballroom',
+            type: 'social',
+            description: 'Details to follow'
+          },
+          {
             id: '8',
             title: 'Teak Tuning / Session Fingerboards',
             time: '9:30 PM - 11:30 PM',
