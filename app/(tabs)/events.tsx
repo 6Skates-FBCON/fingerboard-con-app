@@ -83,7 +83,7 @@ export default function EventsScreen() {
         subEvents: [
           {
             id: '14',
-            title: 'BlackRiver Ramps',
+            title: 'Blackriver Ramps',
             time: '6:00 PM - 8:00 PM',
             location: 'Main Ballroom',
             type: 'social',
