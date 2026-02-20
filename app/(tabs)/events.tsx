@@ -45,14 +45,6 @@ export default function EventsScreen() {
             type: 'competition',
             description: '8 teams enter. Only one claims fingerboarding supremacy.'
           },
-          {
-            id: '3',
-            title: 'Sponsored Event',
-            time: '8:30 PM - 10:30 PM',
-            location: 'Main Ballroom',
-            type: 'TBD',
-            description: 'Details to follow.'
-          },
         ]
       },
     ],
