@@ -179,7 +179,7 @@ export default function VendorsScreen() {
     {
       id: '17',
       name: 'Bonk Benches',
-      description: 'Vendor details coming soon',
+      description: 'Miniature skateboard products handmade in Upstate New York',
       category: 'decks',
       booth: 'TBD',
       featured: false,
