@@ -139,12 +139,12 @@ export default function VendorsScreen() {
     {
       id: '13',
       name: 'Future Bound Prints',
-      description: 'Home of the Original FB Props & Decor since 2021',
+      description: 'Realistic 3D-printed fingerboard obstacles and props inspired by real street spots to level up parks and setups.',
       category: 'decks',
       booth: 'TBD',
       featured: false,
       website: 'https://www.futureboundprints.com/',
-      specialOffer: 'FBCon Exclusive drops',
+      specialOffer: 'Props, Obstacles and FBcon Exclusives',
     },
     {
       id: '14',
