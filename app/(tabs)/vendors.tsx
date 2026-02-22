@@ -248,8 +248,8 @@ export default function VendorsScreen() {
     },
     {
       id: '24',
-      name: 'Board Corks',
-      description: 'Fingerboard Display Solutions',
+      name: 'BoardCorks',
+      description: 'Fingerboard display solutions made with cork',
       category: 'decks',
       booth: 'TBD',
       featured: false,
