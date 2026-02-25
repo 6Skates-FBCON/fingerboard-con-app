@@ -7,17 +7,11 @@ import { BrowsingProvider } from '@/contexts/BrowsingContext';
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  const isReady = useFrameworkReady();
+  useFrameworkReady();
 
   useEffect(() => {
-    if (isReady) {
-      SplashScreen.hideAsync();
-    }
-  }, [isReady]);
-
-  if (!isReady) {
-    return null;
-  }
+    SplashScreen.hideAsync();
+  }, []);
 
   return (
     <BrowsingProvider>

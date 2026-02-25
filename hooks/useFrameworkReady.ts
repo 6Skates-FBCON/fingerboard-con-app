@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 declare global {
   interface Window {
@@ -7,12 +7,7 @@ declare global {
 }
 
 export function useFrameworkReady() {
-  const [isReady, setIsReady] = useState(false);
-
   useEffect(() => {
-    setIsReady(true);
     window.frameworkReady?.();
   }, []);
-
-  return isReady;
 }
