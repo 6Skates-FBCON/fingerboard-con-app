@@ -239,12 +239,12 @@ export default function VendorsScreen() {
     {
       id: '23',
       name: '3face',
-      description: 'Vendor details coming soon',
+      description: 'From chaos to order, from plywood to ramp; 3face weaves the unseen. Handmade fingerboard goods from Los Angeles',
       category: 'decks',
       booth: 'TBD',
       featured: false,
       website: 'https://www.3face.us/',
-      specialOffer: 'FBCon Exclusive drops',
+      specialOffer: 'Wooden fingerboard ramps, accessories, and more',
     },
     {
       id: '24',
