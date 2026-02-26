@@ -1,12 +1,16 @@
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, RefreshControl, Linking } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, RefreshControl, Linking, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ticket, Send, Clock, CheckCircle, XCircle, MapPin, Phone, ExternalLink } from 'lucide-react-native';
 import { useAuth } from '@/hooks/useAuth';
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
-import QRCode from 'react-native-qrcode-svg';
 import { router } from 'expo-router';
+
+let QRCode: any = null;
+if (Platform.OS !== 'web') {
+  QRCode = require('react-native-qrcode-svg').default;
+}
 
 interface TicketData {
   id: number;
@@ -218,7 +222,14 @@ export default function MyTicketsScreen() {
                           </View>
 
                           <View style={styles.qrContainer}>
-                            <QRCode value={ticket.qr_code_data} size={100} backgroundColor="white" />
+                            {QRCode ? (
+                              <QRCode value={ticket.qr_code_data} size={100} backgroundColor="white" />
+                            ) : (
+                              <View style={styles.qrPlaceholder}>
+                                <Ticket size={32} color="#2E7D32" />
+                                <Text style={styles.qrPlaceholderText}>QR Code</Text>
+                              </View>
+                            )}
                           </View>
                         </View>
 
@@ -406,6 +417,18 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     padding: 8,
     borderRadius: 12,
+  },
+  qrPlaceholder: {
+    width: 100,
+    height: 100,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  qrPlaceholderText: {
+    fontSize: 10,
+    fontWeight: '700',
+    color: '#2E7D32',
+    marginTop: 4,
   },
   ticketFooter: {
     flexDirection: 'row',

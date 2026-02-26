@@ -4,7 +4,11 @@ import { StatusBar } from 'expo-status-bar';
 import { useFrameworkReady } from '@/hooks/useFrameworkReady';
 import { BrowsingProvider } from '@/contexts/BrowsingContext';
 
-SplashScreen.preventAutoHideAsync();
+try {
+  SplashScreen.preventAutoHideAsync();
+} catch (e) {
+  // SplashScreen not supported on web
+}
 
 export default function RootLayout() {
   useFrameworkReady();

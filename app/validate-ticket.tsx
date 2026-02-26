@@ -1,12 +1,19 @@
-import { View, Text, StyleSheet, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Alert, ActivityIndicator, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ArrowLeft, Camera, CheckCircle, XCircle, Ticket } from 'lucide-react-native';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { CameraView, useCameraPermissions } from 'expo-camera';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/hooks/useAuth';
+
+let CameraView: any = null;
+let useCameraPermissions: any = null;
+if (Platform.OS !== 'web') {
+  const cameraModule = require('expo-camera');
+  CameraView = cameraModule.CameraView;
+  useCameraPermissions = cameraModule.useCameraPermissions;
+}
 
 interface ValidationResult {
   success: boolean;
@@ -20,12 +27,44 @@ interface ValidationResult {
   message: string;
 }
 
+function WebFallback() {
+  return (
+    <SafeAreaView style={styles.container} edges={['top']}>
+      <LinearGradient colors={['#000000', '#1a1a1a']} style={styles.header}>
+        <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+          <ArrowLeft size={24} color="#FFFFFF" />
+        </TouchableOpacity>
+        <Text style={styles.title}>Validate Ticket</Text>
+      </LinearGradient>
+      <View style={styles.permissionContainer}>
+        <Camera size={64} color="#FFD700" />
+        <Text style={styles.permissionTitle}>Camera Not Available</Text>
+        <Text style={styles.permissionText}>
+          Ticket scanning requires the mobile app. Please use the iOS or Android app to validate tickets.
+        </Text>
+        <TouchableOpacity style={styles.permissionButton} onPress={() => router.back()}>
+          <Text style={styles.permissionButtonText}>Go Back</Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
+  );
+}
+
 export default function ValidateTicketScreen() {
   const { session } = useAuth();
-  const [permission, requestPermission] = useCameraPermissions();
   const [scanning, setScanning] = useState(true);
   const [validating, setValidating] = useState(false);
   const [validationResult, setValidationResult] = useState<ValidationResult | null>(null);
+
+  if (Platform.OS === 'web' || !useCameraPermissions) {
+    return <WebFallback />;
+  }
+
+  return <NativeValidateTicket session={session} scanning={scanning} setScanning={setScanning} validating={validating} setValidating={setValidating} validationResult={validationResult} setValidationResult={setValidationResult} />;
+}
+
+function NativeValidateTicket({ session, scanning, setScanning, validating, setValidating, validationResult, setValidationResult }: any) {
+  const [permission, requestPermission] = useCameraPermissions();
 
   if (!permission) {
     return (
