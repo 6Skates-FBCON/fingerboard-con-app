@@ -199,12 +199,12 @@ export default function VendorsScreen() {
     {
       id: '19',
       name: 'FlockDecks',
-      description: 'Vendor details coming soon',
+      description: 'Fingerboards and more! ',
       category: 'decks',
       booth: 'TBD',
       featured: false,
       website: 'https://www.flockdecks.com',
-      specialOffer: 'FBCon Exclusive drops',
+      specialOffer: '',
     },
     {
       id: '20',
