@@ -1,5 +1,6 @@
 import { Tabs } from 'expo-router';
 import { Chrome as Home, Calendar, ShoppingBag, Users, MapPin, UserCircle, Shield, Ticket } from 'lucide-react-native';
+import { View, ActivityIndicator, StyleSheet } from 'react-native';
 import { useIsAdmin } from '@/hooks/useIsAdmin';
 import { useAuth } from '@/hooks/useAuth';
 
@@ -8,7 +9,11 @@ export default function TabLayout() {
   const { loading } = useAuth();
 
   if (loading) {
-    return null;
+    return (
+      <View style={loadingStyles.container}>
+        <ActivityIndicator size="large" color="#4CAF50" />
+      </View>
+    );
   }
 
   return (
@@ -112,3 +117,12 @@ export default function TabLayout() {
     </Tabs>
   );
 }
+
+const loadingStyles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#000000',
+  },
+});

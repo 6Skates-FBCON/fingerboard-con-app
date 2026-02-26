@@ -6,8 +6,14 @@ declare global {
   }
 }
 
+if (typeof window !== 'undefined') {
+  window.frameworkReady?.();
+}
+
 export function useFrameworkReady() {
   useEffect(() => {
-    window.frameworkReady?.();
+    if (typeof window !== 'undefined') {
+      window.frameworkReady?.();
+    }
   }, []);
 }

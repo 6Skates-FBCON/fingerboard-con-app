@@ -17,6 +17,11 @@ export default function Index() {
       }
 
       try {
+        if (typeof window === 'undefined' || !window.location) {
+          setCheckingRecovery(false);
+          return;
+        }
+
         const urlParams = new URLSearchParams(window.location.search);
         const hashParams = new URLSearchParams(window.location.hash.substring(1));
         const type = urlParams.get('type') || hashParams.get('type');
