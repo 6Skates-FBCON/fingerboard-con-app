@@ -209,12 +209,12 @@ export default function VendorsScreen() {
     {
       id: '20',
       name: 'Loft Fingerboarding',
-      description: 'Vendor details coming soon',
+      description: '',
       category: 'decks',
       booth: 'TBD',
       featured: false,
       website: 'https://www.loftfingerboarding.com',
-      specialOffer: 'FBCon Exclusive drops',
+      specialOffer: '',
     },
     {
       id: '21',
