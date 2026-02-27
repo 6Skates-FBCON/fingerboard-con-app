@@ -229,12 +229,12 @@ export default function VendorsScreen() {
     {
       id: '22',
       name: 'Sweets Kendamas',
-      description: 'Vendor details coming soon',
+      description: '',
       category: 'decks',
       booth: 'TBD',
       featured: false,
       website: 'https://sweetskendamas.com',
-      specialOffer: 'FBCon Exclusive drops',
+      specialOffer: '',
     },
     {
       id: '23',
