@@ -224,7 +224,7 @@ export default function VendorsScreen() {
       booth: 'TBD',
       featured: false,
       website: 'https://maplewheelsfb.com/',
-      specialOffer: 'FBCon Exclusive drops',
+      specialOffer: 'Variety of wheel shapes & colors + FBCon Limited Edition wheels',
     },
     {
       id: '22',
