@@ -219,7 +219,7 @@ export default function VendorsScreen() {
     {
       id: '21',
       name: 'Maple Wheels',
-      description: 'Vendor details coming soon',
+      description: 'Carefully crafted fingerboard wheels - Precision In Every Roll',
       category: 'decks',
       booth: 'TBD',
       featured: false,
