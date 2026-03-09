@@ -12,6 +12,15 @@ if (Platform.OS !== 'web') {
   QRCode = require('react-native-qrcode-svg').default;
 }
 
+const QRCodeComponent = ({ value }: { value: string }) => {
+  if (Platform.OS !== 'web') {
+    return QRCode ? <QRCode value={value} size={100} backgroundColor="white" /> : null;
+  }
+
+  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(value)}`;
+  return <img src={qrUrl} alt="QR Code" style={{ width: 100, height: 100, borderRadius: 8 }} />;
+};
+
 interface TicketData {
   id: number;
   order_id: number;
@@ -222,8 +231,8 @@ export default function MyTicketsScreen() {
                           </View>
 
                           <View style={styles.qrContainer}>
-                            {QRCode ? (
-                              <QRCode value={ticket.qr_code_data} size={100} backgroundColor="white" />
+                            {ticket.qr_code_data ? (
+                              <QRCodeComponent value={ticket.qr_code_data} />
                             ) : (
                               <View style={styles.qrPlaceholder}>
                                 <Ticket size={32} color="#2E7D32" />
