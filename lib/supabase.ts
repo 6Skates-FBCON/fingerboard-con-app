@@ -40,9 +40,7 @@ export interface User {
 }
 
 // Create Supabase client
-export const supabase = supabaseUrl && supabaseAnonKey 
-  ? createClient(supabaseUrl, supabaseAnonKey)
-  : null;
+export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 // Mock data for development
 export const mockEvents: Event[] = [
@@ -68,10 +66,6 @@ export const mockEvents: Event[] = [
 export const api = {
   // Auth functions
   signUp: async (email: string, password: string) => {
-    if (!supabase) {
-      throw new Error('Supabase not connected. Please connect to Supabase first.');
-    }
-    
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -85,10 +79,6 @@ export const api = {
   },
   
   signIn: async (email: string, password: string) => {
-    if (!supabase) {
-      throw new Error('Supabase not connected. Please connect to Supabase first.');
-    }
-    
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -102,10 +92,6 @@ export const api = {
   },
   
   signOut: async () => {
-    if (!supabase) {
-      throw new Error('Supabase not connected. Please connect to Supabase first.');
-    }
-
     const { error } = await supabase.auth.signOut();
 
     if (error) {
@@ -114,10 +100,6 @@ export const api = {
   },
 
   sendPasswordResetEmail: async (email: string) => {
-    if (!supabase) {
-      throw new Error('Supabase not connected. Please connect to Supabase first.');
-    }
-
     const redirectTo = Platform.OS === 'web' && typeof window !== 'undefined' && window.location
       ? `${window.location.origin}/reset-password`
       : 'myapp://reset-password';
@@ -134,10 +116,6 @@ export const api = {
   },
 
   updatePassword: async (newPassword: string) => {
-    if (!supabase) {
-      throw new Error('Supabase not connected. Please connect to Supabase first.');
-    }
-
     const { error } = await supabase.auth.updateUser({
       password: newPassword,
     });
@@ -148,19 +126,11 @@ export const api = {
   },
   
   getCurrentUser: async () => {
-    if (!supabase) {
-      return null;
-    }
-
     const { data: { user } } = await supabase.auth.getUser();
     return user;
   },
 
   getUserProfile: async (userId: string): Promise<UserProfile | null> => {
-    if (!supabase) {
-      return null;
-    }
-
     const { data, error } = await supabase
       .from('profiles')
       .select('*')
@@ -176,10 +146,6 @@ export const api = {
   },
 
   isUserAdmin: async (userId: string): Promise<boolean> => {
-    if (!supabase) {
-      return false;
-    }
-
     const { data, error } = await supabase
       .from('profiles')
       .select('role')
@@ -195,10 +161,6 @@ export const api = {
   },
 
   updateUserProfile: async (userId: string, profile: Partial<UserProfile>) => {
-    if (!supabase) {
-      throw new Error('Supabase not connected. Please connect to Supabase first.');
-    }
-
     const { data, error } = await supabase
       .from('profiles')
       .update(profile)
