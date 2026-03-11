@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, RefreshControl, Linking, Platform } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, RefreshControl, Linking, Platform, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ticket, Send, Clock, CheckCircle, XCircle, MapPin, Phone, ExternalLink } from 'lucide-react-native';
@@ -9,16 +9,23 @@ import { router } from 'expo-router';
 
 let QRCode: any = null;
 if (Platform.OS !== 'web') {
-  QRCode = require('react-native-qrcode-svg').default;
+  const mod = require('react-native-qrcode-svg');
+  QRCode = mod.default || mod;
 }
 
 const QRCodeComponent = ({ value }: { value: string }) => {
-  if (Platform.OS !== 'web') {
-    return QRCode ? <QRCode value={value} size={100} backgroundColor="white" /> : null;
+  if (Platform.OS !== 'web' && QRCode) {
+    return <QRCode value={value} size={100} backgroundColor="white" />;
   }
 
-  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(value)}`;
-  return <img src={qrUrl} alt="QR Code" style={{ width: 100, height: 100, borderRadius: 8 }} />;
+  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(value)}`;
+  return (
+    <Image
+      source={{ uri: qrUrl }}
+      style={{ width: 100, height: 100, borderRadius: 8 }}
+      accessibilityLabel="QR Code"
+    />
+  );
 };
 
 interface TicketData {
@@ -48,12 +55,6 @@ export default function MyTicketsScreen() {
   const fetchTickets = async () => {
     if (!session) {
       setLoading(false);
-      return;
-    }
-
-    if (!supabase) {
-      setLoading(false);
-      setRefreshing(false);
       return;
     }
 
