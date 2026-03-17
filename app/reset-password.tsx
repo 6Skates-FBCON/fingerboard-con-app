@@ -26,7 +26,7 @@ export default function ResetPasswordScreen() {
       console.log('Reset password page loaded');
       console.log('Token hash:', token_hash);
       console.log('Type:', type);
-      console.log('Full URL:', typeof window !== 'undefined' ? window.location.href : 'N/A');
+      console.log('Full URL:', Platform.OS === 'web' ? window.location?.href : 'N/A');
 
       if (!supabase) {
         setError('Unable to connect to authentication service');

@@ -1,7 +1,7 @@
 import { Redirect } from 'expo-router';
 import { useAuth } from '@/hooks/useAuth';
 import { useEffect, useState } from 'react';
-import { View, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, ActivityIndicator, StyleSheet, Platform } from 'react-native';
 import { supabase } from '@/lib/supabase';
 
 export default function Index() {
@@ -17,27 +17,25 @@ export default function Index() {
       }
 
       try {
-        if (typeof window === 'undefined' || !window.location) {
+        if (Platform.OS !== 'web') {
           setCheckingRecovery(false);
           return;
         }
 
-        const urlParams = new URLSearchParams(window.location.search);
-        const hashParams = new URLSearchParams(window.location.hash.substring(1));
+        const search = window.location?.search ?? '';
+        const hash = window.location?.hash ?? '';
+        const urlParams = new URLSearchParams(search);
+        const hashParams = new URLSearchParams(hash.substring(1));
         const type = urlParams.get('type') || hashParams.get('type');
         const accessToken = urlParams.get('access_token') || hashParams.get('access_token');
 
-        console.log('Recovery check - type:', type, 'accessToken:', accessToken ? 'present' : 'none');
-
         if (type === 'recovery' && accessToken) {
-          console.log('Detected recovery token in URL');
           setIsRecovery(true);
           setCheckingRecovery(false);
           return;
         }
 
-        const { data: { session } } = await supabase.auth.getSession();
-        console.log('Session check:', session?.user ? 'user present' : 'no user');
+        await supabase.auth.getSession();
 
       } catch (error) {
         console.error('Error checking recovery mode:', error);
