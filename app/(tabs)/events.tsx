@@ -93,11 +93,11 @@ export default function EventsScreen() {
           },
           {
             id: '8',
-            title: 'Teak Tuning / Session Fingerboards',
+            title: 'Teak Tuning x Session Fingerboards',
             time: '8:30 PM - 10:30 PM',
             location: 'Main Ballroom',
             type: 'social',
-            description: 'Details to follow'
+            description: 'Teak x Session Spin-The-Wheel Event'
           },
         ]
       },
