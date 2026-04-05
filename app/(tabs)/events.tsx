@@ -43,7 +43,7 @@ export default function EventsScreen() {
             time: '6:00 PM - 8:00 PM',
             location: 'Main Ballroom',
             type: 'competition',
-            description: '8 teams enter. Only one claims fingerboarding supremacy.'
+            description: 'New competitive fingerboard event based on PSL. 8 team single elimination bracket.'
           },
           {
             id: '11',
