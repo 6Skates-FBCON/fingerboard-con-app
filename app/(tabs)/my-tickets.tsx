@@ -30,7 +30,7 @@ const QRCodeComponent = ({ value }: { value: string }) => {
 
 interface TicketData {
   id: number;
-  order_id: number;
+  order_id: number | null;
   ticket_type: string;
   ticket_number: number;
   qr_code_data: string;
@@ -150,13 +150,13 @@ export default function MyTicketsScreen() {
     ticketType === 'guest_list' ? 'General Admission' : ticketType;
 
   const groupedTickets = tickets.reduce((acc, ticket) => {
-    const key = ticket.order_id ?? 'guest_list';
+    const key = ticket.order_id != null ? String(ticket.order_id) : 'guest_list';
     if (!acc[key]) {
       acc[key] = [];
     }
     acc[key].push(ticket);
     return acc;
-  }, {} as Record<number | string, TicketData[]>);
+  }, {} as Record<string, TicketData[]>);
 
   if (!isAuthenticated) {
     return (
