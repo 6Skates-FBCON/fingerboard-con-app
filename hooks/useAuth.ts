@@ -122,17 +122,21 @@ export function useAuth(): AuthState {
     }
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
+      (event, session) => {
         if (!mounted) return;
 
         setSession(session);
         setUser(session?.user ?? null);
 
         if (session?.user) {
-          const userRole = await fetchUserRole(session.user.id);
-          if (mounted) {
-            setRole(userRole);
-          }
+          const userId = session.user.id;
+          setTimeout(() => {
+            fetchUserRole(userId).then((userRole) => {
+              if (mounted) {
+                setRole(userRole);
+              }
+            });
+          }, 0);
         } else {
           setRole(null);
         }

@@ -1,53 +1,52 @@
 import { Redirect } from 'expo-router';
 import { useAuth } from '@/hooks/useAuth';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { View, ActivityIndicator, StyleSheet, Platform } from 'react-native';
-import { supabase } from '@/lib/supabase';
 
 export default function Index() {
   const { loading } = useAuth();
   const [isRecovery, setIsRecovery] = useState(false);
   const [checkingRecovery, setCheckingRecovery] = useState(true);
+  const [timedOut, setTimedOut] = useState(false);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    const checkRecoveryMode = async () => {
-      if (!supabase) {
-        setCheckingRecovery(false);
-        return;
-      }
+    timeoutRef.current = setTimeout(() => {
+      setTimedOut(true);
+    }, 4000);
 
-      try {
-        if (Platform.OS !== 'web') {
-          setCheckingRecovery(false);
-          return;
-        }
-
-        const search = window.location?.search ?? '';
-        const hash = window.location?.hash ?? '';
-        const urlParams = new URLSearchParams(search);
-        const hashParams = new URLSearchParams(hash.substring(1));
-        const type = urlParams.get('type') || hashParams.get('type');
-        const accessToken = urlParams.get('access_token') || hashParams.get('access_token');
-
-        if (type === 'recovery' && accessToken) {
-          setIsRecovery(true);
-          setCheckingRecovery(false);
-          return;
-        }
-
-        await supabase.auth.getSession();
-
-      } catch (error) {
-        console.error('Error checking recovery mode:', error);
-      } finally {
-        setCheckingRecovery(false);
-      }
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
-
-    checkRecoveryMode();
   }, []);
 
-  if (loading || checkingRecovery) {
+  useEffect(() => {
+    if (Platform.OS !== 'web') {
+      setCheckingRecovery(false);
+      return;
+    }
+
+    try {
+      const search = window.location?.search ?? '';
+      const hash = window.location?.hash ?? '';
+      const urlParams = new URLSearchParams(search);
+      const hashParams = new URLSearchParams(hash.substring(1));
+      const type = urlParams.get('type') || hashParams.get('type');
+      const accessToken = urlParams.get('access_token') || hashParams.get('access_token');
+
+      if (type === 'recovery' && accessToken) {
+        setIsRecovery(true);
+      }
+    } catch (error) {
+      console.error('Error checking recovery mode:', error);
+    } finally {
+      setCheckingRecovery(false);
+    }
+  }, []);
+
+  const isLoading = (loading || checkingRecovery) && !timedOut;
+
+  if (isLoading) {
     return (
       <View style={styles.container}>
         <ActivityIndicator size="large" color="#ffffff" />
