@@ -14,7 +14,6 @@ interface Event {
   participants?: number;
   description: string;
   fullDescription?: string;
-  image?: string;
   subEvents?: Event[];
 }
 
@@ -46,8 +45,7 @@ export default function EventsScreen() {
             location: 'Main Ballroom',
             type: 'competition',
             description: 'New competitive fingerboard event based on PSL. 8 team single elimination bracket.',
-            fullDescription: 'PFL presented by Skatestation: A new competitive fingerboard event based on PSL. PSL (professional skateboard league) is a new team-based skateboarding event which has been streaming on YouTube. Ethan and Clark at Skatestation decided to bring this new event structure into fingerboarding and PFL was born. PFL plays similarly to baseball, featuring offensive and defensive innings. Each team has three outs and tries to get points by landing tricks the defensive team cannot backup. The game is played on a blackriver 10-stair for consistency and fairness for right and left handed players. The Fingerboard Con PFL series will involve 8 invited teams playing head-to-head in a single elimination bracket until one team is crowned the champion!',
-            image: 'pfl_bracket'
+            fullDescription: 'PFL presented by Skatestation: A new competitive fingerboard event based on PSL. PSL (professional skateboard league) is a new team-based skateboarding event which has been streaming on YouTube. Ethan and Clark at Skatestation decided to bring this new event structure into fingerboarding and PFL was born. PFL plays similarly to baseball, featuring offensive and defensive innings. Each team has three outs and tries to get points by landing tricks the defensive team cannot backup. The game is played on a blackriver 10-stair for consistency and fairness for right and left handed players. The Fingerboard Con PFL series will involve 8 invited teams playing head-to-head in a single elimination bracket until one team is crowned the champion!'
           },
           {
             id: '11',
@@ -232,7 +230,6 @@ export default function EventsScreen() {
                 type: e.type,
                 description: e.fullDescription ?? e.description,
                 participants: e.participants?.toString(),
-                image: e.image,
               },
             });
           };
