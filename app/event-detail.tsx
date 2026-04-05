@@ -13,7 +13,17 @@ export default function EventDetailScreen() {
     type: string;
     description: string;
     participants?: string;
+    image?: string;
   }>();
+
+  const getEventImage = (key?: string) => {
+    if (key === 'pfl_bracket') {
+      return require('@/assets/images/Screenshot_2026-04-05_at_5.04.14_PM.png');
+    }
+    return null;
+  };
+
+  const eventImage = getEventImage(params.image);
 
   const getEventIcon = (type: string) => {
     switch (type) {
@@ -83,6 +93,14 @@ export default function EventDetailScreen() {
           </View>
 
           <Text style={styles.headerTitle}>{params.title}</Text>
+
+          {eventImage && (
+            <Image
+              source={eventImage}
+              style={styles.eventImage}
+              resizeMode="contain"
+            />
+          )}
         </View>
       </LinearGradient>
 
@@ -172,6 +190,12 @@ const styles = StyleSheet.create({
   blackriverLogo: {
     width: 44,
     height: 44,
+  },
+  eventImage: {
+    width: '100%',
+    height: 200,
+    borderRadius: 12,
+    marginTop: 8,
   },
   typeBadge: {
     paddingHorizontal: 14,
