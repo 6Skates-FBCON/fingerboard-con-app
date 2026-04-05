@@ -146,13 +146,17 @@ export default function MyTicketsScreen() {
     }
   };
 
+  const getDisplayTicketType = (ticketType: string) =>
+    ticketType === 'guest_list' ? 'General Admission' : ticketType;
+
   const groupedTickets = tickets.reduce((acc, ticket) => {
-    if (!acc[ticket.order_id]) {
-      acc[ticket.order_id] = [];
+    const key = ticket.order_id ?? 'guest_list';
+    if (!acc[key]) {
+      acc[key] = [];
     }
-    acc[ticket.order_id].push(ticket);
+    acc[key].push(ticket);
     return acc;
-  }, {} as Record<number, TicketData[]>);
+  }, {} as Record<number | string, TicketData[]>);
 
   if (!isAuthenticated) {
     return (
@@ -208,7 +212,7 @@ export default function MyTicketsScreen() {
               {Object.entries(groupedTickets).map(([orderId, orderTickets]) => (
                 <View key={orderId} style={styles.orderGroup}>
                   <Text style={styles.orderHeader}>
-                    Order #{orderId} • {orderTickets.length} Ticket{orderTickets.length !== 1 ? 's' : ''}
+                    {orderId === 'guest_list' ? 'Guest List' : `Order #${orderId}`} • {orderTickets.length} Ticket{orderTickets.length !== 1 ? 's' : ''}
                   </Text>
 
                   {orderTickets.map((ticket) => {
@@ -223,7 +227,7 @@ export default function MyTicketsScreen() {
                       >
                         <View style={styles.ticketHeader}>
                           <View style={styles.ticketInfo}>
-                            <Text style={styles.ticketType}>{ticket.ticket_type}</Text>
+                            <Text style={styles.ticketType}>{getDisplayTicketType(ticket.ticket_type)}</Text>
                             <Text style={styles.ticketNumber}>
                               Ticket {ticket.ticket_number} of {orderTickets.length}
                             </Text>
@@ -251,7 +255,7 @@ export default function MyTicketsScreen() {
                             </Text>
                           </View>
 
-                          {ticket.status === 'active' && (
+                          {ticket.status === 'active' && ticket.ticket_type !== 'guest_list' && (
                             <TouchableOpacity
                               style={styles.transferButton}
                               onPress={() => handleTransfer(ticket)}

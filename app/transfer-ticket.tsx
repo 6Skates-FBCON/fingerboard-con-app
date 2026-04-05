@@ -81,6 +81,13 @@ export default function TransferTicketScreen() {
         return;
       }
 
+      if (data.ticket_type === 'guest_list') {
+        Alert.alert('Error', 'Guest list tickets cannot be transferred');
+        setLoading(false);
+        router.back();
+        return;
+      }
+
       if (data.status !== 'active') {
         Alert.alert('Error', `This ticket cannot be transferred (status: ${data.status})`);
         setLoading(false);
@@ -188,7 +195,7 @@ export default function TransferTicketScreen() {
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         <LinearGradient colors={[ticket.background_color, ticket.background_color + 'CC']} style={styles.ticketCard}>
-          <Text style={styles.ticketType}>{ticket.ticket_type}</Text>
+          <Text style={styles.ticketType}>{ticket.ticket_type === 'guest_list' ? 'General Admission' : ticket.ticket_type}</Text>
           <Text style={styles.ticketNumber}>Ticket #{ticket.ticket_number}</Text>
           <Text style={styles.eventName}>{ticket.event_name}</Text>
           <Text style={styles.eventDate}>{ticket.event_date}</Text>

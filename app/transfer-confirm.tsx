@@ -88,7 +88,7 @@ export default function TransferConfirmScreen() {
         <View style={styles.ticketInfo}>
           <Text style={styles.sectionTitle}>Ticket Details</Text>
           <View style={styles.infoCard}>
-            <Text style={styles.ticketType}>{ticketType}</Text>
+            <Text style={styles.ticketType}>{ticketType === 'guest_list' ? 'General Admission' : ticketType}</Text>
             <Text style={styles.ticketNumber}>Ticket #{ticketNumber}</Text>
           </View>
         </View>

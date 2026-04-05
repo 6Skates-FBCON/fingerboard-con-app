@@ -201,7 +201,14 @@ function NativeValidateTicket({ session, scanning, setScanning, validating, setV
                 <View style={styles.ticketDetails}>
                   <View style={styles.detailRow}>
                     <Text style={styles.detailLabel}>Type:</Text>
-                    <Text style={styles.detailValue}>{validationResult.ticket.ticket_type}</Text>
+                    <View style={styles.detailValueGroup}>
+                      <Text style={styles.detailValue}>
+                        {validationResult.ticket.ticket_type === 'guest_list' ? 'General Admission' : validationResult.ticket.ticket_type}
+                      </Text>
+                      {validationResult.ticket.ticket_type === 'guest_list' && (
+                        <Text style={styles.guestListBadge}>Guest List</Text>
+                      )}
+                    </View>
                   </View>
                   <View style={styles.detailRow}>
                     <Text style={styles.detailLabel}>Ticket #:</Text>
@@ -390,6 +397,15 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
     color: '#FFFFFF',
+  },
+  detailValueGroup: {
+    alignItems: 'flex-end',
+  },
+  guestListBadge: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#FFD700',
+    marginTop: 2,
   },
   scanAgainButton: {
     flexDirection: 'row',
