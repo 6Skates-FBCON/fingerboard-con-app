@@ -217,9 +217,24 @@ export default function EventsScreen() {
           const IconComponent = getEventIcon(event.type);
           const eventColor = getEventColor(event.type);
 
+          const navigateToEvent = (e: Event) => {
+            router.push({
+              pathname: '/event-detail',
+              params: {
+                id: e.id,
+                title: e.title,
+                time: e.time,
+                location: e.location,
+                type: e.type,
+                description: e.description,
+                participants: e.participants?.toString(),
+              },
+            });
+          };
+
           return (
             <View key={event.id}>
-              <View style={styles.eventCard}>
+              <TouchableOpacity style={styles.eventCard} onPress={() => navigateToEvent(event)} activeOpacity={0.85}>
                 <View style={styles.eventHeader}>
                   <View style={[styles.eventIcon, { backgroundColor: eventColor }]}>
                     <IconComponent size={20} color="#000000" />
@@ -245,7 +260,7 @@ export default function EventsScreen() {
                   </View>
                 </View>
                 <Text style={styles.eventDescription}>{event.description}</Text>
-              </View>
+              </TouchableOpacity>
 
               {event.subEvents && event.subEvents.length > 0 && (
                 <View style={styles.subEventsContainer}>
@@ -254,7 +269,7 @@ export default function EventsScreen() {
                     const subEventColor = getEventColor(subEvent.type);
 
                     return (
-                      <View key={subEvent.id} style={styles.subEventCard}>
+                      <TouchableOpacity key={subEvent.id} style={styles.subEventCard} onPress={() => navigateToEvent(subEvent)} activeOpacity={0.85}>
                         <View style={styles.eventHeader}>
                           <View style={[styles.eventIcon, { backgroundColor: subEventColor }]}>
                             {subEvent.type === 'blackriver' ? (
@@ -288,7 +303,7 @@ export default function EventsScreen() {
                           </View>
                         </View>
                         <Text style={styles.eventDescription}>{subEvent.description}</Text>
-                      </View>
+                      </TouchableOpacity>
                     );
                   })}
                 </View>
