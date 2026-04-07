@@ -1,10 +1,18 @@
-import { View, Text, StyleSheet, TouchableOpacity, Alert, ActivityIndicator, Platform } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ActivityIndicator,
+  Platform,
+  TextInput,
+  ScrollView,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
-import { ArrowLeft, Camera, CheckCircle, XCircle, Ticket } from 'lucide-react-native';
+import { ArrowLeft, Camera, CheckCircle, XCircle, Keyboard } from 'lucide-react-native';
 import { router } from 'expo-router';
-import { useState } from 'react';
-import { supabase } from '@/lib/supabase';
+import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 
 let CameraView: any = null;
@@ -27,7 +35,251 @@ interface ValidationResult {
   message: string;
 }
 
-function WebFallback() {
+async function validateTicketCode(code: string, accessToken: string): Promise<ValidationResult> {
+  const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
+
+  if (!supabaseUrl || !supabaseAnonKey) {
+    throw new Error('Configuration missing');
+  }
+
+  const response = await fetch(`${supabaseUrl}/functions/v1/validate-ticket`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      'Content-Type': 'application/json',
+      apikey: supabaseAnonKey,
+    },
+    body: JSON.stringify({ qr_code_data: code }),
+  });
+
+  return response.json();
+}
+
+function ResultCard({
+  result,
+  onReset,
+}: {
+  result: ValidationResult;
+  onReset: () => void;
+}) {
+  return (
+    <View style={styles.resultContainer}>
+      <View style={[styles.resultCard, result.success ? styles.successCard : styles.errorCard]}>
+        {result.success ? (
+          <>
+            <CheckCircle size={80} color="#39FF14" />
+            <Text style={styles.resultTitle}>Valid Ticket</Text>
+          </>
+        ) : (
+          <>
+            <XCircle size={80} color="#F44336" />
+            <Text style={styles.resultTitle}>Invalid Ticket</Text>
+          </>
+        )}
+        <Text style={styles.resultMessage}>{result.message}</Text>
+        {result.ticket && (
+          <View style={styles.ticketDetails}>
+            <View style={styles.detailRow}>
+              <Text style={styles.detailLabel}>Type:</Text>
+              <View style={styles.detailValueGroup}>
+                <Text style={styles.detailValue}>
+                  {result.ticket.ticket_type === 'guest_list'
+                    ? 'General Admission'
+                    : result.ticket.ticket_type}
+                </Text>
+                {result.ticket.ticket_type === 'guest_list' && (
+                  <Text style={styles.guestListBadge}>Guest List</Text>
+                )}
+              </View>
+            </View>
+            <View style={styles.detailRow}>
+              <Text style={styles.detailLabel}>Ticket #:</Text>
+              <Text style={styles.detailValue}>{result.ticket.ticket_number}</Text>
+            </View>
+            <View style={styles.detailRow}>
+              <Text style={styles.detailLabel}>Event:</Text>
+              <Text style={styles.detailValue}>{result.ticket.event_name}</Text>
+            </View>
+            <View style={styles.detailRow}>
+              <Text style={styles.detailLabel}>Owner:</Text>
+              <Text style={styles.detailValue}>{result.ticket.owner_email}</Text>
+            </View>
+          </View>
+        )}
+      </View>
+      <TouchableOpacity style={styles.scanAgainButton} onPress={onReset}>
+        <Camera size={20} color="#FFFFFF" />
+        <Text style={styles.scanAgainText}>Scan Another Ticket</Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
+
+function ManualEntry({
+  onSubmit,
+  validating,
+}: {
+  onSubmit: (code: string) => void;
+  validating: boolean;
+}) {
+  const [code, setCode] = useState('');
+
+  return (
+    <View style={styles.manualContainer}>
+      <View style={styles.manualIconRow}>
+        <Keyboard size={28} color="#FFD700" />
+        <Text style={styles.manualTitle}>Enter Ticket Code</Text>
+      </View>
+      <TextInput
+        style={styles.manualInput}
+        value={code}
+        onChangeText={setCode}
+        placeholder="Paste or type QR code value"
+        placeholderTextColor="#88AA88"
+        autoCapitalize="none"
+        autoCorrect={false}
+        editable={!validating}
+      />
+      <TouchableOpacity
+        style={[styles.manualSubmitButton, (!code.trim() || validating) && styles.disabledButton]}
+        onPress={() => code.trim() && onSubmit(code.trim())}
+        disabled={!code.trim() || validating}
+      >
+        {validating ? (
+          <ActivityIndicator size="small" color="#2E7D32" />
+        ) : (
+          <Text style={styles.manualSubmitText}>Validate</Text>
+        )}
+      </TouchableOpacity>
+    </View>
+  );
+}
+
+function WebScanner({ onScanned }: { onScanned: (code: string) => void }) {
+  const videoRef = useRef<any>(null);
+  const readerRef = useRef<any>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+
+    async function startScanner() {
+      try {
+        const { BrowserMultiFormatReader } = await import('@zxing/browser');
+        const reader = new BrowserMultiFormatReader();
+        readerRef.current = reader;
+
+        const devices = await BrowserMultiFormatReader.listVideoInputDevices();
+        if (!devices || devices.length === 0) {
+          if (active) setError('No camera found on this device.');
+          return;
+        }
+
+        const backCamera =
+          devices.find((d) => /back|rear|environment/i.test(d.label)) || devices[0];
+
+        if (active) setReady(true);
+
+        await reader.decodeFromVideoDevice(
+          backCamera.deviceId,
+          videoRef.current,
+          (result: any, err: any) => {
+            if (result) {
+              onScanned(result.getText());
+            }
+          }
+        );
+      } catch (e: any) {
+        if (active) {
+          if (e?.name === 'NotAllowedError' || e?.message?.includes('Permission')) {
+            setError('Camera permission denied. Please allow camera access in your browser.');
+          } else {
+            setError('Unable to start camera. Use manual entry below.');
+          }
+        }
+      }
+    }
+
+    startScanner();
+
+    return () => {
+      active = false;
+      if (readerRef.current) {
+        try {
+          readerRef.current.reset();
+        } catch {}
+      }
+    };
+  }, []);
+
+  if (error) {
+    return (
+      <View style={styles.webCameraError}>
+        <Camera size={48} color="#FFD700" />
+        <Text style={styles.webCameraErrorText}>{error}</Text>
+      </View>
+    );
+  }
+
+  return (
+    <View style={styles.webScannerWrapper}>
+      {!ready && (
+        <View style={styles.webScannerLoading}>
+          <ActivityIndicator size="large" color="#FFD700" />
+          <Text style={styles.loadingText}>Starting camera...</Text>
+        </View>
+      )}
+      <video
+        ref={videoRef}
+        style={{
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          display: ready ? 'block' : 'none',
+        }}
+        muted
+        playsInline
+      />
+      {ready && (
+        <View style={styles.scanOverlay} pointerEvents="none">
+          <View style={styles.scanFrame} />
+          <Text style={styles.scanText}>Position QR code within frame</Text>
+        </View>
+      )}
+    </View>
+  );
+}
+
+function WebValidateTicket() {
+  const { session } = useAuth();
+  const [validating, setValidating] = useState(false);
+  const [result, setResult] = useState<ValidationResult | null>(null);
+  const [showManual, setShowManual] = useState(false);
+  const scannedRef = useRef(false);
+
+  const handleCode = async (code: string) => {
+    if (validating || scannedRef.current) return;
+    scannedRef.current = true;
+    setValidating(true);
+
+    try {
+      if (!session) throw new Error('Not authenticated');
+      const res = await validateTicketCode(code, session.access_token);
+      setResult(res);
+    } catch {
+      setResult({ success: false, message: 'Failed to validate ticket.' });
+    } finally {
+      setValidating(false);
+    }
+  };
+
+  const reset = () => {
+    scannedRef.current = false;
+    setResult(null);
+  };
+
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <LinearGradient colors={['#000000', '#1a1a1a']} style={styles.header}>
@@ -36,35 +288,46 @@ function WebFallback() {
         </TouchableOpacity>
         <Text style={styles.title}>Validate Ticket</Text>
       </LinearGradient>
-      <View style={styles.permissionContainer}>
-        <Camera size={64} color="#FFD700" />
-        <Text style={styles.permissionTitle}>Camera Not Available</Text>
-        <Text style={styles.permissionText}>
-          Ticket scanning requires the mobile app. Please use the iOS or Android app to validate tickets.
-        </Text>
-        <TouchableOpacity style={styles.permissionButton} onPress={() => router.back()}>
-          <Text style={styles.permissionButtonText}>Go Back</Text>
-        </TouchableOpacity>
-      </View>
+
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+        keyboardShouldPersistTaps="handled"
+      >
+        {validating ? (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color="#FFD700" />
+            <Text style={styles.loadingText}>Validating ticket...</Text>
+          </View>
+        ) : result ? (
+          <ResultCard result={result} onReset={reset} />
+        ) : (
+          <>
+            <View style={styles.webCameraSection}>
+              <WebScanner onScanned={handleCode} />
+            </View>
+
+            <View style={styles.dividerRow}>
+              <View style={styles.dividerLine} />
+              <Text style={styles.dividerText}>or enter manually</Text>
+              <View style={styles.dividerLine} />
+            </View>
+
+            <ManualEntry onSubmit={handleCode} validating={validating} />
+          </>
+        )}
+      </ScrollView>
     </SafeAreaView>
   );
 }
 
-export default function ValidateTicketScreen() {
+function NativeValidateTicket() {
   const { session } = useAuth();
+  const [permission, requestPermission] = useCameraPermissions();
   const [scanning, setScanning] = useState(true);
   const [validating, setValidating] = useState(false);
-  const [validationResult, setValidationResult] = useState<ValidationResult | null>(null);
-
-  if (Platform.OS === 'web' || !useCameraPermissions) {
-    return <WebFallback />;
-  }
-
-  return <NativeValidateTicket session={session} scanning={scanning} setScanning={setScanning} validating={validating} setValidating={setValidating} validationResult={validationResult} setValidationResult={setValidationResult} />;
-}
-
-function NativeValidateTicket({ session, scanning, setScanning, validating, setValidating, validationResult, setValidationResult }: any) {
-  const [permission, requestPermission] = useCameraPermissions();
+  const [result, setResult] = useState<ValidationResult | null>(null);
+  const [showManual, setShowManual] = useState(false);
 
   if (!permission) {
     return (
@@ -76,16 +339,41 @@ function NativeValidateTicket({ session, scanning, setScanning, validating, setV
     );
   }
 
+  const handleCode = async (code: string) => {
+    if (validating || !scanning) return;
+    setScanning(false);
+    setValidating(true);
+
+    try {
+      if (!session) throw new Error('Not authenticated');
+      const res = await validateTicketCode(code, session.access_token);
+      setResult(res);
+    } catch {
+      setResult({ success: false, message: 'Failed to validate ticket.' });
+    } finally {
+      setValidating(false);
+    }
+  };
+
+  const reset = () => {
+    setScanning(true);
+    setResult(null);
+    setShowManual(false);
+  };
+
+  const renderHeader = () => (
+    <LinearGradient colors={['#000000', '#1a1a1a']} style={styles.header}>
+      <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+        <ArrowLeft size={24} color="#FFFFFF" />
+      </TouchableOpacity>
+      <Text style={styles.title}>Validate Ticket</Text>
+    </LinearGradient>
+  );
+
   if (!permission.granted) {
     return (
       <SafeAreaView style={styles.container} edges={['top']}>
-        <LinearGradient colors={['#000000', '#1a1a1a']} style={styles.header}>
-          <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-            <ArrowLeft size={24} color="#FFFFFF" />
-          </TouchableOpacity>
-          <Text style={styles.title}>Validate Ticket</Text>
-        </LinearGradient>
-
+        {renderHeader()}
         <View style={styles.permissionContainer}>
           <Camera size={64} color="#FFD700" />
           <Text style={styles.permissionTitle}>Camera Permission Required</Text>
@@ -93,165 +381,97 @@ function NativeValidateTicket({ session, scanning, setScanning, validating, setV
           <TouchableOpacity style={styles.permissionButton} onPress={requestPermission}>
             <Text style={styles.permissionButtonText}>Grant Permission</Text>
           </TouchableOpacity>
+          <View style={styles.dividerRow}>
+            <View style={styles.dividerLine} />
+            <Text style={styles.dividerTextDark}>or enter manually</Text>
+            <View style={styles.dividerLine} />
+          </View>
+          <ManualEntry onSubmit={handleCode} validating={validating} />
         </View>
       </SafeAreaView>
     );
   }
 
-  const handleBarcodeScanned = async ({ data }: { data: string }) => {
-    if (validating || !scanning) return;
+  if (validating) {
+    return (
+      <SafeAreaView style={styles.container} edges={['top']}>
+        {renderHeader()}
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#FFD700" />
+          <Text style={styles.loadingText}>Validating ticket...</Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
-    setScanning(false);
-    setValidating(true);
-
-    try {
-      const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL;
-      const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
-
-      if (!supabaseUrl || !supabaseAnonKey || !session) {
-        throw new Error('Configuration missing');
-      }
-
-      const response = await fetch(`${supabaseUrl}/functions/v1/validate-ticket`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${session.access_token}`,
-          'Content-Type': 'application/json',
-          'apikey': supabaseAnonKey,
-        },
-        body: JSON.stringify({
-          qr_code_data: data,
-        }),
-      });
-
-      const result = await response.json();
-
-      setValidationResult(result);
-
-      if (result.success) {
-        Alert.alert('Valid Ticket', result.message);
-      } else {
-        Alert.alert('Invalid Ticket', result.message);
-      }
-    } catch (error) {
-      console.error('Validation error:', error);
-      setValidationResult({
-        success: false,
-        message: 'Failed to validate ticket',
-      });
-      Alert.alert('Error', 'Failed to validate ticket');
-    } finally {
-      setValidating(false);
-    }
-  };
-
-  const resetScanner = () => {
-    setScanning(true);
-    setValidationResult(null);
-  };
+  if (result) {
+    return (
+      <SafeAreaView style={styles.container} edges={['top']}>
+        {renderHeader()}
+        <ResultCard result={result} onReset={reset} />
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
-      <LinearGradient colors={['#000000', '#1a1a1a']} style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-          <ArrowLeft size={24} color="#FFFFFF" />
-        </TouchableOpacity>
-        <Text style={styles.title}>Validate Ticket</Text>
-      </LinearGradient>
-
+      {renderHeader()}
       <View style={styles.content}>
-        {scanning && !validationResult ? (
+        {showManual ? (
+          <ScrollView keyboardShouldPersistTaps="handled">
+            <TouchableOpacity
+              style={styles.switchModeButton}
+              onPress={() => setShowManual(false)}
+            >
+              <Camera size={18} color="#FFD700" />
+              <Text style={styles.switchModeText}>Use Camera Scanner</Text>
+            </TouchableOpacity>
+            <ManualEntry onSubmit={handleCode} validating={validating} />
+          </ScrollView>
+        ) : (
           <>
             <CameraView
               style={styles.camera}
               facing="back"
-              onBarcodeScanned={handleBarcodeScanned}
-              barcodeScannerSettings={{
-                barcodeTypes: ['qr'],
-              }}
+              onBarcodeScanned={({ data }: { data: string }) => handleCode(data)}
+              barcodeScannerSettings={{ barcodeTypes: ['qr'] }}
             />
-            <View style={styles.scanOverlay}>
+            <View style={styles.scanOverlay} pointerEvents="none">
               <View style={styles.scanFrame} />
               <Text style={styles.scanText}>Position QR code within frame</Text>
             </View>
-          </>
-        ) : validationResult ? (
-          <View style={styles.resultContainer}>
-            <View
-              style={[
-                styles.resultCard,
-                validationResult.success ? styles.successCard : styles.errorCard,
-              ]}
+            <TouchableOpacity
+              style={styles.manualFallbackButton}
+              onPress={() => setShowManual(true)}
             >
-              {validationResult.success ? (
-                <>
-                  <CheckCircle size={80} color="#39FF14" />
-                  <Text style={styles.resultTitle}>Valid Ticket</Text>
-                </>
-              ) : (
-                <>
-                  <XCircle size={80} color="#F44336" />
-                  <Text style={styles.resultTitle}>Invalid Ticket</Text>
-                </>
-              )}
-
-              <Text style={styles.resultMessage}>{validationResult.message}</Text>
-
-              {validationResult.ticket && (
-                <View style={styles.ticketDetails}>
-                  <View style={styles.detailRow}>
-                    <Text style={styles.detailLabel}>Type:</Text>
-                    <View style={styles.detailValueGroup}>
-                      <Text style={styles.detailValue}>
-                        {validationResult.ticket.ticket_type === 'guest_list' ? 'General Admission' : validationResult.ticket.ticket_type}
-                      </Text>
-                      {validationResult.ticket.ticket_type === 'guest_list' && (
-                        <Text style={styles.guestListBadge}>Guest List</Text>
-                      )}
-                    </View>
-                  </View>
-                  <View style={styles.detailRow}>
-                    <Text style={styles.detailLabel}>Ticket #:</Text>
-                    <Text style={styles.detailValue}>{validationResult.ticket.ticket_number}</Text>
-                  </View>
-                  <View style={styles.detailRow}>
-                    <Text style={styles.detailLabel}>Event:</Text>
-                    <Text style={styles.detailValue}>{validationResult.ticket.event_name}</Text>
-                  </View>
-                  <View style={styles.detailRow}>
-                    <Text style={styles.detailLabel}>Owner:</Text>
-                    <Text style={styles.detailValue}>{validationResult.ticket.owner_email}</Text>
-                  </View>
-                </View>
-              )}
-            </View>
-
-            <TouchableOpacity style={styles.scanAgainButton} onPress={resetScanner}>
-              <Camera size={20} color="#FFFFFF" />
-              <Text style={styles.scanAgainText}>Scan Another Ticket</Text>
+              <Keyboard size={16} color="#FFFFFF" />
+              <Text style={styles.manualFallbackText}>Enter code manually</Text>
             </TouchableOpacity>
-          </View>
-        ) : (
-          <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color="#FFD700" />
-            <Text style={styles.loadingText}>Validating ticket...</Text>
-          </View>
+          </>
         )}
-      </View>
-
-      <View style={styles.infoSection}>
-        <Text style={styles.infoText}>
-          Scan ticket QR codes to validate entry at the event. Valid tickets will be marked as used.
-        </Text>
       </View>
     </SafeAreaView>
   );
+}
+
+export default function ValidateTicketScreen() {
+  if (Platform.OS === 'web' || !useCameraPermissions) {
+    return <WebValidateTicket />;
+  }
+  return <NativeValidateTicket />;
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#2E7D32',
+  },
+  scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
+    paddingHorizontal: 20,
+    paddingBottom: 40,
   },
   header: {
     paddingTop: 16,
@@ -280,7 +500,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#4CAF50',
+    minHeight: 200,
   },
   loadingText: {
     fontSize: 16,
@@ -345,11 +565,44 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginTop: 24,
   },
+  manualFallbackButton: {
+    position: 'absolute',
+    bottom: 20,
+    alignSelf: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    backgroundColor: '#00000088',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#FFFFFF44',
+  },
+  manualFallbackText: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#FFFFFF',
+  },
+  switchModeButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    marginBottom: 8,
+  },
+  switchModeText: {
+    fontSize: 15,
+    fontWeight: '700',
+    color: '#FFD700',
+  },
   resultContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 20,
+    paddingTop: 32,
   },
   resultCard: {
     width: '100%',
@@ -422,17 +675,96 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     color: '#FFFFFF',
   },
-  infoSection: {
-    backgroundColor: '#4CAF50',
-    padding: 16,
-    marginHorizontal: 20,
-    marginBottom: 20,
-    borderRadius: 12,
+  webCameraSection: {
+    width: '100%',
+    height: 320,
+    borderRadius: 16,
+    overflow: 'hidden',
+    marginTop: 24,
+    backgroundColor: '#1a2e1a',
   },
-  infoText: {
-    fontSize: 14,
+  webScannerWrapper: {
+    flex: 1,
+    position: 'relative',
+  },
+  webScannerLoading: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  webCameraError: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 24,
+    gap: 12,
+  },
+  webCameraErrorText: {
+    fontSize: 15,
     color: '#E8F5E8',
     textAlign: 'center',
-    lineHeight: 20,
+    fontWeight: '600',
+  },
+  dividerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 20,
+    gap: 12,
+  },
+  dividerLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: '#4CAF5088',
+  },
+  dividerText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#A5D6A7',
+  },
+  dividerTextDark: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#E8F5E8',
+  },
+  manualContainer: {
+    backgroundColor: '#4CAF50',
+    borderRadius: 16,
+    padding: 20,
+    marginBottom: 12,
+  },
+  manualIconRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    marginBottom: 16,
+  },
+  manualTitle: {
+    fontSize: 17,
+    fontWeight: '800',
+    color: '#FFFFFF',
+  },
+  manualInput: {
+    backgroundColor: '#2E7D32',
+    borderRadius: 10,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    fontSize: 15,
+    color: '#FFFFFF',
+    fontWeight: '600',
+    marginBottom: 12,
+  },
+  manualSubmitButton: {
+    backgroundColor: '#FFD700',
+    borderRadius: 10,
+    paddingVertical: 13,
+    alignItems: 'center',
+  },
+  manualSubmitText: {
+    fontSize: 16,
+    fontWeight: '800',
+    color: '#2E7D32',
+  },
+  disabledButton: {
+    opacity: 0.5,
   },
 });
