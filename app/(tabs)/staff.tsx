@@ -13,6 +13,7 @@ export default function StaffScreen() {
     transferredTickets: 0,
   });
   const [loading, setLoading] = useState(true);
+  const [statsError, setStatsError] = useState<string | null>(null);
 
   useEffect(() => {
     fetchStats();
@@ -25,9 +26,14 @@ export default function StaffScreen() {
     }
 
     try {
-      const { data: allTickets } = await supabase
+      const { data: allTickets, error } = await supabase
         .from('tickets')
         .select('status');
+
+      if (error) {
+        setStatsError(error.message);
+        return;
+      }
 
       if (allTickets) {
         const total = allTickets.length;
@@ -43,7 +49,7 @@ export default function StaffScreen() {
         });
       }
     } catch (error) {
-      console.error('Error fetching stats:', error);
+      setStatsError('Failed to load stats');
     } finally {
       setLoading(false);
     }
@@ -75,6 +81,9 @@ export default function StaffScreen() {
         <View style={styles.content}>
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Quick Stats</Text>
+            {statsError && (
+              <Text style={styles.errorText}>{statsError}</Text>
+            )}
             <View style={styles.statsGrid}>
               <View style={styles.statCard}>
                 <View style={[styles.statIcon, { backgroundColor: '#4CAF50' }]}>
@@ -294,5 +303,13 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: '#E8F5E8',
     lineHeight: 22,
+  },
+  errorText: {
+    fontSize: 13,
+    color: '#FFCDD2',
+    marginBottom: 12,
+    backgroundColor: '#C62828',
+    padding: 10,
+    borderRadius: 8,
   },
 });
