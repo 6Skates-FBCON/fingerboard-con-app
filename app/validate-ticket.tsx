@@ -329,10 +329,10 @@ function WebValidateTicket() {
 function NativeValidateTicket() {
   const { session } = useAuth();
   const [permission, requestPermission] = useCameraPermissions();
-  const [scanning, setScanning] = useState(true);
   const [validating, setValidating] = useState(false);
   const [result, setResult] = useState<ValidationResult | null>(null);
   const [showManual, setShowManual] = useState(false);
+  const scannedRef = useRef(false);
 
   if (!permission) {
     return (
@@ -345,8 +345,8 @@ function NativeValidateTicket() {
   }
 
   const handleCode = async (code: string) => {
-    if (validating || !scanning) return;
-    setScanning(false);
+    if (scannedRef.current) return;
+    scannedRef.current = true;
     setValidating(true);
 
     try {
@@ -361,7 +361,7 @@ function NativeValidateTicket() {
   };
 
   const reset = () => {
-    setScanning(true);
+    scannedRef.current = false;
     setResult(null);
     setShowManual(false);
   };
@@ -438,7 +438,7 @@ function NativeValidateTicket() {
             <CameraView
               style={styles.camera}
               facing="back"
-              onBarcodeScanned={({ data }: { data: string }) => handleCode(data)}
+              onBarcodeScanned={scannedRef.current ? undefined : ({ data }: { data: string }) => handleCode(data)}
               barcodeScannerSettings={{ barcodeTypes: ['qr'] }}
             />
             <View style={styles.scanOverlay} pointerEvents="none">
