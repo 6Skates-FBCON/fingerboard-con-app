@@ -53,7 +53,12 @@ async function validateTicketCode(code: string, accessToken: string): Promise<Va
     body: JSON.stringify({ qr_code_data: code }),
   });
 
-  return response.json();
+  const text = await response.text();
+  try {
+    return JSON.parse(text);
+  } catch {
+    return { success: false, message: `Server error (${response.status})` };
+  }
 }
 
 function ResultCard({
