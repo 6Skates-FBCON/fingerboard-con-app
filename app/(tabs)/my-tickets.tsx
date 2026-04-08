@@ -77,7 +77,7 @@ export default function MyTicketsScreen() {
           created_at
         `)
         .eq('owner_id', session.user.id)
-        .eq('status', 'active')
+        .in('status', ['active', 'validated'])
         .order('created_at', { ascending: false });
 
       if (error) {
@@ -123,7 +123,7 @@ export default function MyTicketsScreen() {
       case 'transferred':
         return '#FFC107';
       case 'validated':
-        return '#4CAF50';
+        return '#F44336';
       case 'expired':
       case 'cancelled':
         return '#F44336';
@@ -236,7 +236,12 @@ export default function MyTicketsScreen() {
                           </View>
 
                           <View style={styles.qrContainer}>
-                            {ticket.qr_code_data ? (
+                            {ticket.status === 'validated' ? (
+                              <View style={styles.qrPlaceholder}>
+                                <CheckCircle size={32} color="#F44336" />
+                                <Text style={[styles.qrPlaceholderText, { color: '#F44336' }]}>Used</Text>
+                              </View>
+                            ) : ticket.qr_code_data ? (
                               <QRCodeComponent value={ticket.qr_code_data} />
                             ) : (
                               <View style={styles.qrPlaceholder}>
