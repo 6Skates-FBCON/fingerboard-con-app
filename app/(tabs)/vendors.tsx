@@ -273,7 +273,7 @@ export default function VendorsScreen() {
       category: 'decks',
       booth: 'TBD',
       featured: false,
-      website: 'https://clued.shop/runitbackfb',
+      website: 'https://runitbackfb.com',
       specialOffer: 'FBCon Exclusive drops',
     },
   ];
