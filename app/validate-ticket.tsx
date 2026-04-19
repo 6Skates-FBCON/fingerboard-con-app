@@ -10,10 +10,11 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
-import { ArrowLeft, Camera, CheckCircle, XCircle, Keyboard } from 'lucide-react-native';
+import { ArrowLeft, Camera, CheckCircle, XCircle, Keyboard, ScanLine } from 'lucide-react-native';
 import { router } from 'expo-router';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useAuth } from '@/hooks/useAuth';
+import { Audio } from 'expo-av';
 
 let CameraView: any = null;
 let useCameraPermissions: any = null;
@@ -61,6 +62,20 @@ async function validateTicketCode(code: string, accessToken: string): Promise<Va
   }
 }
 
+async function playSuccessChime() {
+  try {
+    const { sound } = await Audio.Sound.createAsync(
+      { uri: 'https://cdn.freesound.org/previews/341/341695_5858296-lq.mp3' },
+      { shouldPlay: true, volume: 1.0 }
+    );
+    sound.setOnPlaybackStatusUpdate((status: any) => {
+      if (status.didJustFinish) {
+        sound.unloadAsync();
+      }
+    });
+  } catch {}
+}
+
 function ResultCard({
   result,
   onReset,
@@ -68,6 +83,11 @@ function ResultCard({
   result: ValidationResult;
   onReset: () => void;
 }) {
+  useEffect(() => {
+    if (result.success) {
+      playSuccessChime();
+    }
+  }, [result.success]);
   return (
     <View style={styles.resultContainer}>
       <View style={[styles.resultCard, result.success ? styles.successCard : styles.errorCard]}>
@@ -166,6 +186,7 @@ function WebScanner({ onScanned }: { onScanned: (code: string) => void }) {
   const readerRef = useRef<any>(null);
   const [error, setError] = useState<string | null>(null);
   const [ready, setReady] = useState(false);
+  const [detectedCode, setDetectedCode] = useState<string | null>(null);
 
   useEffect(() => {
     let active = true;
@@ -191,8 +212,8 @@ function WebScanner({ onScanned }: { onScanned: (code: string) => void }) {
           backCamera.deviceId,
           videoRef.current,
           (result: any, err: any) => {
-            if (result) {
-              onScanned(result.getText());
+            if (result && active) {
+              setDetectedCode(result.getText());
             }
           }
         );
@@ -218,6 +239,12 @@ function WebScanner({ onScanned }: { onScanned: (code: string) => void }) {
       }
     };
   }, []);
+
+  const handleConfirm = useCallback(() => {
+    if (detectedCode) {
+      onScanned(detectedCode);
+    }
+  }, [detectedCode, onScanned]);
 
   if (error) {
     return (
@@ -247,10 +274,19 @@ function WebScanner({ onScanned }: { onScanned: (code: string) => void }) {
         muted
         playsInline
       />
-      {ready && (
+      {ready && !detectedCode && (
         <View style={styles.scanOverlay} pointerEvents="none">
           <View style={styles.scanFrame} />
           <Text style={styles.scanText}>Position QR code within frame</Text>
+        </View>
+      )}
+      {ready && detectedCode && (
+        <View style={styles.scanOverlay}>
+          <View style={styles.detectedFrame} />
+          <TouchableOpacity style={styles.confirmScanButton} onPress={handleConfirm}>
+            <ScanLine size={22} color="#2E7D32" />
+            <Text style={styles.confirmScanText}>Validate This Ticket</Text>
+          </TouchableOpacity>
         </View>
       )}
     </View>
@@ -332,7 +368,7 @@ function NativeValidateTicket() {
   const [validating, setValidating] = useState(false);
   const [result, setResult] = useState<ValidationResult | null>(null);
   const [showManual, setShowManual] = useState(false);
-  const scannedRef = useRef(false);
+  const [detectedCode, setDetectedCode] = useState<string | null>(null);
 
   if (!permission) {
     return (
@@ -345,9 +381,8 @@ function NativeValidateTicket() {
   }
 
   const handleCode = async (code: string) => {
-    if (scannedRef.current) return;
-    scannedRef.current = true;
     setValidating(true);
+    setDetectedCode(null);
 
     try {
       if (!session) throw new Error('Not authenticated');
@@ -360,8 +395,20 @@ function NativeValidateTicket() {
     }
   };
 
+  const handleBarcodeDetected = ({ data }: { data: string }) => {
+    if (!detectedCode && !validating) {
+      setDetectedCode(data);
+    }
+  };
+
+  const handleConfirmNative = () => {
+    if (detectedCode) {
+      handleCode(detectedCode);
+    }
+  };
+
   const reset = () => {
-    scannedRef.current = false;
+    setDetectedCode(null);
     setResult(null);
     setShowManual(false);
   };
@@ -438,13 +485,30 @@ function NativeValidateTicket() {
             <CameraView
               style={styles.camera}
               facing="back"
-              onBarcodeScanned={scannedRef.current ? undefined : ({ data }: { data: string }) => handleCode(data)}
+              onBarcodeScanned={detectedCode ? undefined : handleBarcodeDetected}
               barcodeScannerSettings={{ barcodeTypes: ['qr'] }}
             />
-            <View style={styles.scanOverlay} pointerEvents="none">
-              <View style={styles.scanFrame} />
-              <Text style={styles.scanText}>Position QR code within frame</Text>
-            </View>
+            {!detectedCode && (
+              <View style={styles.scanOverlay} pointerEvents="none">
+                <View style={styles.scanFrame} />
+                <Text style={styles.scanText}>Position QR code within frame</Text>
+              </View>
+            )}
+            {detectedCode && (
+              <View style={styles.scanOverlay}>
+                <View style={styles.detectedFrame} />
+                <TouchableOpacity style={styles.confirmScanButton} onPress={handleConfirmNative}>
+                  <ScanLine size={22} color="#2E7D32" />
+                  <Text style={styles.confirmScanText}>Validate This Ticket</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.rescanButton}
+                  onPress={() => setDetectedCode(null)}
+                >
+                  <Text style={styles.rescanText}>Rescan</Text>
+                </TouchableOpacity>
+              </View>
+            )}
             <TouchableOpacity
               style={styles.manualFallbackButton}
               onPress={() => setShowManual(true)}
@@ -771,5 +835,47 @@ const styles = StyleSheet.create({
   },
   disabledButton: {
     opacity: 0.5,
+  },
+  detectedFrame: {
+    width: 250,
+    height: 250,
+    borderWidth: 4,
+    borderColor: '#39FF14',
+    borderRadius: 16,
+    backgroundColor: 'transparent',
+  },
+  confirmScanButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    backgroundColor: '#FFD700',
+    paddingVertical: 16,
+    paddingHorizontal: 32,
+    borderRadius: 14,
+    marginTop: 28,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 6,
+  },
+  confirmScanText: {
+    fontSize: 18,
+    fontWeight: '900',
+    color: '#2E7D32',
+  },
+  rescanButton: {
+    marginTop: 14,
+    paddingVertical: 10,
+    paddingHorizontal: 24,
+    borderRadius: 10,
+    borderWidth: 1.5,
+    borderColor: '#FFFFFF88',
+    backgroundColor: '#00000066',
+  },
+  rescanText: {
+    fontSize: 15,
+    fontWeight: '700',
+    color: '#FFFFFF',
   },
 });
