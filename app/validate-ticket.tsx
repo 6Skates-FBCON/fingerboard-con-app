@@ -13,7 +13,6 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { ArrowLeft, Camera, CheckCircle, XCircle, Keyboard, ScanLine } from 'lucide-react-native';
 import { router } from 'expo-router';
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { useAuth } from '@/hooks/useAuth';
 import { Audio } from 'expo-av';
 
 let CameraView: any = null;
@@ -36,7 +35,7 @@ interface ValidationResult {
   message: string;
 }
 
-async function validateTicketCode(code: string, accessToken: string): Promise<ValidationResult> {
+async function validateTicketCode(code: string): Promise<ValidationResult> {
   const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL;
   const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
 
@@ -44,10 +43,17 @@ async function validateTicketCode(code: string, accessToken: string): Promise<Va
     throw new Error('Configuration missing');
   }
 
+  const { supabase } = await import('@/lib/supabase');
+  const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+
+  if (sessionError || !session) {
+    return { success: false, message: 'Session expired. Please log in again.' };
+  }
+
   const response = await fetch(`${supabaseUrl}/functions/v1/validate-ticket`, {
     method: 'POST',
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: `Bearer ${session.access_token}`,
       'Content-Type': 'application/json',
       apikey: supabaseAnonKey,
     },
@@ -294,7 +300,6 @@ function WebScanner({ onScanned }: { onScanned: (code: string) => void }) {
 }
 
 function WebValidateTicket() {
-  const { session } = useAuth();
   const [validating, setValidating] = useState(false);
   const [result, setResult] = useState<ValidationResult | null>(null);
   const [showManual, setShowManual] = useState(false);
@@ -306,8 +311,7 @@ function WebValidateTicket() {
     setValidating(true);
 
     try {
-      if (!session) throw new Error('Not authenticated');
-      const res = await validateTicketCode(code, session.access_token);
+      const res = await validateTicketCode(code);
       setResult(res);
     } catch {
       setResult({ success: false, message: 'Failed to validate ticket.' });
@@ -363,7 +367,6 @@ function WebValidateTicket() {
 }
 
 function NativeValidateTicket() {
-  const { session } = useAuth();
   const [permission, requestPermission] = useCameraPermissions();
   const [validating, setValidating] = useState(false);
   const [result, setResult] = useState<ValidationResult | null>(null);
@@ -385,8 +388,7 @@ function NativeValidateTicket() {
     setDetectedCode(null);
 
     try {
-      if (!session) throw new Error('Not authenticated');
-      const res = await validateTicketCode(code, session.access_token);
+      const res = await validateTicketCode(code);
       setResult(res);
     } catch {
       setResult({ success: false, message: 'Failed to validate ticket.' });
