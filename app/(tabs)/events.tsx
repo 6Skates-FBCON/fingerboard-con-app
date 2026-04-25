@@ -68,14 +68,6 @@ export default function EventsScreen() {
         description: 'Open Fingerboard Session'
       },
       {
-        id: '13',
-        title: 'Registration & Check-in',
-        time: '4:00 PM - 6:00 PM',
-        location: 'Ballroom Entrance',
-        type: 'social',
-        description: 'Get your wristbands.'
-      },
-      {
         id: '6',
         title: 'Official After Vous',
         time: '6:00 PM - 11:30 AM',
